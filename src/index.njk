@@ -4,10 +4,18 @@ layout: 'base.njk'
 ---
 
 
-
+<ul>
 {%- for featured in collections.featured-%}
-    <a href="{{featured.url}}">{{featured.data.title}}</a>
+<li>
+    <article class="snippet">
+        <img src="{{featured.data.image}}" alt="{{featured.data.image_text}}" class="snippet__image horizontal"/>
+            <h3 class="snippet__title"><a href="{{featured.url}}">{{featured.data.title}}</a></h3>
+            <p class="snippet__body">{{featured.data.description}}</p>
+    </article>
+</li>
+    
 {%-endfor-%}
+</ul>
 {%if featured.length >0%}
 <a href="/articles">Alle Artikel</a>
 {%else%}
