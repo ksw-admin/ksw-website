@@ -1,0 +1,16 @@
+---
+layout: 'base.njk'
+---
+<h1>Content of index</h1>
+<ul>
+    {%-for category in collections.category-%}
+        <li>
+            <a href="{{category.url}}">{{category.data.CategoryTitle}}
+</a>
+        </li>
+    {%- endfor -%}
+
+</ul>
+
+
+

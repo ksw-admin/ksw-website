@@ -1,0 +1,13 @@
+---
+Document_Title: test
+layout: 'base.njk'
+---
+
+
+<h1>Content of index</h1>
+
+{%- for featured in collections.featured-%}
+
+    <h1>{{featured.data.ArticleTitle}}</h1>
+
+{%-endfor-%}

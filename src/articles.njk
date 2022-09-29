@@ -1,0 +1,12 @@
+---
+title: Articles
+layout: 'base.njk'
+---
+<h1>Content of index</h1>
+{%-for article in collections.articles | reverse-%}
+        <li>
+            <a href="{{article.url}}">{{article.data.ArticleTitle}}
+    </a>
+        </li>
+    {%- endfor -%}
+
