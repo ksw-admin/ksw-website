@@ -1,10 +1,12 @@
-@import url("https://fonts.googleapis.com/css2?family=Akaya+Telivigala&display=swap");
+/*@import url("https://fonts.googleapis.com/css2?family=Akaya+Telivigala&display=optional");*/
 :root {
   --textcolor: #2f4858;
   --Pr-color: #ebcd06;
   --Pr-color2: #ffdd00;
 }
-* {
+*,
+*::after,
+*::before {
   box-sizing: border-box;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-tap-highlight-color: transparent;
@@ -15,10 +17,6 @@ html {
 body {
   padding: 0;
   margin: 0;
-  overflow-y: overlay;
-  background-color: white;
-  min-height: 100vh;
-  position: relative;
 }
 
 ::-webkit-scrollbar {
