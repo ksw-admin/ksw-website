@@ -1,13 +1,15 @@
 ---
-Document_Title: test
+title: Homepage
 layout: 'base.njk'
 ---
 
 
-<h1>Content of index</h1>
 
 {%- for featured in collections.featured-%}
-
-    <h1>{{featured.data.ArticleTitle}}</h1>
-
+    <a href="{{featured.url}}">{{featured.data.title}}</a>
 {%-endfor-%}
+{%if featured.length >0%}
+<a href="/articles">Alle Artikel</a>
+{%else%}
+<p>Hier gibt es wohl nichts zu sehen</p>
+{%endif%}

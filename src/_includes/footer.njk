@@ -1,3 +1,12 @@
 <footer>
-    <h2>footer here</h2>
+     <div class="botnav">
+        <nav>
+          <ul class="nav-links-bot">
+                {%-for footer in collections.footer-%}
+                    <li><a class="nav-link-bot" href="{{footer.url}}">{{footer.data.title}}</a></li>
+                {%-endfor-%}
+          </ul>
+        </nav>
+        <div class="creat">Created by Jonah L</div>
+      </div>
 </footer>

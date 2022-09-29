@@ -10,7 +10,7 @@ collections:
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{ArticleTitle}}"
     fields:
-      - { label: "Title", name: "ArticleTitle", widget: "string" }
+      - { label: "Title", name: "title", widget: "string" }
       - { label: "Beschreibung", name: "description", widget: "string" }
       - { label: "Bild", name: "image", widget: "image", required: false }
       - { label: "Bild Text", name: "image_text", widget: "string", required: false }
@@ -22,9 +22,21 @@ collections:
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{CategoryTitle}}"
     fields:
-      - { label: "Title", name: "CategoryTitle", widget: "string" }
+      - { label: "Title", name: "title", widget: "string" }
       - { label: "Beschreibung", name: "description", widget: "string" }
       - { label: "Bild", name: "image", widget: "image", required: false }
       - { label: "Bild Text", name: "image_text", widget: "string", required: false }
       - { label: "Content", name: "body", widget: "markdown" }
       - { label: "Tags", name: "tags", widget: "list", default: ["category"] }
+  - name: "other"
+    label: "Andere"
+    folder: "src/other"
+    create: true
+    slug: "{{OtherTitel}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Beschreibung", name: "description", widget: "string" }
+      - { label: "Bild", name: "image", widget: "image", required: false }
+      - { label: "Bild Text", name: "image_text", widget: "string", required: false }
+      - { label: "Content", name: "body", widget: "markdown" }
+      - { label: "Tags", name: "tags", widget: "list" }

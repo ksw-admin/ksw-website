@@ -1,5 +1,5 @@
 ---
-CategoryTitle: TAICHI
+title: TAICHI
 ---
 
 TAICHI
