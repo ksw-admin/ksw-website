@@ -1,33 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="Mqsxt2K_Gilpo3g4d8fLzYVDDlcBzGOVZjrGxTFG14w" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Kuk Sool Won Griepentrog Rheinhausen" />
+    <title>{{title}} | Kuk Sool Won Griepentrog</title>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" href="/images/icons/apple-icon-180.png" />
+    <link rel="stylesheet" href="/css/style.css">
     <script defer src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     <script defer src="/js/app.js"></script>
-    <title>{{title}} | Kuk Sool Won Griepentrog</title>
-    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
     {% include 'header.njk'%}
     <main>
     {{content | safe}}
     </main>
-
     {% include 'footer.njk' %}
-
-
-    <script>
-    if (window.netlifyIdentity) {
-    window.netlifyIdentity.on("init", user => {
-      if (!user) {
-        window.netlifyIdentity.on("login", () => {
-          document.location.href = "/admin/";
-        });
-      }
-    });
-  }
-</script>
 </body>
 </html>
