@@ -8,35 +8,35 @@ collections:
     label: "Artikel"
     folder: "src/articles"
     create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{ArticleTitle}}"
+    slug: "{{year}}-{{month}}-{{day}}-{{title}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Beschreibung", name: "description", widget: "string" }
-      - { label: "Bild", name: "image", widget: "image", required: false }
-      - { label: "Bild Text", name: "image_text", widget: "string", required: false }
+      - { label: "Bild", name: "image", widget: "image", required: false, default: "/placeholder.png" }
+      - { label: "Bild Text", name: "image_text", widget: "string", required: false, default: "placeholder" }
       - { label: "Content", name: "body", widget: "markdown" }
       - { label: "Tags", name: "tags", widget: "list", default: ["articles"] }
   - name: "category"
     label: "Kategorie"
     folder: "src/category"
     create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{CategoryTitle}}"
+    slug: "{{title}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Beschreibung", name: "description", widget: "string" }
-      - { label: "Bild", name: "image", widget: "image", required: false }
-      - { label: "Bild Text", name: "image_text", widget: "string", required: false }
+      - { label: "Bild", name: "image", widget: "image", required: false, default: "/placeholder.png" }
+      - { label: "Bild Text", name: "image_text", widget: "string", required: false, default: "placeholder" }
       - { label: "Content", name: "body", widget: "markdown" }
       - { label: "Tags", name: "tags", widget: "list", default: ["category"] }
   - name: "other"
     label: "Andere"
     folder: "src/other"
     create: true
-    slug: "{{OtherTitel}}"
+    slug: "{{titel}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Beschreibung", name: "description", widget: "string" }
-      - { label: "Bild", name: "image", widget: "image", required: false }
-      - { label: "Bild Text", name: "image_text", widget: "string", required: false }
+      - { label: "Bild", name: "image", widget: "image", required: false, default: "/placeholder.png" }
+      - { label: "Bild Text", name: "image_text", widget: "string", required: false, default: "placeholder" }
       - { label: "Content", name: "body", widget: "markdown" }
       - { label: "Tags", name: "tags", widget: "list" }

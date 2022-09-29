@@ -17,6 +17,8 @@ html {
 body {
   padding: 0;
   margin: 0;
+  position: relative;
+  min-height: 100vh;
 }
 
 ::-webkit-scrollbar {
@@ -172,6 +174,14 @@ article {
   border-radius: 0.25em;
   align-self: start;
   justify-self: start;
+}
+.btn {
+  display: inline-block;
+  color: white;
+  text-decoration: none;
+  background: rgb(53, 53, 53);
+  padding: 1em 1.8em;
+  border-radius: 100px;
 }
 
 .btn:focus {
