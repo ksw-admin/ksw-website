@@ -16,3 +16,15 @@ collections:
       - { label: "Bild Text", name: "image_text", widget: "string" }
       - { label: "Content", name: "body", widget: "markdown" }
       - { label: "Tags", name: "tags", widget: "list", default: ["articles"] }
+  - name: "category"
+    label: "Kategorie"
+    folder: "src/category"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Title", name: "CategoryTitle", widget: "string" }
+      - { label: "Beschreibung", name: "description", widget: "string" }
+      - { label: "Bild", name: "image", widget: "image" }
+      - { label: "Bild Text", name: "image_text", widget: "string" }
+      - { label: "Content", name: "body", widget: "markdown" }
+      - { label: "Tags", name: "tags", widget: "list", default: ["articles"] }
