@@ -29,7 +29,7 @@ collections:
           label: "Gallery",
           name: "galleryImages",
           summary: "{{fields.image}}",
-          widget: "list",
+          widget: "object",
           fields:
             - { label: Image, name: image, widget: image }
             - { label: "Titel", name: "image_text", widget: "string" }
