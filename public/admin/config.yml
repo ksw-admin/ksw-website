@@ -12,7 +12,7 @@ collections:
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Beschreibung", name: "description", widget: "string" }
-      - { label: "Bild", name: "image", widget: "image", required: false, default: "/placeholder.png" }
+      - { label: "Bild", name: "image", widget: "image", required: false, default: "/images/placeholder.png" }
       - { label: "Bild Text", name: "image_text", widget: "string", required: false, default: "placeholder" }
       - { label: "Content", name: "body", widget: "markdown" }
       - { label: "Tags", name: "tags", widget: "list", default: ["articles"] }
@@ -24,7 +24,7 @@ collections:
     fields:
       - { label: "Title", name: "title", widget: "string", required: false }
       - { label: "Beschreibung", name: "description", widget: "string" }
-      - { label: "Bild", name: "image", widget: "image", required: false, default: "/placeholder.png" }
+      - { label: "Bild", name: "image", widget: "image", required: false, default: "/images/placeholder.png" }
       - { label: "Bild Text", name: "image_text", widget: "string", required: false, default: "placeholder" }
       - { label: "Content", name: "body", widget: "markdown" }
       - { label: "Tags", name: "tags", widget: "list", default: ["category"] }
@@ -32,11 +32,22 @@ collections:
     label: "Andere"
     folder: "src/other"
     create: true
-    slug: "{{titel}}"
+    slug: "{{title}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Beschreibung", name: "description", widget: "string", required: false }
-      - { label: "Bild", name: "image", widget: "image", required: false, default: "/placeholder.png" }
+      - { label: "Bild", name: "image", widget: "image", required: false, default: "/images/placeholder.png" }
       - { label: "Bild Text", name: "image_text", widget: "string", required: false, default: "placeholder" }
       - { label: "Content", name: "body", widget: "markdown" }
+      - { label: "Tags", name: "tags", widget: "list" }
+  - name: "news"
+    label: "news"
+    folder: "src/news"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{title}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Beschreibung", name: "description", widget: "string", required: true }
+      - { label: "Bild", name: "image", widget: "image", required: false, default: "/images/placeholder.png" }
+      - { label: "Bild Text", name: "image_text", widget: "string", required: false, default: "placeholder" }
       - { label: "Tags", name: "tags", widget: "list" }
