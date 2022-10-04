@@ -65,7 +65,7 @@ collections:
     fields:
       - label: FAQ
         name: faq
-        widget: object
+        widget: list
         fields:
           - { label: Question, name: question, widget: string, default: "Question" }
           - { label: Answer, name: answer, widget: string, default: "Answer" }
