@@ -106,7 +106,7 @@ article {
 .snippet {
   padding: 0.5em;
   display: grid;
-  gap: 1em;
+  gap: 0.5em;
   grid-template-areas:
     "image"
     "title"
@@ -346,4 +346,30 @@ Experimental
   background-color: black;
   color: rgb(172, 172, 172);
   padding: 1em;
+}
+/*Landing Image*/
+.landingtext {
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+  width: 100%;
+  height: 90vh;
+
+  text-align: center;
+  position: absolute;
+  padding: 2vh 0;
+  font-family: "Akaya Telivigala", cursive;
+}
+.landingtext * {
+  font-weight: bold;
+  color: var(--Pr-color2);
+}
+.landing-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.land-title {
+  font-size: clamp(2rem, 3.5vw, 3.4rem);
+  margin: 0;
 }
