@@ -30,10 +30,9 @@ collections:
           name: "galleryImages",
           summary: "{{fields.image}}",
           widget: "object",
-          fields:
-            - { label: Image, name: image, widget: image }
-            - { label: "Titel", name: "image_text", widget: "string" }
-            - { label: "Link", name: "link", widget: "string" }
+          field: { label: Image, name: image, widget: image },
+          { label: "Titel", name: "image_text", widget: "string" },
+          { label: "Link", name: "link", widget: "string" },
         }
   - name: "other"
     label: "Andere"
