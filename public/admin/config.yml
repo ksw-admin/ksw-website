@@ -25,15 +25,22 @@ collections:
       - { label: "Title", name: "title", widget: "string", required: false }
       - { label: "Content", name: "body", widget: "markdown" }
       - { label: "Tags", name: "tags", widget: "list", default: ["category"] }
-      - {
-          label: "Gallery",
-          name: "galleryImages",
-          summary: "{{fields.image}}",
-          widget: "list",
-          field: { label: Image, name: image, widget: image },
-          { label: "Titel", name: "image_text", widget: "string" },
-          { label: "Link", name: "link", widget: "string" },
-        }
+      - label: Gallery
+        name: galleryImages
+        widget: list
+        fields:
+          - { label: Image, name: image, widget: image }
+          - { label: Link, name: link, widget: string }
+          - { label: Titel, name: link_text, widget: string }
+  #      - {
+  #          label: "Gallery",
+  #          name: "galleryImages",
+  #          summary: "{{fields.image}}",
+  #          widget: "list",
+  #          field: { label: Image, name: image, widget: image },
+  #          { label: "Titel", name: "image_text", widget: "string" },
+  #          { label: "Link", name: "link", widget: "string" },
+  #        }
   - name: "other"
     label: "Andere"
     folder: "src/other"
@@ -59,12 +66,13 @@ collections:
       - { label: "Tags", name: "tags", widget: "list" }
   - label: FAQS
     name: faqs
+    create: true
     folder: "src/other/faq"
     widget: list
     fields:
       - label: FAQ
         name: faq
-        widget: object
+        widget: list
         fields:
           - { label: Question, name: question, widget: string, default: "Question" }
           - { label: Answer, name: answer, widget: string, default: "Answer" }
