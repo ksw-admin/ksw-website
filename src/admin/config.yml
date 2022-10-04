@@ -34,6 +34,8 @@ collections:
           widget: "list",
           summary: "{{fields.image}}",
           field: { label: Image, name: image, widget: image },
+          field: { label: "Titel", name: "image_text", widget: "string" } ,
+          field: { label: "Link", name: "link", widget: "string" } ,
         }
   - name: "other"
     label: "Andere"
