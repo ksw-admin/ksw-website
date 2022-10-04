@@ -22,11 +22,6 @@
         </url>
     
         <url>
-            <loc>https://staging.amperelab.ga/category/taichi/</loc>
-            <lastmod>2022-09-29T13:45:21.959Z</lastmod>
-        </url>
-    
-        <url>
             <loc>https://staging.amperelab.ga/other/sponsors/</loc>
             <lastmod>2022-09-29T16:24:07.698Z</lastmod>
         </url>
@@ -54,6 +49,11 @@
         <url>
             <loc>https://staging.amperelab.ga.</loc>
             <lastmod>2022-10-04T00:00:00.000Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://staging.amperelab.ga/category/taichi/</loc>
+            <lastmod>2022-10-04T20:38:07.373Z</lastmod>
         </url>
     
 </urlset>

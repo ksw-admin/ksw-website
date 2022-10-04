@@ -23,12 +23,16 @@ collections:
     slug: "{{title}}"
     fields:
       - { label: "Title", name: "title", widget: "string", required: false }
-      - { label: "Beschreibung", name: "description", widget: "text" }
-      - { label: "Bild", name: "image", widget: "image", required: false, default: "/images/placeholder.png" }
-      - { label: "Bild Text", name: "image_text", widget: "string", required: false, default: "placeholder" }
       - { label: "Content", name: "body", widget: "markdown" }
       - { label: "Tags", name: "tags", widget: "list", default: ["category"] }
-      - label: "Gallery" name: "galleryImages" widget: "list" summary: '{{fields.image}}' field: {label: Image, name image, widget: image}
+      - {
+          label: "Gallery",
+          name: "galleryImages",
+          widget: "list",
+          { label: Image, name: image, widget: image },
+          { label: "Titel", name: "image_text", widget: "string" },
+          { label: "Link", name: "link", widget: "string" },
+        }
   - name: "other"
     label: "Andere"
     folder: "src/other"
