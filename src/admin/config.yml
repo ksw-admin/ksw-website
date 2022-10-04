@@ -59,6 +59,7 @@ collections:
       - { label: "Tags", name: "tags", widget: "list" }
   - label: FAQS
     name: faqs
+    create: true
     folder: "src/other/faq"
     widget: list
     fields:
