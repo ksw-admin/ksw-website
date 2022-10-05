@@ -1,6 +1,13 @@
 ---
 title: Kuk Sool Won
 description: Kuk Sool Won
+galleryImages:
+  - image: images/pruefung2020.jpg
+    link: https://www.flickr.com/photos/143500996@N08/sets/72157719946848586/
+    link_text: Prüfung 2020
+  - image: images/weihnacht.jpg
+    link: https://www.flickr.com/photos/143500996@N08/sets/72157712804840162/
+    link_text: Weihnachten 2019
 ---
 <!--StartFragment-->
 
