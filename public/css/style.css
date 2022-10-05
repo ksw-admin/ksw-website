@@ -20,7 +20,9 @@ body {
   position: relative;
   min-height: 100vh;
 }
-
+main {
+  min-height: 80vh;
+}
 ::-webkit-scrollbar {
   width: 0.8rem;
 }
@@ -224,6 +226,7 @@ nav {
 }
 .nav-links-bot {
   width: 100%;
+  margin: 1em 0 0 0;
 }
 .nav-links li a,
 .nav-links-bot li a {
@@ -280,11 +283,7 @@ Experimental
   height: max(4em, 8vh);
   z-index: 3;
 }
-.botnav {
-  bottom: 0;
-  width: 100%;
-  position: absolute;
-}
+
 @media screen and (max-width: 1000px) {
   /*Hamburgermenu */
   .line {
@@ -329,7 +328,6 @@ Experimental
   }
   .nav-links-bot {
     padding: 1em 0;
-    margin: 1em 0 0 0;
     height: 100%;
     flex-flow: column;
   }
