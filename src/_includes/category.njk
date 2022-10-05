@@ -2,6 +2,20 @@
 layout: 'base.njk'
 ---
 
-<h1>{{CategoryTitle}}</h1>
-
+<h1>{{title}}</h1>
 {{content | safe}}
+
+
+<div class="galerie">
+    <h2>Galerie</h2>
+    <div class="gal-cont">
+
+{% for item in range(0,galleryImages.length ) -%}
+    <div class="gal-item">
+        <a target="__blank" href="{{galleryImages[item].link}}"><img loading="lazy" src="/{{galleryImages[item].image}}" alt="{{galleryImages[item].link_text}}" />
+            <h3>{{galleryImages[item].link_text}}</h3>
+              </a>
+            </div>
+{% endfor %}
+</div>
+</div>

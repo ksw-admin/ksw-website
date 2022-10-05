@@ -42,11 +42,6 @@
         </url>
     
         <url>
-            <loc>https://www.kuk-sool-won-griepentrog.de//category/kuksoolwon/</loc>
-            <lastmod>2022-09-29T21:55:20.400Z</lastmod>
-        </url>
-    
-        <url>
             <loc>https://www.kuk-sool-won-griepentrog.de/.</loc>
             <lastmod>2022-10-04T00:00:00.000Z</lastmod>
         </url>
@@ -59,6 +54,11 @@
         <url>
             <loc>https://www.kuk-sool-won-griepentrog.de//404.html</loc>
             <lastmod>2022-10-05T17:40:54.349Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://www.kuk-sool-won-griepentrog.de//category/kuksoolwon/</loc>
+            <lastmod>2022-10-05T18:29:15.511Z</lastmod>
         </url>
     
 </urlset>
