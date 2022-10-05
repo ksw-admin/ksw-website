@@ -2,63 +2,58 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     
         <url>
-            <loc>https://www.kuk-sool-won-griepentrog.de//articles/2022-09-29-/</loc>
+            <loc>https://www.kuk-sool-won-griepentrog.de/articles/2022-09-29-/</loc>
             <lastmod>2022-09-29T00:00:00.000Z</lastmod>
         </url>
     
         <url>
-            <loc>https://www.kuk-sool-won-griepentrog.de//</loc>
+            <loc>https://www.kuk-sool-won-griepentrog.de/</loc>
             <lastmod>2022-09-29T13:14:47.454Z</lastmod>
         </url>
     
         <url>
-            <loc>https://www.kuk-sool-won-griepentrog.de//articles/</loc>
+            <loc>https://www.kuk-sool-won-griepentrog.de/articles/</loc>
             <lastmod>2022-09-29T13:36:36.761Z</lastmod>
         </url>
     
         <url>
-            <loc>https://www.kuk-sool-won-griepentrog.de//category/</loc>
+            <loc>https://www.kuk-sool-won-griepentrog.de/category/</loc>
             <lastmod>2022-09-29T13:36:42.975Z</lastmod>
         </url>
     
         <url>
-            <loc>https://www.kuk-sool-won-griepentrog.de//other/sponsors/</loc>
+            <loc>https://www.kuk-sool-won-griepentrog.de/other/sponsors/</loc>
             <lastmod>2022-09-29T16:24:07.698Z</lastmod>
         </url>
     
         <url>
-            <loc>https://www.kuk-sool-won-griepentrog.de//other/datenschutz/</loc>
-            <lastmod>2022-09-29T16:24:22.507Z</lastmod>
-        </url>
-    
-        <url>
-            <loc>https://www.kuk-sool-won-griepentrog.de//other/impressum/</loc>
-            <lastmod>2022-09-29T16:24:43.881Z</lastmod>
-        </url>
-    
-        <url>
-            <loc>https://www.kuk-sool-won-griepentrog.de//other/contact/</loc>
+            <loc>https://www.kuk-sool-won-griepentrog.de/other/contact/</loc>
             <lastmod>2022-09-29T17:20:08.427Z</lastmod>
         </url>
     
         <url>
-            <loc>https://www.kuk-sool-won-griepentrog.de/.</loc>
+            <loc>https://www.kuk-sool-won-griepentrog.de.</loc>
             <lastmod>2022-10-04T00:00:00.000Z</lastmod>
         </url>
     
         <url>
-            <loc>https://www.kuk-sool-won-griepentrog.de//category/taichi/</loc>
+            <loc>https://www.kuk-sool-won-griepentrog.de/category/taichi/</loc>
             <lastmod>2022-10-04T20:38:07.373Z</lastmod>
         </url>
     
         <url>
-            <loc>https://www.kuk-sool-won-griepentrog.de//404.html</loc>
-            <lastmod>2022-10-05T17:40:54.349Z</lastmod>
+            <loc>https://www.kuk-sool-won-griepentrog.de/category/kuksoolwon/</loc>
+            <lastmod>2022-10-05T18:29:15.511Z</lastmod>
         </url>
     
         <url>
-            <loc>https://www.kuk-sool-won-griepentrog.de//category/kuksoolwon/</loc>
-            <lastmod>2022-10-05T18:29:15.511Z</lastmod>
+            <loc>https://www.kuk-sool-won-griepentrog.de/other/datenschutz/</loc>
+            <lastmod>2022-10-05T19:15:58.925Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://www.kuk-sool-won-griepentrog.de/other/impressum/</loc>
+            <lastmod>2022-10-05T19:15:58.925Z</lastmod>
         </url>
     
 </urlset>

@@ -10,11 +10,14 @@
             <div class="line"></div>
           </div>
           <ul class="nav-links">
-            <li><a class="nav-link" href="/">Home</a></li>
-            <li><a class="nav-link" href="/category/kuksoolwon">Kuk Sool Won</a></li>
-            <li><a class="nav-link" href="/category/taichi">Tai Chi</a></li>
-            <li><a class="nav-link" href="/articles/">Blog</a></li>
-            <li><a class="nav-link" href="/other/contact">Kontakt</a></li>
+            <li><a class="nav-link {% if site.url == page.url %}active{% endif %}" href="/">Home</a></li>
+            <li><a class="nav-link {% if '/kuksoolwon' in page.url %}active{% endif %}" href="/category/kuksoolwon">Kuk Sool Won</a></li>
+            <li><a class="nav-link {% if '/taichi' in page.url %}active{% endif %}
+" href="/category/taichi">Tai Chi</a></li>
+            <li><a class="nav-link {% if '/articles' in page.url %}active{% endif %}
+" href="/articles/">Blog</a></li>
+            <li><a class="nav-link {% if '/contact' in page.url %}active{% endif %}
+" href="/other/contact">Kontakt</a></li>
           </ul>
         </nav>
       </div>

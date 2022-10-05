@@ -239,7 +239,7 @@ nav {
   color: var(--Pr-color);
   transition: ease-in-out 300ms;
 }
-.activ {
+.active {
   border-color: var(--Pr-color);
 }
 nav li {
