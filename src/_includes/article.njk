@@ -1,7 +1,16 @@
 ---
 layout: 'base.njk'
 ---
-<h1>{{title}}</h1>
-<p>{{description}}</p>
+<article>
+    <header>
+        <h1>{{title}}</h1>
+        <p>{{description}}</p>
+    </header>
+    <main>
 <img src="{{image}}" alt="{{image_text}}">
 {{content | safe}}
+
+    </main>
+
+</article>
+
