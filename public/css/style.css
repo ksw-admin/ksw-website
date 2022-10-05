@@ -23,6 +23,10 @@ body {
 main {
   min-height: 80vh;
 }
+.centered {
+  margin: 0 auto;
+  text-align: center;
+}
 ::-webkit-scrollbar {
   width: 0.8rem;
 }
