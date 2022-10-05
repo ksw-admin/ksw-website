@@ -23,6 +23,16 @@ body {
 main {
   min-height: 80vh;
 }
+.content {
+  margin: 0 2rem;
+}
+@media (min-width: 130ch) {
+  .content {
+    max-width: 100ch;
+    margin: 0 auto;
+  }
+}
+
 .centered {
   margin: 0 auto;
   text-align: center;
@@ -81,6 +91,9 @@ main {
   to {
     transform: rotate(360deg);
   }
+}
+ul {
+  padding-left: 0;
 }
 /*Articel Snippet*/
 
