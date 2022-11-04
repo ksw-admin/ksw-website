@@ -45,7 +45,7 @@ collections:
       - { label: "Content", name: "body", widget: "markdown" }
       - { label: "Tags", name: "tags", widget: "list" }
   - name: "news"
-    label: "news"
+    label: "News"
     folder: "src/news"
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{title}}"
@@ -55,6 +55,18 @@ collections:
       - { label: "Bild", name: "image", widget: "image", required: false, default: "/images/placeholder.png" }
       - { label: "Bild Text", name: "image_text", widget: "string", required: false, default: "placeholder" }
       - { label: "Tags", name: "tags", widget: "list" }
+  - name: "sponsoren"
+    label: "Sponsoren"
+    folder: "src/sponsor"
+    create: true
+    slug: "{{name}}"
+    fields:
+      - { label: "Name", name: "name", widget: "string", required: true }
+      - { label: "Adresse", name: "adresse_1", widget: "string", required: true }
+      - { label: "PLZ Ort", name: "adresse_2", widget: "string", required: true }
+      - { label: "Bild", name: "image", widget: "image", required: false }
+      - { label: "Bild Text", name: "image_text", widget: "string", required: false }
+      - { label: "Tags", name: "tags", widget: "list", default: "sponsor" }
 #  - label: FAQS
 #    name: faqs
 #    create: true
