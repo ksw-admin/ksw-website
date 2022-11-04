@@ -1,0 +1,10 @@
+---
+title: Sponsoren
+tags: footer
+layout: base.njk
+---
+<div class="content">
+{%- for post in collections.sponsor-%}
+{% include "sponsor_snippet.njk" %}  
+{%-endfor-%}
+</div>
