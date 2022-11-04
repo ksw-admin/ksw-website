@@ -282,9 +282,6 @@ Experimental
   */
   border-bottom: 0.125em solid transparent;
 }
-*/ header {
-  height: max(5em, 10vh);
-}
 .logo {
   position: absolute;
   display: flex;
