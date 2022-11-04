@@ -64,6 +64,8 @@ collections:
       - { label: "Name", name: "name", widget: "string", required: true }
       - { label: "Adresse", name: "adresse_1", widget: "string", required: true }
       - { label: "PLZ Ort", name: "adresse_2", widget: "string", required: true }
+      - { label: "Telefon", name: "telefon", widget: "string", required: true }
+      - { label: "Website", name: "link", widget: "string", required: false }
       - { label: "Bild", name: "image", widget: "image", required: false }
       - { label: "Bild Text", name: "image_text", widget: "string", required: false }
       - { label: "Tags", name: "tags", widget: "list", default: "sponsor" }
