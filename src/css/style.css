@@ -410,3 +410,28 @@ Experimental
   color: black;
   text-decoration: none;
 }
+/* Sponsor Cards*/
+.sponsoren ul {
+  list-style: none;
+}
+.spon-title {
+  font-size: 3em;
+  width: 100%;
+  text-align: center;
+}
+.splitter {
+  justify-content: space-around;
+  align-items: center;
+}
+.splitter-div {
+  flex-shrink: 0;
+  flex-basis: 25%;
+  height: auto;
+  margin: 2em 2em;
+  padding: 1em;
+  background: rgb(231, 231, 231);
+  border-radius: 20px;
+}
+.splitter-div img {
+  width: 100%;
+}
