@@ -1,16 +1,14 @@
 ---
-layout: 'base.njk'
+layout: "base.njk"
 ---
+
 <article>
-    <header>
-        <h1 class="articel__title">{{title}}</h1>
-        <p>{{description}}</p>
-    </header>
-    <main>
-<img src="{{image}}" alt="{{image_text}}" class="articel__image">
-{{content | safe}}
-
-    </main>
-
+  <header>
+    <h1 class="articel__title">{{ title }}</h1>
+    <p>{{ description }}</p>
+  </header>
+  <main>
+    <img src="/{{ image }}" alt="{{ image_text }}" class="articel__image" />
+    {{ content | safe }}
+  </main>
 </article>
-

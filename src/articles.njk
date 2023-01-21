@@ -1,13 +1,11 @@
 ---
 title: Artikel
-layout: 'base.njk'
+layout: "base.njk"
 ---
-<section class="articel__snippets">
-<h2 class="articel__list__title">Alle Artikel</h2>
-<ul role="list" class="articles__list flow">
 
-{%- for post in collections.articles-%}
-{% include "article_snippet.njk" %}  
-{%-endfor-%}
-</ul>
+<section class="articel__snippets">
+  <h2 class="articel__list__title">Alle Artikel</h2>
+  <ul role="list" class="articles__list flow">
+    {%- for post in collections.articles-%} {% include "article_snippet.njk" %} {%-endfor-%}
+  </ul>
 </section>

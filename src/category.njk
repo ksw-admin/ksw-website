@@ -1,18 +1,13 @@
 ---
-layout: 'base.njk'
+layout: "base.njk"
 title: Kategorien
-
 ---
-<h1>{{title}}</h1>
+
+<h1>{{ title }}</h1>
 <ul>
-    {%-for category in collections.category-%}
-        <li>
-            <a href="{{category.url}}">{{category.data.title}}
-</a>
-        </li>
-    {%- endfor -%}
-
+  {%-for category in collections.category-%}
+  <li>
+    <a href="{{ category.url }}">{{ category.data.title }} </a>
+  </li>
+  {%- endfor -%}
 </ul>
-
-
-
