@@ -140,7 +140,7 @@ ul {
 }
 .grid-1-1 {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(25rem, 1fr));
+  grid-template-columns: 1fr 1fr;
   gap: 2rem;
 }
 .grid-auto {
@@ -148,9 +148,11 @@ ul {
   grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
   gap: 2rem;
 }
-@media screen and (max-width: 25rem) {
+@media screen and (max-width: 1000px) {
   .grid-1-1 {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
   }
 }
 /*Header and Navigations*/
@@ -422,7 +424,7 @@ article {
 }
 .masterimg {
   max-width: 100%;
-  align-self: end;
+  align-self: center;
 }
 /*Gallery*/
 .gal-cont {
