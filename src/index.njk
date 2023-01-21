@@ -45,8 +45,7 @@ layout: "base.njk"
   <section class="articel__snippets">
     <h2 class="articel__list__title">Aktuelles</h2>
     <ul role="list" class="articles__list flow">
-      {%- for post in collections.news-%} {% include "article_snippet.njk" %} {%-endfor-%} {%- for post in
-      collections.featured-%} {% include "article_snippet.njk" %} {%-endfor-%}
+      {%- for post in collections.featured-%} {% include "article_snippet.njk" %} {%-endfor-%}
     </ul>
   </section>
   {%if collections.featured == null %}
