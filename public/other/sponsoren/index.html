@@ -48,16 +48,68 @@
       </div>
 </header>
     <main>
-    <div class="content"><div class="splitter-div">
-              <img src="" loading="lazy" alt="" />
-              <ul>
-                <li>menges</li>
-                <li></li>
-                <li></li>
-                <li>Telefon 123445</li>
-                <li><a href="https://" target="_blank"></a></li>
-              </ul>
-</div></div>
+    
+<section class="landing">
+  <div class="landSlide">
+    <div class="cont"><img src="/images/IMG_3056.jpeg" alt="" /></div>
+  </div>
+</section>
+<div class="content">
+  <h1 class="sponsoren-title">Unser Sponsoren</h1>
+  <div class="grid-auto"><div class="sponsor">
+  
+  <h2>Testsponsor</h2>
+  
+  <ul>
+    <li>Testsponsor</li>
+    
+    <li>testraße 1</li>
+     
+    <li>1111 testcloud</li>
+     
+    <li>123445</li>
+     
+    <li>
+      <a href="https://example.com" target="_blank">example.com</a>
+    </li>
+    
+  </ul>
+</div>
+<div class="sponsor">
+  
+  <img src="/images/SP_Mollin.jpg" loading="lazy" alt="Martin Mollins Kartoffelbox" />
+  
+  <ul>
+    <li>Martin Mollin</li>
+        
+    <li>0157 78900422</li>
+     
+    <li>
+      <a href="https://www.mollins-kartoffelbox.de" target="_blank">www.mollins-kartoffelbox.de</a>
+    </li>
+    
+  </ul>
+</div>
+</div>
+</div>
+<!--Slider-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $(".landSlide").slick({
+      autoplay: true,
+      autoplaySpeed: 3500,
+      dots: true,
+      arrows: false,
+      slidesToShow: 1,
+      adaptiveHeight: true,
+    });
+  });
+</script>
+<!--Slider End-->
 
     </main>
     <footer>

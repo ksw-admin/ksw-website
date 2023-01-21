@@ -1,7 +1,18 @@
 ---
 title: Tai Chi
 description: Taichi
+tags: taichi
+difDays: true
+trainingstage:
+  - tag: Dienstag
+  - tag2: Donnerstag
+zeiten:
+  - zeit: 18:30 - 19:30 Uhr
+    alter:
+  - zeit: 19:15 - 20:15 Uhr
+    alter:
 ---
+
 <!--StartFragment-->
 
 Tai Chi-Qi Gong bedeutet Körper und Geist in Einklang zu bringen.

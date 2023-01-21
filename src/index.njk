@@ -3,37 +3,36 @@ title: Homepage
 layout: 'base.njk'
 ---
 <section class="landing" style="height: 90vh">
-        <div class="landingtext">
-          <h1 class="land-title">Kampfkunst Academy - Peter Griepentrog</h1>
-          <h2 class="land-title">Kuk Sool Won ~ Tai Chi ~ Qi Gong</h2>
-        </div>
-        <div class="landing-img">
-          <picture>
-            <source srcset="images/1.webp" />
-            <img src="images/1.jpg" class="landing-img" alt="Gruppenbild Kuk Sool Won Urkundenübergabe" />
-          </picture>
-        </div>
-      </section>
+  <div class="landingtext">
+    <h1 class="land-title">Kampfkunst Academy - Peter Griepentrog</h1>
+      <h2 class="land-title">Kuk Sool Won ~ Tai Chi ~ Qi Gong</h2>
+  </div>
+  <div class="landing-img">
+    <picture>
+      <source srcset="images/1.webp" />
+      <img src="images/1.jpg" class="landing-img" alt="Gruppenbild Kuk Sool Won Urkundenübergabe" />
+    </picture>
+  </div>
+</section>
 
 
 <div class="content">
-<section class="articel__snippets">
-<h2 class="articel__list__title">Aktuelles</h2>
-<ul role="list" class="articles__list flow">
-{%- for post in collections.news-%}
-{% include "article_snippet.njk" %}  
-{%-endfor-%}
-{%- for post in collections.featured-%}
-{% include "article_snippet.njk" %}  
-{%-endfor-%}
-</ul>
-</section>
-{%if collections.featured == null %}
-<p>Hier gibt es wohl nichts zu sehen</p>
-<p>Schau dir doch andere Artikel an</p>
-{%endif%}
-<div class="centered">
-<a href="/articles" class="btn centered">Alle Artikel</a>
-
-</div>
+  <section class="articel__snippets">
+    <h2 class="articel__list__title">Aktuelles</h2>
+    <ul role="list" class="articles__list flow">
+      {%- for post in collections.news-%}
+        {% include "article_snippet.njk" %}  
+      {%-endfor-%}
+      {%- for post in collections.featured-%}
+        {% include "article_snippet.njk" %}  
+      {%-endfor-%}
+    </ul>
+  </section>
+  {%if collections.featured == null %}
+  <p>Hier gibt es wohl nichts zu sehen</p>
+  <p>Schau dir doch andere Artikel an</p>
+  {%endif%}
+  <div class="centered">
+  <a href="/articles" class="btn centered">Alle Artikel</a>
+  </div>
 </div>

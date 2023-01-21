@@ -1,22 +1,50 @@
 ---
-layout: 'base.njk'
+layout: "base.njk"
 ---
+
 <div class="content">
-<h1>{{title}}</h1>
-{{content | safe}}
+  <div class="grid-1-1">
+    <div>
+      <h1>{{ title }}</h1>
+      {{ content | safe }}
+    </div>
+    <div>
+      <h2>Trainingszeiten</h2>
+      {% if difDays %} {% else %}
+      <h3>{{ trainingstage[0].tag }}</h3>
 
+      {% endif %}
+      <div class="lists row">
+        <ul class="uls">
+          {% if difDays%}
+          <h3>{{ trainingstage[0].tag }}</h3>
+          <li>{{ zeiten[0].zeit }}</li>
+          <h3>{{ trainingstage[1].tag2 }}</h3>
+          <li>{{ zeiten[0].zeit }}</li>
+          {% else %} {% for item in range(0,zeiten.length ) -%}
+          <li>{{ zeiten[item].zeit }}</li>
+          {% endfor %} {% endif %}
+        </ul>
+        <ul class="uls">
+          {% for item in range(0,zeiten.length ) -%}
+          <li>{{ zeiten[item].alter }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
 
-<div class="galerie">
+  <div class="galerie">
     <h2>Galerie</h2>
     <div class="gal-cont">
-
-{% for item in range(0,galleryImages.length ) -%}
-    <div class="gal-item">
-        <a target="__blank" href="{{galleryImages[item].link}}"><img loading="lazy" src="/{{galleryImages[item].image}}" alt="{{galleryImages[item].link_text}}" />
-            <h3>{{galleryImages[item].link_text}}</h3>
-              </a>
-            </div>
-{% endfor %}
-</div>
-</div>
+      {% for item in range(0,galleryImages.length ) -%}
+      <div class="gal-item">
+        <a target="__blank" href="{{ galleryImages[item].link }}"
+          ><img loading="lazy" src="/{{ galleryImages[item].image }}" alt="{{ galleryImages[item].link_text }}" />
+          <h3>{{ galleryImages[item].link_text }}</h3>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
 </div>

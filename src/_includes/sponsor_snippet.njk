@@ -1,10 +1,21 @@
-<div class="splitter-div">
-              <img src="/{{post.data.image}}" loading="lazy" alt="{{post.data.image_text}}" />
-              <ul>
-                <li>{{post.data.name}}</li>
-                <li>{{post.data.adresse_1}}</li>
-                <li>{{post.data.adresse_2}}</li>
-                <li>Telefon {{post.data.telefon}}</li>
-                <li><a href="https://{{post.data.link}}" target="_blank">{{post.data.link}}</a></li>
-              </ul>
+<div class="sponsor">
+  {% if post.data.image == "/" %}
+  <h2>{{ post.data.name }}</h2>
+  {% else %}
+  <img src="/{{ post.data.image }}" loading="lazy" alt="{{ post.data.image_text }}" />
+  {% endif %}
+  <ul>
+    <li>{{ post.data.name }}</li>
+    {% if post.data.adresse_1 == "" %} {% else %}
+    <li>{{ post.data.adresse_1 }}</li>
+    {% endif %} {% if post.data.adresse_2 == "" %} {% else %}
+    <li>{{ post.data.adresse_2 }}</li>
+    {% endif %} {% if post.data.telefon == "" %} {% else %}
+    <li>{{ post.data.telefon }}</li>
+    {% endif %} {% if post.data.link == "" %} {% else %}
+    <li>
+      <a href="https://{{ post.data.link }}" target="_blank">{{ post.data.link }}</a>
+    </li>
+    {% endif %}
+  </ul>
 </div>

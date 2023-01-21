@@ -2,6 +2,19 @@
 title: Kuk Sool Won
 description: Kuk Sool Won
 tags: ksw
+trainingstage:
+  - tag: Montag und Freitag
+zeiten:
+  - zeit: 16:00 - 17:00 Uhr
+    alter: 4 - 6 Jahre
+  - zeit: 17:00 - 18:00 Uhr
+    alter: 7 - 8 Jahre
+  - zeit: 18:00 - 19:00 Uhr
+    alter: 9 - 11 Jahre
+  - zeit: 19:00 - 20:00 Uhr
+    alter: 12 - 14 Jahre
+  - zeit: 20:00 - 21:30 Uhr
+    alter: 15 - 80 Jahre
 galleryImages:
   - image: images/pruefung2020.jpg
     link: https://www.flickr.com/photos/143500996@N08/sets/72157719946848586/
