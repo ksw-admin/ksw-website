@@ -5,4 +5,6 @@ description: Großmeister Salvatore Tiso, 7. Dan und Meister Peter Griepentrog,
   schwarz) ab. Herzlichen Glückwunsch zur bestandenen Prüfung.
 image: images/braunschwarz22.jpg
 image_text: Braun-Schwarz Prüfung bestanden
+tags:
+  - featured
 ---
