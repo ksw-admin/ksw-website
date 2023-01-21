@@ -8,6 +8,5 @@ description: Prüfer waren der Grand Master Salvatore Tiso 7. Dan und Senior
 image: images/pruefung2020.jpg
 image_text: placeholder
 tags:
-  - post
-  - featured
+  - news
 ---
