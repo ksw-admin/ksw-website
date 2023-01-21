@@ -6,4 +6,6 @@ description: Die I.H.H.H.F Budo Familie und der World Executive Director
   Bestanden 4.Dan im IHHHF Kuk Sool Won System.
 image: images/uebergabe.jpeg
 image_text: Urkunden übergabe des 4. Dan
+tags:
+  - featured
 ---
