@@ -7,6 +7,7 @@ image: images/way-of-warrior2.jpeg
 image_text: Bild vom Way of Warrior Seminar
 tags:
   - articles
+  - featured
 ---
 <!--StartFragment-->
 
