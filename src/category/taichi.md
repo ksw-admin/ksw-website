@@ -8,9 +8,19 @@ trainingstage:
   - tag2: Donnerstag
 zeiten:
   - zeit: 18:30 - 19:30 Uhr
-    alter:
+    alter: null
   - zeit: 19:15 - 20:15 Uhr
-    alter:
+    alter: null
+galleryImages:
+  - image: images/DuBwT.jpg
+    link: https://www.flickr.com/gp/143500996@N08/un9hHn
+    link_text: DU bewegt sich 2016
+  - image: images/Gem17T.jpg
+    link: https://www.flickr.com/gp/143500996@N08/yf6273
+    link_text: Gemeindefest 2017
+  - image: images/Ge16T.jpg
+    link: https://www.flickr.com/gp/143500996@N08/t3e5X5
+    link_text: Gemeindefest 2016
 ---
 
 <!--StartFragment-->
