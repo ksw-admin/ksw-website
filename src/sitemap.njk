@@ -1,13 +1,24 @@
 ---
 permalink: /sitemap.xml
 eleventyExcludeFromCollections: true
+date: 2023-01-22T00:00:00.000Z
 ---
 <?xml version="1.0" encoding="utf-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    {% for page in collections.all %}
-        <url>
-            <loc>{{ site.url }}{{ page.url | url }}</loc>
-            <lastmod>{{ page.date.toISOString() }}</lastmod>
-        </url>
-    {% endfor %}
+  <url>
+    <loc>{{ site.url }}</loc>
+    <lastmod>{{ date.toISOString() }}</lastmod>
+  </url>{% for page in collections.category %}
+  <url>
+    <loc>{{ site.url }}{{ page.url | url }}</loc>
+    <lastmod>{{ page.date.toISOString() }}</lastmod>
+  </url>{% endfor %}{% for page in collections.articles %}
+  <url>
+    <loc>{{ site.url }}{{ page.url | url }}</loc>
+    <lastmod>{{ page.date.toISOString() }}</lastmod>
+  </url>{% endfor %}{% for page in collections.other %}
+  <url>
+    <loc>{{ site.url }}{{ page.url | url }}</loc>
+    <lastmod>{{ page.date.toISOString() }}</lastmod>
+  </url>{% endfor %}
 </urlset>

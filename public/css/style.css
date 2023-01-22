@@ -116,7 +116,7 @@ li {
 }
 @media (min-width: 130ch) {
   .content {
-    max-width: 100ch;
+    max-width: 150ch;
     margin: 0 auto;
   }
 }

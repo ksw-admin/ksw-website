@@ -1,3 +1,4 @@
 {
-  "layout": "generic.njk"
+  "layout": "generic.njk",
+  "tags": "other"
 }

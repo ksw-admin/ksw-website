@@ -1,5 +1,6 @@
-User-Agent: *
+User-agent: * 
 Allow: /
-Disallow: /images/placeholder.png
-
+Disallow: /images/placeholder.png 
 Sitemap: https://www.kuk-sool-won-griepentrog.de/sitemap.xml
+
+
