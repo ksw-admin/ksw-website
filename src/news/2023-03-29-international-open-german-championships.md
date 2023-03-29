@@ -10,7 +10,7 @@ description: >
 
   Meister Peter Griepentrog
 image: images/img_8331.jpg
-image_text: placeholder
+image_text: International Open German Championships
 tags:
   - featured
 ---
