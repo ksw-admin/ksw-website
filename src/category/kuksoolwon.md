@@ -16,9 +16,21 @@ zeiten:
   - zeit: 20:00 - 21:30 Uhr
     alter: 15 - 80 Jahre
 galleryImages:
+  - link_text: "Gürtelprüfung 16.06.2023 "
+    link: https://www.flickr.com/gp/143500996@N08/ZACcY5MJ8S
+    image: images/52979902382_d367ac2c76_c.jpg
+  - link_text: World Open Material Arts Campionships 2022
+    link: https://www.flickr.com/gp/143500996@N08/57HS4q104b
+    image: images/52338899388_bc926d3bcf_c.jpg
+  - image: images/52292773976_c6a07b2992_c.jpg
+    link_text: Gürtelübergabe 17.08.2022
+    link: https://www.flickr.com/gp/143500996@N08/07524MQ326
+  - image: images/52034281126_9904dc59fa_h.jpg
+    link: https://www.flickr.com/gp/143500996@N08/bZ5R60369A
+    link_text: 1.DAN - 27.04.2022
   - image: images/pruefung2020.jpg
     link: https://www.flickr.com/photos/143500996@N08/sets/72157719946848586/
-    link_text: Prüfung 2020
+    link_text: Prüfung 2021
   - image: images/weihnacht.jpg
     link: https://www.flickr.com/photos/143500996@N08/sets/72157712804840162/
     link_text: Weihnachten 2019
