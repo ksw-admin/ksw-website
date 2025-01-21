@@ -4,11 +4,6 @@ tags: footer
 layout: base.njk
 ---
 
-<section class="landing">
-  <div class="landSlide">
-    <div class="cont"><img src="/images/IMG_3056.jpeg" alt="" /></div>
-  </div>
-</section>
 <div class="content">
   <h1 class="sponsoren-title">Unser Sponsoren</h1>
   <div class="grid-auto">{%- for post in collections.sponsor-%} {% include "sponsor_snippet.njk" %} {%-endfor-%}</div>
