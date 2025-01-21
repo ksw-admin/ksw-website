@@ -478,6 +478,7 @@ article {
   font-size: clamp(1.5rem, 5vw, 3rem);
 }
 .sponsor img {
+  width: 100%;
   max-width: 100%;
   border-radius: 1rem;
 }
