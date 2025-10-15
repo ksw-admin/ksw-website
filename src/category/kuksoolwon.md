@@ -16,6 +16,9 @@ zeiten:
   - zeit: 20:00 - 21:30 Uhr
     alter: 15 - 80 Jahre
 galleryImages:
+  - image: images/gürtelprüfung-22032024.jpg
+    link_text: Kuk Sool Won Gürtelprüfung 22.03.2024
+    link: https://www.flickr.com/gp/143500996@N08/DM5T2G9XWP
   - link_text: "Gürtelprüfung 16.06.2023 "
     link: https://www.flickr.com/gp/143500996@N08/ZACcY5MJ8S
     image: images/52979902382_d367ac2c76_c.jpg
@@ -127,9 +130,6 @@ galleryImages:
   - link: https://www.flickr.com/gp/143500996@N08/Z3Kz5H
     image: images/Gem14.jpg
     link_text: Gemeindefest 2014
-  - image: images/gürtelprüfung-22032024.jpg
-    link_text: Kuk Sool Won Gürtelprüfung 22.03.2024
-    link: https://www.flickr.com/gp/143500996@N08/DM5T2G9XWP
 ---
 
 Kuk Sool Won wurde in Korea entwickelt und ist eine in Deutschland noch nicht sehr verbreitete Kampfsportart. Kuk Sool Won bedeutet Förderung des Charakters und des Bewusstseins, Beruhigung der Nerven, Beherrschen von Geist und Willen, Entwicklung der inneren Kräfte, Erhaltung der Energie, Aktivierung der Muskeln, Akupressur, chiropraktische Therapie und körperliche Leistungsfähigkeit.
