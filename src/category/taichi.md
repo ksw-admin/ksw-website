@@ -12,6 +12,9 @@ zeiten:
   - zeit: 19:15 - 20:15 Uhr
     alter: null
 galleryImages:
+  - link_text: Duisburg bewegt sich-Tai Chi - 2024
+    link: https://www.flickr.com/gp/143500996@N08/Qeqm9tA2j4
+    image: images/53995613852_fecc199914_w.jpg
   - image: images/DuBwT.jpg
     link: https://www.flickr.com/gp/143500996@N08/un9hHn
     link_text: DU bewegt sich 2016
