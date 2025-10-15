@@ -16,6 +16,9 @@ zeiten:
   - zeit: 20:00 - 21:30 Uhr
     alter: 15 - 80 Jahre
 galleryImages:
+  - image: images/53995658272_2d2d9b5826_w.jpg
+    link_text: Duisburg bewegt sich-Kuk Sool Won -2024
+    link: https://www.flickr.com/gp/143500996@N08/4h2H9vc545
   - image: images/gürtelprüfung-22032024.jpg
     link_text: Kuk Sool Won Gürtelprüfung 22.03.2024
     link: https://www.flickr.com/gp/143500996@N08/DM5T2G9XWP
