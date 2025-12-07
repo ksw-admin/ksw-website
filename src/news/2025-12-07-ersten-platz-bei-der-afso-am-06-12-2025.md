@@ -6,4 +6,6 @@ description: |-
   Peter Griepentrog gratulierte seiner Schülerin.
 image: images/whatsapp-image-2025-12-07-at-13.54.28.jpeg
 image_text: placeholder
+tags:
+  - featured
 ---
