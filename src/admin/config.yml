@@ -12,8 +12,20 @@ collections:
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Beschreibung", name: "description", widget: "text" }
-      - { label: "Bild", name: "image", widget: "image", required: false, default: "/images/placeholder.png" }
-      - { label: "Bild Text", name: "image_text", widget: "string", required: false, default: "placeholder" }
+      - {
+          label: "Bild",
+          name: "image",
+          widget: "image",
+          required: false,
+          default: "/images/placeholder.png",
+        }
+      - {
+          label: "Bild Text",
+          name: "image_text",
+          widget: "string",
+          required: false,
+          default: "placeholder",
+        }
       - { label: "Content", name: "body", widget: "markdown" }
       - { label: "Tags", name: "tags", widget: "list", default: ["articles"] }
   - name: "category"
@@ -23,8 +35,46 @@ collections:
     slug: "{{title}}"
     fields:
       - { label: "Title", name: "title", widget: "string", required: false }
+      - {
+          label: "Beschreibung",
+          name: "description",
+          widget: "text",
+          required: false,
+        }
       - { label: "Content", name: "body", widget: "markdown" }
       - { label: "Tags", name: "tags", widget: "list", default: ["category"] }
+      - label: "Trainingszeiten"
+        name: "schedule"
+        widget: list
+        required: false
+        summary: "{{fields.day}} – {{fields.time}}"
+        fields:
+          - {
+              label: "Tag",
+              name: "day",
+              widget: "string",
+              required: true,
+              hint: "z.B. Dienstag",
+            }
+          - {
+              label: "Zeit",
+              name: "time",
+              widget: "string",
+              required: true,
+              hint: "z.B. 18:30 - 19:30 Uhr",
+            }
+          - {
+              label: "Alter",
+              name: "age",
+              widget: "string",
+              required: false,
+              hint: "Optional, z.B. 7 - 8 Jahre",
+            }
+      - label: "Trainingshalle"
+        name: "address"
+        widget: list
+        required: false
+        field: { label: "Adresszeile", name: "line", widget: "string" }
       - label: Gallery
         name: galleryImages
         widget: list
@@ -32,18 +82,87 @@ collections:
           - { label: Image, name: image, widget: image }
           - { label: Link, name: link, widget: string }
           - { label: Titel, name: link_text, widget: string }
-  - name: "other"
-    label: "Andere"
-    folder: "src/other"
-    create: true
-    slug: "{{title}}"
-    fields:
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Beschreibung", name: "description", widget: "text", required: false }
-      - { label: "Bild", name: "image", widget: "image", required: false, default: "/images/placeholder.png" }
-      - { label: "Bild Text", name: "image_text", widget: "string", required: false, default: "placeholder" }
-      - { label: "Content", name: "body", widget: "markdown" }
-      - { label: "Tags", name: "tags", widget: "list" }
+  - name: "pages"
+    label: "Seiten"
+    files:
+      - label: "Kontakt"
+        name: "contact"
+        file: "src/other/contact.njk"
+        fields:
+          - {
+              label: "Layout",
+              name: "layout",
+              widget: "hidden",
+              default: "base.njk",
+            }
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Intro", name: "intro", widget: "string" }
+          - { label: "Intro Zusatz", name: "intro_followup", widget: "string" }
+          - { label: "E-Mail", name: "email", widget: "string" }
+          - { label: "Kontaktperson", name: "contact_name", widget: "string" }
+          - label: "Telefon"
+            name: "phones"
+            widget: list
+            fields:
+              - {
+                  label: "Label",
+                  name: "label",
+                  widget: "string",
+                  hint: "z.B. Tel.:",
+                }
+              - { label: "Nummer", name: "value", widget: "string" }
+          - {
+              label: "Uberschrift Adresse",
+              name: "address_title",
+              widget: "string",
+              required: false,
+              default: "Trainingshalle",
+            }
+          - label: "Trainingshalle"
+            name: "address"
+            widget: list
+            required: false
+            field: { label: "Adresszeile", name: "line", widget: "string" }
+          - {
+              label: "Uberschrift Karte",
+              name: "map_title",
+              widget: "string",
+              required: false,
+              default: "Karte",
+            }
+          - {
+              label: "Karten-URL (Embed)",
+              name: "map_embed_url",
+              widget: "string",
+            }
+          - {
+              label: "Kartenbreite",
+              name: "map_width",
+              widget: "string",
+              required: false,
+              default: "800",
+            }
+          - {
+              label: "Kartenhohe",
+              name: "map_height",
+              widget: "string",
+              required: false,
+              default: "600",
+            }
+      - label: "Impressum"
+        name: "impressum"
+        file: "src/other/impressum.md"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Tags", name: "tags", widget: "hidden", default: "footer" }
+          - { label: "Content", name: "body", widget: "markdown" }
+      - label: "Datenschutz"
+        name: "datenschutz"
+        file: "src/other/datenschutz.md"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Tags", name: "tags", widget: "hidden", default: "footer" }
+          - { label: "Content", name: "body", widget: "markdown" }
   - name: "news"
     label: "News"
     folder: "src/news"
@@ -51,9 +170,26 @@ collections:
     slug: "{{year}}-{{month}}-{{day}}-{{title}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
-      - { label: "Beschreibung", name: "description", widget: "text", required: true }
-      - { label: "Bild", name: "image", widget: "image", required: false, default: "/images/placeholder.png" }
-      - { label: "Bild Text", name: "image_text", widget: "string", required: false, default: "placeholder" }
+      - {
+          label: "Beschreibung",
+          name: "description",
+          widget: "text",
+          required: true,
+        }
+      - {
+          label: "Bild",
+          name: "image",
+          widget: "image",
+          required: false,
+          default: "/images/placeholder.png",
+        }
+      - {
+          label: "Bild Text",
+          name: "image_text",
+          widget: "string",
+          required: false,
+          default: "placeholder",
+        }
       - { label: "Tags", name: "tags", widget: "list" }
   - name: "sponsoren"
     label: "Sponsoren"
@@ -62,12 +198,27 @@ collections:
     slug: "{{name}}"
     fields:
       - { label: "Name", name: "name", widget: "string", required: true }
-      - { label: "Adresse", name: "adresse_1", widget: "string", required: false }
-      - { label: "PLZ Ort", name: "adresse_2", widget: "string", required: false }
+      - {
+          label: "Adresse",
+          name: "adresse_1",
+          widget: "string",
+          required: false,
+        }
+      - {
+          label: "PLZ Ort",
+          name: "adresse_2",
+          widget: "string",
+          required: false,
+        }
       - { label: "Telefon", name: "telefon", widget: "string", required: false }
       - { label: "Website", name: "link", widget: "string", required: false }
       - { label: "Bild", name: "image", widget: "image", required: false }
-      - { label: "Bild Text", name: "image_text", widget: "string", required: false }
+      - {
+          label: "Bild Text",
+          name: "image_text",
+          widget: "string",
+          required: false,
+        }
       - { label: "Tags", name: "tags", widget: "list", default: "sponsor" }
 #  - label: FAQS
 #    name: faqs

@@ -10,6 +10,30 @@ layout: "base.njk"
     </div>
     <div>
       <h2>Trainingszeiten</h2>
+      {% if schedule and schedule.length %}
+      <div class="lists row">
+        <ul class="uls">
+          {% set currentDay = "" %}
+          {% for entry in schedule %}
+          {% if entry.day and entry.day != currentDay %}
+          <li class="list-heading"><h3>{{ entry.day }}</h3></li>
+          {% set currentDay = entry.day %}
+          {% endif %}
+          <li>{{ entry.time or '' }}</li>
+          {% endfor %}
+        </ul>
+        <ul class="uls">
+          {% set currentDay = "" %}
+          {% for entry in schedule %}
+          {% if entry.day and entry.day != currentDay %}
+          <li class="list-heading"><h3>&nbsp;</h3></li>
+          {% set currentDay = entry.day %}
+          {% endif %}
+          <li>{{ entry.age or '' }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% else %}
       {% if difDays %} {% else %}
       <h3>{{ trainingstage[0].tag }}</h3>
 
@@ -17,20 +41,34 @@ layout: "base.njk"
       <div class="lists row">
         <ul class="uls">
           {% if difDays%}
-          <h3>{{ trainingstage[0].tag }}</h3>
+          <li class="list-heading"><h3>{{ trainingstage[0].tag }}</h3></li>
           <li>{{ zeiten[0].zeit }}</li>
-          <h3>{{ trainingstage[1].tag2 }}</h3>
-          <li>{{ zeiten[0].zeit }}</li>
+          <li class="list-heading"><h3>{{ trainingstage[1].tag }}</h3></li>
+          <li>{{ zeiten[1].zeit }}</li>
           {% else %} {% for item in range(0,zeiten.length ) -%}
           <li>{{ zeiten[item].zeit }}</li>
           {% endfor %} {% endif %}
         </ul>
         <ul class="uls">
-          {% for item in range(0,zeiten.length ) -%}
+          {% if difDays%}
+          <li class="list-heading"><h3>&nbsp;</h3></li>
+          <li>{{ zeiten[0].alter }}</li>
+          <li class="list-heading"><h3>&nbsp;</h3></li>
+          <li>{{ zeiten[1].alter }}</li>
+          {% else %} {% for item in range(0,zeiten.length ) -%}
           <li>{{ zeiten[item].alter }}</li>
-          {% endfor %}
+          {% endfor %} {% endif %}
         </ul>
       </div>
+      {% endif %}
+      {% if address and address.length %}
+      <h2>Trainingshalle</h2>
+      <ul class="uls">
+        {% for line in address %}
+        <li>{{ line }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
     </div>
   </div>
 

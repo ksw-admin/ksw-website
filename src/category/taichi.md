@@ -2,15 +2,16 @@
 title: Tai Chi
 description: Taichi
 tags: taichi
-difDays: true
-trainingstage:
-  - tag: Dienstag
-  - tag2: Donnerstag
-zeiten:
-  - zeit: 18:30 - 19:30 Uhr
-    alter: null
-  - zeit: 19:15 - 20:15 Uhr
-    alter: null
+schedule:
+  - day: Dienstag
+    time: 18:30 - 19:30 Uhr
+    age: ""
+  - day: Donnerstag
+    time: 19:15 - 20:15 Uhr
+    age: ""
+address:
+  - Beethovenstr. 18a
+  - 47226 Duisburg-Rheinhausen
 galleryImages:
   - link_text: Duisburg bewegt sich-Tai Chi - 2024
     link: https://www.flickr.com/gp/143500996@N08/Qeqm9tA2j4

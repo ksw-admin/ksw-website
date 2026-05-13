@@ -2,19 +2,25 @@
 title: Kuk Sool Won
 description: Kuk Sool Won
 tags: ksw
-trainingstage:
-  - tag: Montag und Freitag
-zeiten:
-  - zeit: 16:00 - 17:00 Uhr
-    alter: 4 - 6 Jahre
-  - zeit: 17:00 - 18:00 Uhr
-    alter: 7 - 8 Jahre
-  - zeit: 18:00 - 19:00 Uhr
-    alter: 9 - 11 Jahre
-  - zeit: 19:00 - 20:00 Uhr
-    alter: 12 - 14 Jahre
-  - zeit: 20:00 - 21:30 Uhr
-    alter: 15 - 80 Jahre
+schedule:
+  - day: Montag und Freitag
+    time: 16:00 - 17:00 Uhr
+    age: 4 - 6 Jahre
+  - day: Montag und Freitag
+    time: 17:00 - 18:00 Uhr
+    age: 7 - 8 Jahre
+  - day: Montag und Freitag
+    time: 18:00 - 19:00 Uhr
+    age: 9 - 11 Jahre
+  - day: Montag und Freitag
+    time: 19:00 - 20:00 Uhr
+    age: 12 - 14 Jahre
+  - day: Montag und Freitag
+    time: 20:00 - 21:30 Uhr
+    age: 15 - 80 Jahre
+address:
+  - Beethovenstr. 18a
+  - 47226 Duisburg-Rheinhausen
 galleryImages:
   - image: images/53995658272_2d2d9b5826_w.jpg
     link_text: Duisburg bewegt sich-Kuk Sool Won -2024

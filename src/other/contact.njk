@@ -1,34 +1,66 @@
 ---
 layout: base.njk
+title: Kontakt
+intro: Wir freuen uns auf Fragen und Mitteilungen!
+intro_followup: Sendet einfach eine E-Mail oder ruft an.
+email: info@atemschulung-griepentrog.de
+contact_name: Peter Griepentrog
+phones:
+  - label: "Tel.:"
+    value: 020 65 - 67 96 31
+  - label: "Fax:"
+    value: 020 65 - 6 38 41
+  - label: "Mobil:"
+    value: 0170 - 90 42 408
+address_title: Trainingshalle
+address:
+  - Beethovenstr. 18a
+  - 47226 Duisburg-Rheinhausen
+  - im Regenbogenhaus
+map_title: Karte
+map_embed_url: https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2488.9157001750414!2d6.713066216312197!3d51.40460362603407!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47b8b9357699850d%3A0xb96c1112e0e76bd9!2sBeethovenstra%C3%9Fe%2018A%2C%2047226%20Duisburg!5e0!3m2!1sde!2sde!4v1614338318846!5m2!1sde!2sde
+map_width: "800"
+map_height: "600"
 ---
 
 <div class="grid-1-1 content">
   <div class="contact">
-    <h1 class="section__title">Kontakt</h1>
-    <p>Wir freuen uns auf Fragen und Mitteilungen! <br />Sendet einfach eine E-Mail oder ruft an.</p>
-    <p><a href="mailto:info@atemschulung-griepentrog.de">info@atemschulung-griepentrog.de</a></p>
+    <h1 class="section__title">{{ title }}</h1>
+    {% if intro or intro_followup %}
+    <p>
+      {% if intro %}{{ intro }}{% endif %} {% if intro_followup %}<br />{{ intro_followup }}{% endif %}
+    </p>
+    {% endif %}
+    {% if email %}
+    <p><a href="mailto:{{ email }}">{{ email }}</a></p>
+    {% endif %}
     <ul class="uls">
-      <li>Peter Griepentrog</li>
-      <li>Tel.: 020 65 - 67 96 31</li>
-      <li>Fax: 020 65 - 6 38 41</li>
-      <li>Mobil: 0170 - 90 42 408</li>
+      {% if contact_name %}
+      <li>{{ contact_name }}</li>
+      {% endif %} {% if phones and phones.length %} {% for phone in phones %}
+      <li>{{ phone.label }} {{ phone.value }}</li>
+      {% endfor %} {% endif %}
     </ul>
-    <h2>Trainingshalle</h2>
+    {% if address and address.length %}
+    <h2>{{ address_title or 'Trainingshalle' }}</h2>
     <ul class="uls">
-      <li>Beethovenstr. 18a</li>
-      <li>47226 Duisburg-Rheinhausen</li>
-      <li>im Regenbogenhaus</li>
+      {% for line in address %}
+      <li>{{ line }}</li>
+      {% endfor %}
     </ul>
+    {% endif %}
   </div>
   <div class="map">
-    <h2>Karte</h2>
+    {% if map_embed_url %}
+    <h2>{{ map_title or 'Karte' }}</h2>
     <iframe
-      title="Karte"
-      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2488.9157001750414!2d6.713066216312197!3d51.40460362603407!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47b8b9357699850d%3A0xb96c1112e0e76bd9!2sBeethovenstra%C3%9Fe%2018A%2C%2047226%20Duisburg!5e0!3m2!1sde!2sde!4v1614338318846!5m2!1sde!2sde"
-      width="800"
-      height="600"
+      title="{{ map_title or 'Karte' }}"
+      src="{{ map_embed_url }}"
+      width="{{ map_width or '800' }}"
+      height="{{ map_height or '600' }}"
       style="border: 0"
       allowfullscreen=""
       loading="lazy"></iframe>
+    {% endif %}
   </div>
 </div>

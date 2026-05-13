@@ -5,10 +5,14 @@
       alt="{{ post.data.image_text }}"
       class="snippet__image horizontal{% if post.data.image == 'images/placeholder.png' %} disabled {% endif %}" />
     <h3 class="snippet__title">
+      {% if post.url and post.data.permalink != false %}
       <a href="{{ post.url }}">{{ post.data.title }}</a>
+      {% else %}
+      <span>{{ post.data.title }}</span>
+      {% endif %}
     </h3>
     <p class="snippet__body">{{ post.data.description }}</p>
-    {% if post.data.permalink != false %}
+    {% if post.url and post.data.permalink != false %}
     <a href="{{ post.url }}" class="btn">Weiterlesen</a>
     {% endif %}
   </article>
