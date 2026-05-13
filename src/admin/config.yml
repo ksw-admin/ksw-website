@@ -74,7 +74,6 @@ collections:
         name: "address"
         widget: list
         required: false
-        field: { label: "Adresszeile", name: "line", widget: "string" }
       - label: Gallery
         name: galleryImages
         widget: list
@@ -84,6 +83,7 @@ collections:
           - { label: Titel, name: link_text, widget: string }
   - name: "pages"
     label: "Seiten"
+    format: "yaml-frontmatter"
     files:
       - label: "Kontakt"
         name: "contact"
@@ -122,7 +122,6 @@ collections:
             name: "address"
             widget: list
             required: false
-            field: { label: "Adresszeile", name: "line", widget: "string" }
           - {
               label: "Uberschrift Karte",
               name: "map_title",
