@@ -22,6 +22,9 @@ address:
   - Beethovenstr. 18a
   - 47226 Duisburg-Rheinhausen
 galleryImages:
+  - image: images/020f84f3-6c69-4087-b76a-0e3c50f35492.jpg
+    link: https://www.flickr.com/gp/143500996@N08/g4eXAb13St
+    link_text: New Generation Turnier Arnsberg 2026
   - image: images/53995658272_2d2d9b5826_w.jpg
     link_text: Duisburg bewegt sich-Kuk Sool Won -2024
     link: https://www.flickr.com/gp/143500996@N08/4h2H9vc545
