@@ -1,6 +1,13 @@
 ---
 title: Kids Tournament International Championship
 date: 2026-02-16
+kind: Turnier
+# Counted from the post text (backfill 2026-11-03).
+medals:
+  gold: 6
+  silver: 5
+  bronze: 1
+  other: 0
 featured: true
 description: Am 14.02.2026 haben wir am Turnier International Championship teilgenommen.
 image: images/ed1828bd-c889-41a2-9e74-ebdd273bc3ea.jpg

@@ -1,6 +1,14 @@
 ---
 title: Erfolg bei Weltmeisterschaft in Arnsberg
 date: 2025-07-04
+kind: Turnier
+place: Arnsberg
+# Counted from the post text (backfill 2026-11-03).
+medals:
+  gold: 1
+  silver: 4
+  bronze: 0
+  other: 0
 featured: true
 description: Erster Weltmeistertitel in Formen und vier zweite Plätze dazu. Der
   Einsatz hat sich mehr als gelohnt!

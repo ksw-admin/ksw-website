@@ -1,6 +1,14 @@
 ---
 title: Turnier "New Generation Tournament"
 date: 2024-03-03
+kind: Turnier
+place: Arnsberg
+# Counted from the post text (backfill 2026-11-03).
+medals:
+  gold: 7
+  silver: 3
+  bronze: 3
+  other: 0
 featured: true
 description: >-
   Kampfkunst Academy Griepentrog, Abteilung des FC Rumeln -Kaldenhausen 1955

@@ -1,6 +1,14 @@
 ---
 title: Kampfkunst Academy des FC Rumeln-Kaldenhausen 1955 e.V.
 date: 2024-07-15
+kind: Turnier
+place: Arnsberg
+# Counted from the post text (backfill 2026-11-03).
+medals:
+  gold: 4
+  silver: 3
+  bronze: 0
+  other: 0
 featured: true
 description: >-
   Für die Erfolge bei der Weltmeisterschaft in Arnsberg bedanke ich mich bei

@@ -1,6 +1,14 @@
 ---
 title: International Open German Championships In Arnsberg 2026
 date: 2026-04-09
+kind: Turnier
+place: Arnsberg
+# Counted from the post text (backfill 2026-11-03).
+medals:
+  gold: 3
+  silver: 1
+  bronze: 0
+  other: 0
 featured: true
 description: >-
   International Open German Championships 

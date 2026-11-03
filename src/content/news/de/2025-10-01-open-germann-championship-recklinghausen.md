@@ -1,6 +1,8 @@
 ---
 title: Open German Championship Recklinghausen
 date: 2025-10-01
+kind: Turnier
+place: Recklinghausen
 featured: true
 description: >-
   Wir haben in Recklinghausen am 20.9.2025 teilgenommen an der
