@@ -33,8 +33,10 @@ answer on the site yet; each one becomes an FAQ entry once answered:
 
 ## Question form and closures
 
+- [ ] **Contact form is OFF** (CMS: Einstellungen › Kontakt und Allgemeines › Kontaktformular). Switch on once Peter wants
+      written messages; set the notification email in Netlify › Forms › kontakt.
 - [ ] **Question form is OFF** (CMS: Einstellungen › Kontakt und Allgemeines › Fragen-Formular). The FAQ shows phone and
-      email instead. If it stays off for good, drop the "Fragen-Formular" paragraph from the Datenschutz text.
+      email instead. If both forms stay off for good, drop the "Formulare" paragraph from the Datenschutz text.
 - [ ] **Who reads the questions** sent through the FAQ form, once it is on? Netlify › Forms › "frage" › notifications: set the email
       address there. Submissions stay in the Netlify dashboard until deleted: delete them once answered (the Datenschutz
       text promises that).

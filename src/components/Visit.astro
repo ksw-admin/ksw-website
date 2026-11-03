@@ -25,10 +25,9 @@ const others = site.phones.filter((p) => p !== primaryPhone);
         {others.map((p) => <><br />{p.label} {p.value}</>)}
       </p>
       <p class="faq-hint">
-        {de ? 'Vorher lesen: ' : 'Read first: '}<a href={localePath('/faq/', lang)}>{de ? 'Häufige Fragen' : 'Frequently asked questions'}</a>
-        {site.calendar
-          ? de ? ' zu Probetraining, Alter, Prüfungen und Kalender-Abo.' : ' about trial lessons, age, gradings and the calendar subscription.'
-          : de ? ' zu Probetraining, Alter und Prüfungen.' : ' about trial lessons, age and gradings.'}
+        {de
+          ? <>Antworten zu Probetraining, Alter, Prüfungen{site.calendar ? ' und Kalender-Abo' : ''} findest du bei den <a href={localePath('/faq/', lang)}>häufigen Fragen</a>.</>
+          : <>You'll find answers about trial lessons, age, gradings{site.calendar ? ' and the calendar subscription' : ''} in the <a href={localePath('/faq/', lang)}>FAQ</a>.</>}
       </p>
     </div>
     <div class="side">
