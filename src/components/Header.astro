@@ -70,6 +70,25 @@ const links = [
 </header>
 
 <script>
+  // Language switch keeps the reading position: store how far down the page is (as a share, since the translated
+  // page can be longer or shorter) and restore it on the other language's page.
+  const SCROLL_KEY = 'lang-switch-scroll';
+  const scrollable = () => document.documentElement.scrollHeight - innerHeight;
+  for (const a of document.querySelectorAll<HTMLAnchorElement>('a.lang')) {
+    a.addEventListener('click', () => {
+      try {
+        sessionStorage.setItem(SCROLL_KEY, JSON.stringify({ to: a.pathname, share: scrollable() > 0 ? scrollY / scrollable() : 0 }));
+      } catch {}
+    });
+  }
+  try {
+    const saved = JSON.parse(sessionStorage.getItem(SCROLL_KEY) ?? 'null') as { to: string; share: number } | null;
+    sessionStorage.removeItem(SCROLL_KEY);
+    if (saved && saved.to === location.pathname && !location.hash && saved.share > 0) {
+      requestAnimationFrame(() => scrollTo({ top: saved.share * scrollable(), behavior: 'instant' }));
+    }
+  } catch {}
+
   const menu = document.getElementById('menu') as HTMLElement & { hidePopover?: () => void };
   const burger = document.querySelector<HTMLButtonElement>('.burger');
   if (menu && burger && 'hidePopover' in menu) {

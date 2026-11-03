@@ -42,9 +42,9 @@ const fullSize = new Map(
             {(d.kind || d.place) && <span class="kind">{[d.kind, d.place].filter(Boolean).join(', ')}</span>}
             <h3 lang={p.textLang !== lang ? p.textLang : undefined}>{p.href ? <a href={p.href}>{p.title}</a> : p.title}</h3>
             {p.hasPage ? (
-              <p lang={p.textLang !== lang ? p.textLang : undefined}>{teaser(p.paragraphs[0] ?? '')} <a class="more" href={p.href} lang={lang}>{more}</a></p>
+              <p lang={p.descriptionLang !== lang ? p.descriptionLang : undefined}>{teaser(p.paragraphs[0] ?? '')} <a class="more" href={p.href} lang={lang}>{more}</a></p>
             ) : (
-              p.paragraphs.map((t) => <p class="full" lang={p.textLang !== lang ? p.textLang : undefined}>{t}</p>)
+              p.paragraphs.map((t) => <p class="full" lang={p.descriptionLang !== lang ? p.descriptionLang : undefined}>{t}</p>)
             )}
           </div>
           <Medals medals={d.medals} />

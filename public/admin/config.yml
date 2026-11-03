@@ -208,6 +208,7 @@ collections:
         name: home
         file: src/content/home.json
         format: json
+        i18n: true
         description: Texte und Fotos der Startseite. Trainingszeiten, Beiträge, Kontaktdaten und Qualifikationen werden an ihrer eigenen Stelle gepflegt. Leere englische Felder zeigen den deutschen Text.
         media_folder: images
         public_folder: images

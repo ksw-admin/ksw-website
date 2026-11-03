@@ -28,8 +28,8 @@ export async function getDisciplines(lang: Lang): Promise<Discipline[]> {
       const slug = splitId(de.id).slug as Discipline['slug'];
       if (!de.data.title?.trim()) throw new Error(`${de.filePath}: German page needs a title.`);
       const en = english.get(slug);
-      // An English file counts as a translation only with a title and a text.
-      const translated = !!(en?.data.title?.trim() && en.body?.trim());
+      // An English file counts as a translation once it has a title; a missing text shows the German one.
+      const translated = !!en?.data.title?.trim();
       const text = lang === 'en' && translated ? en! : de;
       return {
         slug,

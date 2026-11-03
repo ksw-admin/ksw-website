@@ -14,8 +14,10 @@ export type Post = {
   slug: string;
   /** Language of the page the post is listed on / rendered for. */
   lang: Lang;
-  /** Language of the shown text ('de' on an English page means: not translated yet). */
+  /** Language of the shown title ('de' on an English page means: not translated yet). */
   textLang: Lang;
+  /** Language of the shown short text (an English translation may have only a title). */
+  descriptionLang: Lang;
   /** An English translation exists (for hreflang and the language switch). */
   translated: boolean;
   title: string;
@@ -41,8 +43,8 @@ export function splitId(id: string): { lang: Lang; slug: string } {
   return { lang: lang as Lang, slug: rest.join('/') };
 }
 
-/** An English file counts as a translation only with a title and a description (else the site shows German). */
-const isTranslation = (e?: Entry) => !!(e?.data.title?.trim() && e?.data.description?.trim());
+/** An English file counts as a translation once it has a title; its missing fields show the German text. */
+const isTranslation = (e?: Entry) => !!e?.data.title?.trim();
 
 function toPost(collection: Post['collection'], de: Entry, en: Entry | undefined, lang: Lang): Post {
   const { slug } = splitId(de.id);
@@ -52,7 +54,8 @@ function toPost(collection: Post['collection'], de: Entry, en: Entry | undefined
   const translated = isTranslation(en);
   const text = lang === 'en' && translated ? en! : de;
   const title = text.data.title!.trim();
-  const description = text.data.description!;
+  const descriptionEntry = text.data.description?.trim() ? text : de;
+  const description = descriptionEntry.data.description!;
   const fromName = DATE_IN_NAME.exec(slug)?.[1];
   const date = de.data.date ?? (fromName ? new Date(fromName + 'T12:00:00') : new Date(0));
   const base = collection === 'news' ? '/aktuelles/' : '/articles/';
@@ -67,6 +70,7 @@ function toPost(collection: Post['collection'], de: Entry, en: Entry | undefined
     slug,
     lang,
     textLang: text === de ? 'de' : lang,
+    descriptionLang: descriptionEntry === de ? 'de' : lang,
     translated,
     title,
     description,

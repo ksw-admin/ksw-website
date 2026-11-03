@@ -43,7 +43,7 @@ const paragraphs = post.paragraphs;
       </header>
       <div class="cols">
         <div class="prose">
-          {paragraphs.map((p) => <p class="desc" lang={post.textLang !== post.lang ? post.textLang : undefined}>{p}</p>)}
+          {paragraphs.map((p) => <p class="desc" lang={post.descriptionLang !== post.lang ? post.descriptionLang : undefined}>{p}</p>)}
           <div lang={bodyLang}><Content /></div>
         </div>
         {post.image && (

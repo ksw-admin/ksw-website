@@ -13,10 +13,13 @@ interface Props { page: Discipline }
 const { page } = Astro.props;
 const { lang, entry } = page;
 const t = useTranslations(lang);
-const { Content } = await render(page.textEntry);
+// Text: the shown language's, else the German one (an English version may have only a title so far).
+const bodyEntry = page.textEntry.body?.trim() ? page.textEntry : entry;
+const { Content } = await render(bodyEntry);
 const slots = await getSchedule(page.slug);
 const isKsw = page.slug === 'kuksoolwon';
 const textLang = page.textLang !== lang ? page.textLang : undefined;
+const bodyLang = bodyEntry === entry && lang !== 'de' ? 'de' : undefined;
 ---
 
 <Base title={page.title} description={page.description} alternate={page.alternate}>
@@ -29,7 +32,7 @@ const textLang = page.textLang !== lang ? page.textLang : undefined;
 
   <section class="band body">
     <div class="wrap cols">
-      <div class="prose" lang={textLang}><Content /></div>
+      <div class="prose" lang={bodyLang}><Content /></div>
       <aside>
         <h2>{t('times.title')}</h2>
         <table>

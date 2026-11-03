@@ -45,8 +45,8 @@ Netlify does the deploys.
 - In the CMS, open a post, the Kuk Sool Won / Tai Chi page or the Startseite and switch to the **en** tab. Translate
   the text fields (title, short text, report, photo description). Date, type, place, medals, photo and gallery are
   only in German; the English page uses them.
-- Files: `src/content/<collection>/en/<same name>.md`. An English post needs a title and a short text, else the site
-  ignores it and shows German.
+- Files: `src/content/<collection>/en/<same name>.md`. An English version counts once it has a title; fields not yet
+  translated (short text, report) show the German text, marked as German for screen readers.
 - Every German page also exists under `/en/…`. Untranslated, it shows the German text with English navigation and the
   note "This page is only available in German" (noindex, canonical to German). Translated, it is a normal English
   page with hreflang links and is listed in the sitemap.
