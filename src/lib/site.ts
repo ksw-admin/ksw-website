@@ -19,6 +19,8 @@ const Site = z.object({
   social: z.array(z.object({ name: z.string(), url: z.url(), label: z.string().optional() })).default([]),
   // Home page video. Loads from YouTube only after a click (privacy, no Google request on page view).
   video: z.object({ youtubeId: z.string().regex(/^[\w-]{11}$/), title: z.string(), heading: z.string() }).optional(),
+  // Cloudflare Web Analytics (cookieless, no consent banner needed). Empty token = no analytics.
+  analytics: z.object({ cloudflareToken: z.string().regex(/^([0-9a-f]{32})?$/, '32 hex characters from the Cloudflare dashboard') }).default({ cloudflareToken: '' }),
 });
 
 export const site = Site.parse(raw);

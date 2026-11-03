@@ -83,6 +83,17 @@ const ogImage = new URL(encodeURI(image), Astro.site);
     <Footer lang={lang} />
     <MobileBar lang={lang} />
     {
+      // Cloudflare Web Analytics: production build only, and only once a token is set in site.json (CMS: Einstellungen).
+      import.meta.env.PROD && site.analytics.cloudflareToken && (
+        <script
+          is:inline
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={JSON.stringify({ token: site.analytics.cloudflareToken, spa: false })}
+        />
+      )
+    }
+    {
       import.meta.env.PROD && (
         <script is:inline>
           if ('serviceWorker' in navigator) {

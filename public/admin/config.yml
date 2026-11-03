@@ -274,6 +274,12 @@ collections:
               - { label: Name, name: name, widget: string, hint: z.B. Instagram }
               - { label: Adresse, name: url, widget: string }
               - { label: Linktext, name: label, widget: string, required: false, hint: 'z.B. „Fotoalben auf Flickr“' }
+          - label: Besucherstatistik
+            name: analytics
+            widget: object
+            collapsed: true
+            fields:
+              - { label: Cloudflare Web Analytics Token, name: cloudflareToken, widget: string, required: false, pattern: ['^([0-9a-f]{32})?$', '32 Zeichen (0-9, a-f) aus dem Cloudflare-Dashboard'], hint: 'Cloudflare-Dashboard › Analytics & Logs › Web Analytics › Site hinzufügen › Token. Leer = keine Statistik.' }
           - label: Video auf der Startseite
             name: video
             widget: object
