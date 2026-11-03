@@ -1,0 +1,51 @@
+---
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import { site } from '../lib/site';
+
+interface Props { photo: ImageMetadata; photoAlt: string; caption?: string }
+const { photo, photoAlt, caption } = Astro.props;
+const { master } = site;
+---
+
+<section class="master band">
+  <div class="wrap">
+    <figure>
+      <Image src={photo} alt={photoAlt} width={Math.min(photo.width, 1000)} quality={75} widths={[400, 700, 1000]} sizes="(max-width: 760px) 100vw, 40vw" loading="lazy" />
+      {caption && <figcaption>{caption}</figcaption>}
+    </figure>
+    <div>
+      <h2 class="cond">{site.contactName}</h2>
+      <div class="intro"><slot /></div>
+      <div class="belt">
+        <div class="strip" aria-hidden="true">{Array.from({ length: master.dan }, () => <i />)}</div>
+        <b>{master.dan}. Dan</b>
+      </div>
+      <dl>
+        {master.credentials.map((c) => (<><dt>{c.label}</dt><dd>{c.value}</dd></>))}
+      </dl>
+    </div>
+  </div>
+</section>
+
+<style>
+  .master { padding-block: 0 72px; }
+  .wrap { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 56px; align-items: start; }
+  figure { margin: 0; }
+  figure :global(img) { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: 30% 30%; border-radius: 4px; display: block; }
+  figcaption { font-size: 0.85rem; color: var(--stein); margin-top: 8px; }
+  h2 { font-size: clamp(2.4rem, 5vw, 3.8rem); line-height: 0.95; font-weight: 900; }
+  .intro { margin-top: 16px; font-size: 1.2rem; max-width: 44ch; }
+  .belt { display: flex; align-items: center; gap: 14px; margin-top: 28px; }
+  .strip { height: 22px; width: 220px; max-width: 55vw; background: #000; border-radius: 2px; display: flex; justify-content: flex-end; gap: 5px; padding-right: 14px; border: 1px solid var(--linie); }
+  .strip i { width: 5px; background: var(--gelb); }
+  .belt b { font-size: 1.4rem; }
+  dl { margin: 24px 0 0; display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 10px 24px; }
+  dt { color: var(--stein); font-weight: 500; }
+  dd { margin: 0; font-weight: 600; }
+  @media (max-width: 760px) {
+    .wrap { grid-template-columns: 1fr; gap: 28px; }
+    dl { grid-template-columns: 1fr; gap: 2px; }
+    dd { margin-bottom: 10px; }
+  }
+</style>

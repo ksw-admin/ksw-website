@@ -1,0 +1,46 @@
+---
+import { site, primaryPhone, telHref } from '../lib/site';
+import type { Lang } from '../i18n/ui';
+
+interface Props { lang: Lang; heading: string }
+const { heading } = Astro.props;
+const others = site.phones.filter((p) => p !== primaryPhone);
+---
+
+<section class="visit band" id="besuch">
+  <div class="wrap">
+    <div>
+      <h2 class="cond">{heading}</h2>
+      <a class="phone cond num" href={telHref(primaryPhone.value)}>{primaryPhone.value.replace(/ - /g, ' ')}</a>
+      <p class="who">
+        {site.contactName}. <a href={`mailto:${site.email}`}>{site.email}</a>
+        {others.map((p) => <><br />{p.label} {p.value}</>)}
+      </p>
+    </div>
+    <div class="side">
+      <address><b>Trainingshalle</b>{site.hall.street}<br />{site.hall.note && <>{site.hall.note}<br /></>}{site.hall.city}</address>
+      <a href={site.hall.osm} rel="noopener">Route in OpenStreetMap öffnen</a>
+      {site.social.length > 0 && (
+        <p class="social">{site.social.map((s) => <a href={s.url} rel="me noopener">{s.label ?? s.name}</a>)}</p>
+      )}
+      <slot />
+    </div>
+  </div>
+</section>
+
+<style>
+  .visit { background: #000; color: #fff; padding-block: 64px; }
+  .wrap { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 48px; }
+  h2 { font-size: clamp(2.4rem, 6vw, 4.6rem); line-height: 0.9; font-weight: 900; }
+  .phone { display: block; margin-top: 26px; font-size: clamp(2.4rem, 7vw, 5.2rem); font-weight: 900; line-height: 1; text-decoration: none; letter-spacing: -0.01em; color: var(--gelb); }
+  .who { margin-top: 8px; font-weight: 600; }
+  address { font-style: normal; font-size: 1.15rem; line-height: 1.5; }
+  address b { display: block; font-size: 0.95rem; margin-bottom: 4px; }
+  .side { display: grid; gap: 24px; align-content: start; border-left: 3px solid var(--gelb); padding-left: 24px; }
+  .side a { font-weight: 700; }
+  .social { display: flex; flex-wrap: wrap; gap: 8px 20px; }
+  @media (max-width: 760px) {
+    .wrap { grid-template-columns: 1fr; }
+    .side { border-left: 0; padding-left: 0; border-top: 3px solid var(--gelb); padding-top: 20px; }
+  }
+</style>

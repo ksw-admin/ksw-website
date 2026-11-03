@@ -1,0 +1,27 @@
+---
+// /other/impressum/, /other/datenschutz/ (German only, legally binding)
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { splitId } from '../../lib/posts';
+
+export async function getStaticPaths() {
+  const pages = await getCollection('pages', (e) => e.id.startsWith('de/'));
+  return pages.map((entry) => ({ params: { page: splitId(entry.id).slug }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<Base title={entry.data.title}>
+  <section class="band">
+    <div class="wrap">
+      <div class="sec-h"><h1>{entry.data.title}</h1></div>
+      <div class="prose"><Content /></div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  section { padding-block: 40px 72px; }
+  .prose { margin-top: 28px; }
+</style>

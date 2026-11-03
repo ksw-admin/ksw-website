@@ -1,0 +1,27 @@
+---
+import { useTranslations, type Lang } from '../i18n/ui';
+import { site } from '../lib/site';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+// Impressum and Datenschutz stay German only (legally binding text).
+---
+
+<footer class="band">
+  <div class="wrap">
+    <a href="/other/impressum/" hreflang="de">{t('footer.impressum')}</a>
+    <a href="/other/datenschutz/" hreflang="de">{t('footer.privacy')}</a>
+    <a href="/other/sponsoren/">{t('footer.sponsors')}</a>
+    {site.social.map((s) => <a href={s.url} rel="me noopener">{s.name}</a>)}
+    <span class="by">Website: Jonah L.</span>
+  </div>
+</footer>
+
+<style>
+  footer { background: #000; color: #bfc2bb; font-size: 0.9rem; padding-block: 22px 86px; border-top: 1px solid #2a2c27; }
+  .wrap { display: flex; gap: 22px; flex-wrap: wrap; }
+  a { color: #bfc2bb; }
+  .by { margin-left: auto; }
+  @media (min-width: 701px) { footer { padding-block: 22px; } }
+</style>

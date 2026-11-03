@@ -1,0 +1,101 @@
+---
+import '@fontsource-variable/archivo/wdth.css';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MobileBar from '../components/MobileBar.astro';
+import { site } from '../lib/site';
+import { getLangFromUrl } from '../i18n/ui';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Path of the same page in each language, if it exists (hreflang + language switch). */
+  alternate?: { de?: string; en?: string };
+  /** Link preview image: a /og/<name>.jpg path (1200x630, built by src/pages/og/[slug].jpg.ts). */
+  image?: string;
+  imageAlt?: string;
+  /** schema.org data for this page (one object or a list). */
+  jsonLd?: object | object[];
+  noindex?: boolean;
+  ogType?: 'website' | 'article';
+  /** ISO date for article previews. */
+  articleDate?: string;
+}
+
+const { title, description = site.description, alternate, image = '/og/default.jpg', imageAlt = 'Gruppenfoto der Kampfkunst Academy auf der Matte', jsonLd, noindex = false, ogType = 'website', articleDate } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+// One line for meta tags (post texts contain line breaks), max ~160 characters for search results and previews.
+const metaDescription = (() => {
+  const s = description.replace(/\s+/g, ' ').trim();
+  return s.length > 160 ? s.slice(0, 157).replace(/\s+\S*$/, '') + ' …' : s;
+})();
+const fullTitle = title ? `${title} | ${site.shortName} Griepentrog` : `${site.name} | Kuk Sool Won & Tai Chi in Duisburg`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(encodeURI(image), Astro.site);
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={metaDescription} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="canonical" href={canonical} />
+    {alternate?.de && <link rel="alternate" hreflang="de" href={new URL(alternate.de, Astro.site)} />}
+    {alternate?.en && <link rel="alternate" hreflang="en" href={new URL(alternate.en, Astro.site)} />}
+    {alternate?.de && <link rel="alternate" hreflang="x-default" href={new URL(alternate.de, Astro.site)} />}
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content={lang === 'de' ? 'de_DE' : 'en_GB'} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={metaDescription} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:secure_url" content={ogImage} />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={imageAlt} />
+    {ogType === 'article' && articleDate && <meta property="article:published_time" content={articleDate} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={metaDescription} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={imageAlt} />
+
+    <meta name="theme-color" content="#ffdd00" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" href="/images/icons/apple-icon-180.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="google-site-verification" content="Mqsxt2K_Gilpo3g4d8fLzYVDDlcBzGOVZjrGxTFG14w" />
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+  </head>
+  <body>
+    <Header lang={lang} alternate={alternate} />
+    <main id="inhalt">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+    <MobileBar lang={lang} />
+    {
+      import.meta.env.PROD && (
+        <script is:inline>
+          if ('serviceWorker' in navigator) {
+            addEventListener('load', function () {
+              navigator.serviceWorker.register('/service-worker.js');
+              // The old Eleventy worker cached images forever in "workbox-runtime-*" caches: remove them.
+              if (window.caches) caches.keys().then(function (keys) {
+                keys.filter(function (k) { return k.indexOf('workbox-runtime') === 0; }).forEach(function (k) { caches.delete(k); });
+              });
+            });
+          }
+        </script>
+      )
+    }
+  </body>
+</html>

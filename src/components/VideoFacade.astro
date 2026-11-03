@@ -1,0 +1,64 @@
+---
+/**
+ * Click-to-load YouTube video. Until the visitor clicks, the page shows our own photo and contacts no Google server.
+ * After the click the player loads from youtube-nocookie.com. Mention this in the Datenschutz text.
+ */
+import { Image } from 'astro:assets';
+import poster from '../assets/images/video-poster.webp';
+import type { Lang } from '../i18n/ui';
+
+interface Props { youtubeId: string; title: string; heading: string; lang: Lang }
+const { youtubeId, title, heading, lang } = Astro.props;
+const de = lang === 'de';
+const watchUrl = `https://www.youtube.com/watch?v=${youtubeId}`;
+---
+
+<section class="video band">
+  <div class="wrap">
+    <div class="sec-h"><h2>{heading}</h2></div>
+    <div class="frame" data-yt={youtubeId} data-title={title}>
+      <button type="button" class="play">
+        <Image src={poster} alt="" width={1440} quality={70} widths={[640, 1024, 1440]} sizes="(max-width: 1520px) 100vw, 1440px" loading="lazy" />
+        <span class="label">
+          <span class="icon" aria-hidden="true"></span>
+          <span>
+            <strong>{de ? 'Video abspielen' : 'Play video'}</strong>
+            <small>{de ? 'Lädt den Player von YouTube. Dabei werden Daten an Google übertragen.' : 'Loads the player from YouTube. This sends data to Google.'}</small>
+          </span>
+        </span>
+      </button>
+    </div>
+    <p class="alt"><a href={watchUrl} rel="noopener">{de ? 'Auf YouTube ansehen' : 'Watch on YouTube'}</a></p>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.video .frame[data-yt]').forEach((frame) => {
+    frame.querySelector('button')?.addEventListener('click', () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube-nocookie.com/embed/${frame.dataset.yt}?autoplay=1&rel=0`;
+      iframe.title = frame.dataset.title ?? 'YouTube';
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+      iframe.allowFullscreen = true;
+      frame.replaceChildren(iframe);
+      iframe.focus();
+    });
+  });
+</script>
+
+<style>
+  .video { padding-block: 72px 0; }
+  .frame { position: relative; margin-top: 24px; aspect-ratio: 16 / 9; background: #000; border-radius: 4px; overflow: hidden; }
+  .frame :global(iframe) { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .play { all: unset; cursor: pointer; position: absolute; inset: 0; display: block; }
+  .play:focus-visible { outline: 3px solid var(--gelb); outline-offset: -3px; }
+  .play img { width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(0.62); transition: filter 0.2s ease; }
+  .play:hover img { filter: brightness(0.5); }
+  .label { position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: center; gap: 18px; padding: clamp(16px, 3vw, 32px); color: #fff; }
+  .icon { flex: none; width: clamp(56px, 7vw, 84px); aspect-ratio: 1; border-radius: 50%; background: var(--gelb); position: relative; }
+  .icon::after { content: ''; position: absolute; left: 38%; top: 28%; border-style: solid; border-width: 0.9em 0 0.9em 1.5em; border-color: transparent transparent transparent #000; font-size: clamp(14px, 1.6vw, 20px); }
+  .label strong { display: block; font-size: clamp(1.2rem, 2vw, 1.6rem); }
+  .label small { display: block; font-size: 0.85rem; opacity: 0.85; max-width: 46ch; }
+  .alt { margin-top: 10px; font-size: 0.9rem; color: var(--stein); }
+</style>

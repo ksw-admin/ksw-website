@@ -1,0 +1,89 @@
+---
+/**
+ * News list. Each row: date, photo, text, medals.
+ * Posts with an own page (post.hasPage) show a teaser and link there.
+ * Short posts (a sentence and a photo) show completely here; the photo opens full size.
+ */
+import { Image, getImage } from 'astro:assets';
+import Medals from './Medals.astro';
+import { capWidth } from '../lib/images';
+import type { Post } from '../lib/posts';
+import type { Lang } from '../i18n/ui';
+
+interface Props { posts: Post[]; lang: Lang }
+const { posts, lang } = Astro.props;
+const fmt = new Intl.DateTimeFormat(lang === 'de' ? 'de-DE' : 'en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+const teaser = (s: string) => (s.length > 220 ? s.slice(0, 217).replace(/\s+\S*$/, '') + ' …' : s);
+const more = lang === 'de' ? 'Weiterlesen' : 'Read more';
+// Posts without an own page: the thumbnail links to a large version (max 1600 px) instead of the phone original.
+const fullSize = new Map(
+  await Promise.all(
+    posts
+      .filter((p) => p.image && !p.href)
+      .map(async (p) => [p, (await getImage({ src: p.image!.meta, width: Math.min(1600, p.image!.meta.width), format: 'webp', quality: 78 })).src] as const),
+  ),
+);
+---
+
+<ol class="ledger">
+  {
+    posts.map((p) => {
+      const d = p.entry.data;
+      const alt = d.image_text && d.image_text !== 'placeholder' ? d.image_text : '';
+      return (
+        <li class:list={{ 'no-img': !p.image }}>
+          <time class="num" datetime={p.date.toISOString().slice(0, 10)}>{fmt.format(p.date)}</time>
+          {p.image && (
+            <a class="thumb" href={p.href ?? fullSize.get(p)} aria-label={p.href ? d.title : `${d.title}: Foto in voller Größe`} tabindex={p.href ? -1 : undefined}>
+              <Image src={p.image.meta} alt={alt} width={capWidth(p.image.meta, 720)} quality={75} widths={[240, 480, 720]} sizes="(max-width: 760px) 100vw, 160px" loading="lazy" decoding="async" />
+            </a>
+          )}
+          <div class="text">
+            {(d.kind || d.place) && <span class="kind">{[d.kind, d.place].filter(Boolean).join(', ')}</span>}
+            <h3>{p.href ? <a href={p.href}>{d.title}</a> : d.title}</h3>
+            {p.hasPage ? (
+              <p>{teaser(p.paragraphs[0] ?? '')} <a class="more" href={p.href}>{more}</a></p>
+            ) : (
+              p.paragraphs.map((t) => <p class="full">{t}</p>)
+            )}
+          </div>
+          <Medals medals={d.medals} />
+        </li>
+      );
+    })
+  }
+</ol>
+
+<style>
+  .ledger { list-style: none; margin: 0; padding: 0; }
+  li {
+    display: grid;
+    grid-template-columns: 7.5rem 10rem minmax(0, 1fr) auto;
+    grid-template-areas: 'date thumb text medals';
+    gap: 24px;
+    align-items: start;
+    padding-block: 22px;
+    border-bottom: 1px solid var(--linie);
+  }
+  li.no-img { grid-template-areas: 'date text text medals'; }
+  time { grid-area: date; color: var(--stein); font-weight: 500; padding-top: 2px; }
+  .thumb { grid-area: thumb; display: block; }
+  .thumb :global(img) { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4px; background: var(--linie); }
+  .text { grid-area: text; min-width: 0; }
+  li > :global(.medals) { grid-area: medals; padding-top: 2px; }
+  h3 { font-size: 1.3rem; font-weight: 700; line-height: 1.2; }
+  h3 a { text-decoration: none; }
+  h3 a:hover { text-decoration: underline; }
+  p { color: var(--stein); margin-top: 6px; max-width: 62ch; }
+  p.full { color: var(--fg); white-space: pre-line; }
+  .more { font-weight: 700; color: var(--fg); white-space: nowrap; }
+  .kind { font-size: 0.85rem; font-weight: 600; color: var(--stein); display: block; margin-bottom: 2px; }
+  @media (max-width: 760px) {
+    li, li.no-img {
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas: 'date medals' 'thumb thumb' 'text text';
+      gap: 10px 16px;
+    }
+    .thumb :global(img) { aspect-ratio: 16 / 9; }
+  }
+</style>

@@ -1,0 +1,92 @@
+---
+import Base from '../layouts/Base.astro';
+import WeekPlanner from './WeekPlanner.astro';
+import DisciplinePaths from './DisciplinePaths.astro';
+import NewsLedger from './NewsLedger.astro';
+import Master from './Master.astro';
+import Visit from './Visit.astro';
+import VideoFacade from './VideoFacade.astro';
+import { site } from '../lib/site';
+import { Image } from 'astro:assets';
+import groupPhoto from '../assets/images/lehrgang.jpeg';
+import masterPhoto from '../assets/images/uebergabe.jpeg';
+import { getPosts, medalTotal } from '../lib/posts';
+import { useTranslations, localePath, type Lang } from '../i18n/ui';
+import { getSchedule } from '../lib/schedule';
+import { organizationLd } from '../lib/seo';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+// English news: show German posts until translations exist (open question in the plan: label or hide).
+const posts = (await getPosts(lang)).length ? await getPosts(lang) : await getPosts('de');
+const latest = posts.slice(0, 4);
+const year = new Date().getFullYear();
+const thisYear = posts.filter((p) => p.date.getFullYear() === year);
+const placings = medalTotal(thisYear);
+const de = lang === 'de';
+const jsonLd = organizationLd(await getSchedule());
+---
+
+<Base
+  alternate={{ de: '/', en: '/en/' }}
+  jsonLd={jsonLd}
+  description={de
+    ? 'Kuk Sool Won für Kinder ab 4 Jahren, Jugendliche und Erwachsene, Tai Chi, Qi Gong und Atemschulung in Duisburg-Rheinhausen. Kostenloses Probetraining.'
+    : 'Kuk Sool Won for children from age 4, teenagers and adults, plus Tai Chi, Qi Gong and breathing training in Duisburg-Rheinhausen. Free trial lesson.'}
+>
+  <WeekPlanner lang={lang}>
+    <Fragment slot="headline">
+      <h1 class="cond">{de ? 'Kampfkunst in Rheinhausen. Von 4 bis 80.' : 'Martial arts in Rheinhausen. Ages 4 to 80.'}</h1>
+      <p class="lead">
+        {de
+          ? 'Kuk Sool Won für Kinder, Jugendliche und Erwachsene. Tai Chi und Atemschulung in jedem Alter, ohne Leistungsdruck.'
+          : 'Kuk Sool Won for children, teenagers and adults. Tai Chi and breathing training at any age, without competition.'}
+      </p>
+    </Fragment>
+  </WeekPlanner>
+
+  <figure class="photo">
+    <Image src={groupPhoto} alt="Gruppenfoto auf der Matte vor den Flaggen von Deutschland, Korea, Kuk Sool Won und China" width={Math.min(groupPhoto.width, 2400)} quality={72} widths={[640, 1024, 1600, 2400]} sizes="100vw" />
+    <figcaption class="band"><div class="wrap">{de ? 'Lehrgang in der Halle, mit Gästen der IHHHF.' : 'Seminar in our hall with guests from the IHHHF.'}</div></figcaption>
+  </figure>
+
+  <DisciplinePaths lang={lang}>
+    <Fragment slot="ksw">
+      <p>Eine koreanische Kampfkunst, die Schläge, Würfe, Hebel, Fallschule, Stock- und Schwerttechniken in einem System verbindet.</p>
+      <p>Atemübungen gehören von der ersten Stunde an dazu. Kinder lernen Selbstverteidigung, Konzentration und Respekt vor dem Partner.</p>
+    </Fragment>
+    <Fragment slot="taichi">
+      <p>Leichte Bewegungen aus der eigenen Schrittlänge, immer aus einem sicheren Stand. Dazu eine Atemtechnik, die aus dem Yang-Stil weiterentwickelt wurde.</p>
+      <p>Seit über zehn Jahren gibt Peter Griepentrog diese Atemübungen auch im Krankenhaus weiter. Tai Chi und Qi Gong sind kein Leistungssport und in jedem Alter erlernbar.</p>
+    </Fragment>
+  </DisciplinePaths>
+
+  {site.video && <VideoFacade lang={lang} {...site.video} />}
+
+  <section class="news band" id="aktuelles">
+    <div class="wrap">
+      <div class="sec-h"><h2>{t('news.title')}</h2><a href={localePath('/articles/', lang)}>{t('news.all')}</a></div>
+      <NewsLedger posts={latest} lang={lang} />
+      {placings > 0 && <p class="tally">{year}: {placings} {t('news.placings')}.</p>}
+    </div>
+  </section>
+
+  <Master photo={masterPhoto} photoAlt="Peter Griepentrog im schwarzen Dobok mit einer Urkunde im IHHHF-Headquarters" caption="Urkunde „Bangbeob, der Weg“, IHHHF-Headquarters.">
+    <p>{de
+      ? 'Ich beschäftige mich seit 1986 mit Kampfkunst und unterrichte Kuk Sool Won, Tai Chi und Atemschulung in Rheinhausen.'
+      : 'I have practised martial arts since 1986 and teach Kuk Sool Won, Tai Chi and breathing training in Rheinhausen.'}</p>
+  </Master>
+
+  <Visit lang={lang} heading={de ? 'Komm zum Probetraining.' : 'Come to a trial lesson.'} />
+</Base>
+
+<style>
+  .lead { font-size: clamp(1.25rem, 1.1vw + 0.6rem, 1.5rem); max-width: 34ch; margin-top: 22px; font-weight: 500; }
+  h1 { font-size: clamp(3.2rem, 7.5vw, 8.6rem); line-height: 0.86; letter-spacing: -0.01em; font-weight: 900; margin-top: 18px; }
+  .photo { margin: 0; background: #000; }
+  .photo :global(img) { display: block; width: 100%; height: clamp(240px, 42vw, 560px); object-fit: cover; object-position: center 40%; }
+  .photo figcaption { color: #cfd2cb; font-size: 0.85rem; padding-block: 10px; }
+  .news { padding-block: 72px; }
+  .tally { margin-top: 22px; color: var(--stein); }
+</style>

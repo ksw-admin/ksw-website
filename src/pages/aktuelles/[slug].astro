@@ -1,0 +1,13 @@
+---
+// News had no own page on the old site (permalink: false); now each gets /aktuelles/<file name>/
+import PostPage from '../../components/PostPage.astro';
+import { getPosts } from '../../lib/posts';
+
+export async function getStaticPaths() {
+  const posts = (await getPosts('de')).filter((p) => p.collection === 'news' && p.hasPage);
+  return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+const { post } = Astro.props;
+---
+
+<PostPage post={post} />

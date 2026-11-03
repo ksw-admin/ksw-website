@@ -1,0 +1,82 @@
+{
+  "slots": [
+    {
+      "id": "ksw-4-6",
+      "discipline": "kuksoolwon",
+      "days": [
+        "mo",
+        "fr"
+      ],
+      "from": "16:00",
+      "to": "17:00",
+      "ageMin": 4,
+      "ageMax": 6
+    },
+    {
+      "id": "ksw-7-8",
+      "discipline": "kuksoolwon",
+      "days": [
+        "mo",
+        "fr"
+      ],
+      "from": "17:00",
+      "to": "18:00",
+      "ageMin": 7,
+      "ageMax": 8
+    },
+    {
+      "id": "ksw-9-11",
+      "discipline": "kuksoolwon",
+      "days": [
+        "mo",
+        "fr"
+      ],
+      "from": "18:00",
+      "to": "19:00",
+      "ageMin": 9,
+      "ageMax": 11
+    },
+    {
+      "id": "ksw-12-14",
+      "discipline": "kuksoolwon",
+      "days": [
+        "mo",
+        "fr"
+      ],
+      "from": "19:00",
+      "to": "20:00",
+      "ageMin": 12,
+      "ageMax": 14
+    },
+    {
+      "id": "ksw-15-80",
+      "discipline": "kuksoolwon",
+      "days": [
+        "mo",
+        "fr"
+      ],
+      "from": "20:00",
+      "to": "21:30",
+      "ageMin": 15,
+      "ageMax": 80
+    },
+    {
+      "id": "taichi-di",
+      "discipline": "taichi",
+      "days": [
+        "di"
+      ],
+      "from": "18:30",
+      "to": "19:30"
+    },
+    {
+      "id": "taichi-do",
+      "discipline": "taichi",
+      "days": [
+        "do"
+      ],
+      "from": "19:15",
+      "to": "20:15"
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+---
+// Old URLs stay: /category/kuksoolwon/, /category/taichi/
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { getSchedule, dayList, ageLabel } from '../../lib/schedule';
+import { Image } from 'astro:assets';
+import { splitId } from '../../lib/posts';
+import { resolveImage, capWidth } from '../../lib/images';
+import { site } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('disciplines', (e) => e.id.startsWith('de/'));
+  return entries.map((entry) => ({ params: { slug: splitId(entry.id).slug }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const slug = splitId(entry.id).slug as 'kuksoolwon' | 'taichi';
+const { Content } = await render(entry);
+const slots = await getSchedule(slug);
+const isKsw = slug === 'kuksoolwon';
+---
+
+<Base title={entry.data.title}>
+  <section class:list={['band', 'head', isKsw ? 'k' : 't']}>
+    <div class="wrap">
+      {isKsw && <div class="hangul" lang="ko" aria-hidden="true">국술원</div>}
+      <h1 class={isKsw ? 'cond' : 'wide'}>{entry.data.title}</h1>
+    </div>
+  </section>
+
+  <section class="band body">
+    <div class="wrap cols">
+      <div class="prose"><Content /></div>
+      <aside>
+        <h2>Trainingszeiten</h2>
+        <table>
+          <tbody>
+            {slots.map((s) => (
+              <tr>
+                <th scope="row">{dayList(s.days, 'de')}</th>
+                <td class="num">{s.from}–{s.to}</td>
+                <td>{ageLabel(s, 'de') ?? ''}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p class="hall">{site.hall.street}, {site.hall.note}<br />{site.hall.city}</p>
+        <a class="btn" href="/#besuch">Probetraining anfragen</a>
+      </aside>
+    </div>
+  </section>
+
+  {entry.data.galleryImages.length > 0 && (
+    <section class="band gallery">
+      <div class="wrap">
+        <div class="sec-h"><h2>Bilder</h2></div>
+        <ul>
+          {entry.data.galleryImages.map((g) => (
+            <li>
+              <a href={g.link} rel="noopener">
+                <Image src={resolveImage(entry.filePath, g.image)!.meta} alt="" width={capWidth(resolveImage(entry.filePath, g.image)!.meta, 600)} quality={75} widths={[300, 600]} sizes="(max-width: 600px) 100vw, 300px" loading="lazy" />
+                <span>{g.link_text}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+</Base>
+
+<style>
+  .head { padding-block: 56px; }
+  .head.k { background: var(--panel); color: var(--panel-fg); }
+  .head.t { background: var(--tc-bg); color: var(--tc-fg); }
+  .hangul { font-family: var(--hangul); font-weight: 800; color: var(--gelb); font-size: clamp(3rem, 7vw, 5.5rem); line-height: 1; letter-spacing: 0.06em; }
+  .k h1 { font-size: clamp(3rem, 8vw, 6rem); line-height: 0.9; font-weight: 900; margin-top: 10px; }
+  .t h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 300; }
+  .body { padding-block: 48px 64px; }
+  .cols { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 56px; align-items: start; }
+  aside { background: var(--card); border: 2px solid var(--fg); border-radius: 4px; padding: 20px; box-shadow: 12px 12px 0 var(--gelb); margin-right: 12px; }
+  aside h2 { font-size: 1.4rem; margin-bottom: 10px; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 8px 8px 8px 0; border-bottom: 1px solid var(--linie); vertical-align: top; }
+  th { font-weight: 600; }
+  .hall { margin-top: 16px; color: var(--stein); }
+  aside .btn { margin-top: 16px; }
+  .gallery { padding-block: 0 72px; }
+  .gallery ul { list-style: none; padding: 0; margin: 24px 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+  .gallery a { text-decoration: none; display: grid; gap: 6px; font-weight: 600; transition: transform 300ms ease-in; }
+  /* Same subtle zoom as the old site's .gal-item:hover */
+  .gallery a:hover, .gallery a:focus-visible { transform: scale(1.05); }
+  .gallery :global(img) { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4px; display: block; }
+  @media (max-width: 860px) { .cols { grid-template-columns: 1fr; } }
+</style>

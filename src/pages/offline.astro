@@ -1,0 +1,42 @@
+---
+// Shown by the service worker when a page is not cached and there is no network.
+// It is precached, so it always works: the things a visitor needs on the way to the hall.
+import Base from '../layouts/Base.astro';
+import { getSchedule, dayList, ageLabel } from '../lib/schedule';
+import { site, primaryPhone, telHref } from '../lib/site';
+
+const slots = await getSchedule();
+---
+
+<Base title="Offline" noindex>
+  <section class="band">
+    <div class="wrap">
+      <div class="sec-h"><h1>Keine Verbindung</h1></div>
+      <p class="lead">Diese Seite ist offline nicht gespeichert. Trainingszeiten und Kontakt gehen trotzdem:</p>
+      <table>
+        <tbody>
+          {slots.map((s) => (
+            <tr>
+              <th scope="row">{s.discipline === 'kuksoolwon' ? 'Kuk Sool Won' : 'Tai Chi'}</th>
+              <td>{dayList(s.days, 'de')}</td>
+              <td class="num">{s.from}–{s.to}</td>
+              <td>{ageLabel(s, 'de') ?? ''}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p class="contact">
+        <a class="num" href={telHref(primaryPhone.value)}>{primaryPhone.value}</a><br />
+        {site.hall.street}, {site.hall.note}, {site.hall.city}
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  section { padding-block: 40px 72px; }
+  .lead { margin-top: 20px; font-size: 1.15rem; }
+  table { margin-top: 20px; border-collapse: collapse; width: 100%; max-width: 44rem; }
+  th, td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--linie); }
+  .contact { margin-top: 24px; font-size: 1.3rem; font-weight: 700; }
+</style>

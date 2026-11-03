@@ -1,0 +1,190 @@
+---
+/**
+ * Hero: the training week as a grid plus the age finder (feature idea 1).
+ * Data: src/content/schedule.json. Works without JS (the full week shows); the script only highlights.
+ */
+import { getSchedule, minutes, dayShort, dayList, WEEKDAYS, type Weekday } from '../lib/schedule';
+import { useTranslations, localePath, type Lang } from '../i18n/ui';
+import { site } from '../lib/site';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const slots = await getSchedule();
+
+// Show Mon..last training day (at least Mon-Fri), and the hours that have training.
+const usedDays = new Set(slots.flatMap((s) => s.days));
+const lastDay = Math.max(4, ...[...usedDays].map((d) => WEEKDAYS.indexOf(d)));
+const days = WEEKDAYS.slice(0, lastDay + 1) as Weekday[];
+const STEP = 15;
+const start = Math.floor(Math.min(...slots.map((s) => minutes(s.from))) / 60) * 60;
+const end = Math.max(...slots.map((s) => minutes(s.to)));
+const rows = (end - start) / STEP;
+const row = (time: string) => (minutes(time) - start) / STEP + 2;
+const hours = Array.from({ length: Math.floor((end - start) / 60) + 1 }, (_, i) => start / 60 + i);
+
+const finderData = slots.map((s) => ({
+  discipline: s.discipline, from: s.from, to: s.to, ageMin: s.ageMin ?? null, ageMax: s.ageMax ?? null,
+  days: dayList(s.days, lang),
+}));
+const i18n = lang === 'de'
+  ? { group: 'Gruppe {a} bis {b} Jahre', adults: 'Erwachsene ab {a}', at: '{days}, {from} bis {to} Uhr', tooYoung: 'Kuk Sool Won beginnt mit {a} Jahren.', firstGroup: 'Die jüngste Gruppe trainiert {days}, {from} bis {to} Uhr.', taichi: 'Oder Tai Chi: {list}.', taichiOnly: 'Tai Chi: {list}.', taichiCalm: 'Ruhig, im eigenen Tempo, ohne Leistungsdruck.', or: ' oder ', hall: 'Kuk Sool Won, {street}.' }
+  : { group: 'Group {a} to {b} years', adults: 'Adults {a}+', at: '{days}, {from} to {to}', tooYoung: 'Kuk Sool Won starts at {a}.', firstGroup: 'The youngest group trains {days}, {from} to {to}.', taichi: 'Or Tai Chi: {list}.', taichiOnly: 'Tai Chi: {list}.', taichiCalm: 'Calm, at your own pace, no competition.', or: ' or ', hall: 'Kuk Sool Won, {street}.' };
+---
+
+<header class="hero band" id="woche">
+  <div class="wrap">
+    <div>
+      <slot name="headline" />
+      <div class="finder">
+        <label for="age">{t('finder.label')}</label>
+        <div class="stepper">
+          <button type="button" data-step="-1" aria-label={t('finder.younger')}>−</button>
+          <input id="age" type="number" inputmode="numeric" min="3" max="95" value="9" aria-describedby="finder-result" />
+          <button type="button" data-step="1" aria-label={t('finder.older')}>+</button>
+          <span class="unit">{t('finder.years')}</span>
+        </div>
+        <div class="result" id="finder-result" aria-live="polite"></div>
+        <a class="btn" href={localePath('/#besuch', lang)}>{t('cta.trial')}</a>
+      </div>
+    </div>
+
+    <div class="week">
+      <div class="week-head">{t('week.title')} <span>{site.hall.street}, {site.hall.note}</span></div>
+      <div class="grid" style={`--rows:${rows};--cols:${days.length}`}>
+        {days.map((d, i) => <div class="day" style={`grid-column:${i + 2}`}>{dayShort(d, lang)}</div>)}
+        {hours.map((h) => (
+          <>
+            <div class="tick num" style={`grid-row:${row(`${String(h).padStart(2, '0')}:00`)}`}>{h}:00</div>
+            <div class="rule" style={`grid-row:${row(`${String(h).padStart(2, '0')}:00`)}`} />
+          </>
+        ))}
+        {days.map((d, i) => (!usedDays.has(d) ? <div class="empty" style={`grid-column:${i + 2}`}>{t('week.none')}</div> : null))}
+        {slots.flatMap((s) =>
+          s.days.map((d) => (
+            <div
+              class:list={['slot', s.discipline === 'kuksoolwon' ? 'k' : 't']}
+              style={`grid-column:${days.indexOf(d) + 2};grid-row:${row(s.from)} / ${row(s.to)}`}
+              data-id={s.id}
+            >
+              {s.discipline === 'taichi' ? 'Tai Chi' : s.ageMax !== undefined && s.ageMax >= 80 ? `ab ${s.ageMin}` : `${s.ageMin}–${s.ageMax}`}
+              <small class="num">{s.from}</small>
+            </div>
+          )),
+        )}
+      </div>
+      <div class="legend">
+        <span><i style="background:var(--slot-k)"></i>Kuk Sool Won</span>
+        <span><i style="background:var(--gelb);box-shadow:inset 0 0 0 2px #000"></i>{t('week.yours')}</span>
+        <span><i style="background:var(--jade)"></i>Tai Chi und Qi Gong</span>
+      </div>
+    </div>
+  </div>
+  <script type="application/json" id="finder-data" set:html={JSON.stringify({ slots: slots.map((s, i) => ({ id: s.id, ...finderData[i] })), i18n, street: site.hall.street })} />
+</header>
+
+<script>
+  type S = { id: string; discipline: string; from: string; to: string; ageMin: number | null; ageMax: number | null; days: string };
+  const data = JSON.parse(document.getElementById('finder-data')!.textContent!) as { slots: S[]; i18n: Record<string, string>; street: string };
+  const fill = (tpl: string, v: Record<string, string | number>) => tpl.replace(/\{(\w+)\}/g, (_, k) => String(v[k] ?? ''));
+  const input = document.getElementById('age') as HTMLInputElement;
+  const out = document.getElementById('finder-result')!;
+  const els = [...document.querySelectorAll<HTMLElement>('.week .slot')];
+  const ksw = data.slots.filter((s) => s.discipline === 'kuksoolwon' && s.ageMin !== null);
+  const taichi = data.slots.filter((s) => s.discipline === 'taichi');
+  const minAge = Math.min(...ksw.map((s) => s.ageMin!));
+  const adultAge = Math.max(...ksw.map((s) => s.ageMin!));
+  const L = data.i18n;
+  const taichiList = taichi.map((s) => `${s.days} ${s.from}`).join(L.or);
+
+  function render() {
+    const a = Math.max(3, Math.min(95, parseInt(input.value, 10) || 9));
+    const match = ksw.find((s) => a >= s.ageMin! && a <= (s.ageMax ?? 999));
+    const showTaichi = a >= adultAge;
+    els.forEach((el) => {
+      const s = data.slots.find((x) => x.id === el.dataset.id)!;
+      const on = s === match || (showTaichi && s.discipline === 'taichi');
+      el.classList.toggle('hit', on);
+      el.classList.toggle('dim', !on);
+    });
+    let strong: string, line: string;
+    if (a < minAge) {
+      const first = ksw.reduce((x, y) => (x.ageMin! < y.ageMin! ? x : y));
+      strong = fill(L.tooYoung, { a: minAge });
+      line = fill(L.firstGroup, { days: first.days, from: first.from, to: first.to });
+    } else if (!match) {
+      strong = fill(L.taichiOnly, { list: taichiList });
+      line = L.taichiCalm;
+    } else {
+      const g = match.ageMax !== null && match.ageMax < 80 ? fill(L.group, { a: match.ageMin!, b: match.ageMax }) : fill(L.adults, { a: match.ageMin! });
+      strong = `${g}: ${fill(L.at, { days: match.days, from: match.from, to: match.to })}.`;
+      line = showTaichi ? fill(L.taichi, { list: taichiList }) : fill(L.hall, { street: data.street });
+    }
+    out.innerHTML = '';
+    const b = document.createElement('strong'); b.textContent = strong;
+    const p = document.createElement('p'); p.textContent = line;
+    out.append(b, p);
+  }
+  document.querySelectorAll<HTMLButtonElement>('.stepper [data-step]').forEach((btn) =>
+    btn.addEventListener('click', () => {
+      input.value = String(Math.max(3, Math.min(95, (parseInt(input.value, 10) || 9) + Number(btn.dataset.step))));
+      render();
+    }),
+  );
+  input.addEventListener('input', render);
+  render();
+</script>
+
+<style>
+  .hero { padding-block: 28px 56px; }
+  .wrap { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 48px; align-items: start; }
+  @media (max-width: 860px) { .wrap { grid-template-columns: minmax(0, 1fr); gap: 32px; } }
+
+  .finder { margin-top: 34px; border-top: 6px solid var(--gelb); padding-top: 18px; max-width: 30rem; }
+  label { font-weight: 700; display: block; margin-bottom: 10px; }
+  .stepper { display: flex; width: max-content; border: 3px solid var(--fg); border-radius: 4px; background: var(--card); }
+  .stepper button { width: 48px; background: transparent; border: 0; font: 800 1.6rem var(--f); cursor: pointer; color: var(--fg); }
+  .stepper button:hover { background: var(--linie); }
+  .stepper input {
+    width: 4.2ch; text-align: center; border: 0; border-inline: 3px solid var(--fg); background: transparent;
+    font: 900 2.2rem/1 var(--f); font-stretch: 62%; padding: 6px 0; color: var(--fg); appearance: textfield;
+  }
+  .stepper input::-webkit-outer-spin-button, .stepper input::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .unit { align-self: center; padding: 0 14px; font-weight: 600; }
+  .result { margin-top: 16px; min-height: 4.2em; overflow-wrap: anywhere; }
+  .result :global(strong) { display: block; font-size: 1.35rem; line-height: 1.2; }
+  .result :global(p) { margin-top: 4px; }
+  .finder .btn { margin-top: 14px; }
+
+  .week {
+    background: var(--card); border: 2px solid var(--fg); border-radius: 4px; padding: 16px 16px 12px;
+    box-shadow: 12px 12px 0 var(--gelb); margin-right: 12px;
+  }
+  @media (max-width: 500px) { .week { box-shadow: 8px 8px 0 var(--gelb); margin-right: 8px; } }
+  .week-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; font-weight: 700; }
+  .week-head span { font-weight: 500; font-size: 0.9rem; color: var(--stein); }
+  .grid {
+    display: grid; column-gap: 6px; font-size: 0.8rem;
+    grid-template-columns: 3.2rem repeat(var(--cols), minmax(0, 1fr));
+    grid-template-rows: auto repeat(var(--rows), clamp(15px, 1.15vw, 22px));
+  }
+  .day { grid-row: 1; text-align: center; font-weight: 800; padding-bottom: 6px; }
+  .tick { grid-column: 1; color: var(--stein); transform: translateY(-0.55em); font-weight: 500; }
+  .rule { grid-column: 2 / -1; border-top: 1px solid var(--linie); pointer-events: none; }
+  .slot {
+    border-radius: 3px; margin-block: 1px; padding: 3px 6px; min-width: 0; overflow: hidden;
+    display: flex; flex-direction: column; justify-content: center; line-height: 1.1; font-weight: 700;
+    transition: opacity 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+  }
+  .slot small { font-weight: 500; font-size: 0.72rem; }
+  .slot.k { background: var(--slot-k); color: var(--slot-k-fg); }
+  .slot.t { background: var(--jade); color: #fff; }
+  /* Other groups: only the fill fades, the label stays readable (opacity on the whole slot failed contrast). */
+  .slot.k.dim { background: color-mix(in srgb, var(--slot-k) 14%, var(--card)); color: var(--fg); }
+  .slot.t.dim { background: color-mix(in srgb, var(--jade) 20%, var(--card)); color: var(--fg); }
+  .slot.dim small { color: var(--stein); }
+  .slot.k.hit { background: var(--gelb); color: #000; box-shadow: inset 0 0 0 2px #000; }
+  .empty { grid-row: 2 / -1; display: flex; align-items: center; justify-content: center; color: var(--stein); writing-mode: vertical-rl; font-size: 0.75rem; }
+  .legend { display: flex; gap: 18px; margin-top: 12px; font-size: 0.85rem; flex-wrap: wrap; }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+</style>
