@@ -94,4 +94,8 @@ Netlify und Cloudflare sind unter dem EU-US Data Privacy Framework zertifiziert.
 
 **YouTube-Video:** Das Video auf der Startseite wird erst nach einem Klick auf „Video abspielen“ von YouTube (Google Ireland Ltd.) geladen; erst dann werden Daten wie Ihre IP-Adresse an Google übertragen (Art. 6 Abs. 1 lit. a DSGVO).
 
+**Fragen-Formular:** Über das Formular auf der Seite „FAQ“ können Sie uns eine Frage senden. Netlify speichert die Frage, die Sprache der Seite und, falls Sie sie angeben, Ihre E-Mail-Adresse und leitet sie an uns weiter; zum Schutz vor Spam prüft Netlify Einsendungen automatisch mit dem Dienst Akismet (Automattic Inc., USA). Wir nutzen die Angaben nur, um Ihre Frage zu beantworten und sie gegebenenfalls ohne Namen und E-Mail-Adresse mit Antwort in die FAQ aufzunehmen, und löschen sie danach (Art. 6 Abs. 1 lit. a DSGVO). Die E-Mail-Adresse ist freiwillig.
+
+**Kalender-Abo:** Wenn Sie die Trainingszeiten als Kalender abonnieren, ruft Ihre Kalender-App die Datei regelmäßig bei Netlify ab; dabei fallen die oben unter „Hosting“ genannten Server-Logdaten an.
+
 **Fotos und Namen:** Fotos und Vornamen von Schülerinnen und Schülern veröffentlichen wir nur mit Einwilligung, bei Minderjährigen der Erziehungsberechtigten. Die Einwilligung kann jederzeit widerrufen werden.

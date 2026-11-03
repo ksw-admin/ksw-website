@@ -157,6 +157,25 @@ collections:
           - { label: Titel, name: link_text, widget: string, hint: z.B. Gürtelprüfung 2026 }
           - { label: Link zum Album (Flickr), name: link, widget: string, pattern: ['^https?://', 'Bitte eine vollständige Adresse mit https:// eingeben'] }
 
+  - name: faq
+    label: FAQ
+    label_singular: Frage
+    description: >-
+      Häufige Fragen (Seite /faq/). Neue Fragen von Besuchern kommen über das Formular unter der FAQ ins
+      Netlify-Dashboard und per E-Mail; erst wenn hier eine Antwort angelegt wird, erscheint die Frage auf der Website.
+    folder: src/content/faq
+    i18n: true
+    preview_path: 'faq/#{{slug}}'
+    create: true
+    slug: '{{question}}'
+    identifier_field: question
+    summary: '{{order}}  {{question}}'
+    sortable_fields: [order, question]
+    fields:
+      - { label: Frage, name: question, widget: string, i18n: true }
+      - { label: Reihenfolge, name: order, widget: number, value_type: int, default: 100, required: false, hint: 'Kleine Zahlen stehen oben (10, 20, 30 …; Lücken lassen Platz zum Einsortieren).' }
+      - { label: Antwort, name: body, widget: markdown, i18n: true, buttons: [bold, italic, link, bulleted-list], editor_components: [], hint: 'Kurz und konkret. Links auf andere Seiten der Website sind gut (z.B. /#woche für den Wochenplan).' }
+
   - name: pages
     label: Rechtliches
     files:
@@ -267,6 +286,31 @@ collections:
               - { label: Alter von, name: ageMin, widget: number, value_type: int, required: false }
               - { label: Alter bis, name: ageMax, widget: number, value_type: int, required: false, hint: 'Leer = „ab … Jahre“ (keine Obergrenze)' }
               - { label: Hinweis, name: note, widget: string, required: false }
+
+      - label: Trainingsausfälle
+        name: closures
+        file: src/content/closures.json
+        format: json
+        description: >-
+          Hinweis „Kein Training“ oben auf jeder Seite, ab 14 Tage vorher bis zum letzten Tag. Die Termine fallen auch
+          im Kalender-Abo weg. Kurzfristig (heute): „Von“ = heute, „Bis“ leer lassen. Vergangene Ausfälle verschwinden
+          von selbst und können gelöscht werden.
+        fields:
+          - label: Ausfälle
+            name: items
+            widget: list
+            required: false
+            summary: '{{fields.from}} – {{fields.to}}: {{fields.text}}'
+            fields:
+              - { label: Von, name: from, widget: datetime, date_format: DD.MM.YYYY, time_format: false, format: YYYY-MM-DD, picker_utc: true }
+              - { label: Bis (leer = nur ein Tag), name: to, widget: datetime, date_format: DD.MM.YYYY, time_format: false, format: YYYY-MM-DD, picker_utc: true, required: false }
+              - { label: Text, name: text, widget: string, hint: 'z.B. „Herbstferien“ oder „Halle belegt“. Steht nach „Kein Training vom … bis …:“.' }
+              - { label: Text Englisch (optional), name: text_en, widget: string, required: false }
+              - label: Betrifft
+                name: groups
+                widget: select
+                default: alle
+                options: [{ label: Alle Gruppen, value: alle }, { label: Nur Kuk Sool Won, value: kuksoolwon }, { label: Nur Tai Chi, value: taichi }]
 
       - label: Kontakt und Allgemeines
         name: site

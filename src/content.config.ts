@@ -105,4 +105,31 @@ const schedule = defineCollection({
     .refine((s) => s.from < s.to, { message: '"to" muss nach "from" liegen' }),
 });
 
-export const collections = { news, articles, disciplines, pages, sponsors, schedule };
+// FAQ: one Markdown file per question (src/content/faq/de/, English translations in .../en/).
+const faq = defineCollection({
+  loader: glob({ base: './src/content/faq', pattern: '**/*.md', generateId: keepName }),
+  schema: z.object({
+    question: opt(z.string()),
+    // Position on the page (small numbers first). Taken from the German entry.
+    order: opt(z.number()),
+  }),
+});
+
+// Training closures (banner + calendar feeds). { "items": [...] } like schedule.json; ids added here.
+const date = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Datum als JJJJ-MM-TT');
+const closures = defineCollection({
+  loader: file('src/content/closures.json', {
+    parser: (text) => (JSON.parse(text).items as object[]).map((c, i) => ({ id: String(i), ...c })),
+  }),
+  schema: z
+    .object({
+      from: date,
+      to: opt(date),
+      text: z.string().min(1),
+      text_en: opt(z.string()),
+      groups: opt(z.enum(['alle', 'kuksoolwon', 'taichi'])),
+    })
+    .refine((c) => !c.to || c.to >= c.from, { message: '"bis" muss am oder nach "von" liegen' }),
+});
+
+export const collections = { news, articles, disciplines, pages, sponsors, schedule, faq, closures };

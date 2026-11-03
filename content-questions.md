@@ -17,6 +17,28 @@ From the content pass on 2026-11-03 (old site vs. redesign). Answer here or tell
       Note: "Melanie Döring" next to "Steven D." may still reveal Steven's surname.
 - [ ] **Impressum:** VAT ID (USt-IdNr.), if any. Legal drafts (Datenschutz, Impressum) are marked ENTWURF in the source.
 
+## FAQ: questions only Peter can answer
+
+The FAQ (/faq/, CMS: FAQ) has 9 answers taken from texts already on the site. These common questions have no
+answer on the site yet; each one becomes an FAQ entry once answered:
+
+- [ ] What does training cost? Membership fee, contract, notice period (or deliberately "ask in person")?
+- [ ] What to wear and bring to the first lesson? When is a uniform (Dobok) needed, and where does it come from?
+- [ ] Is the trial lesson free? How many trial lessons?
+- [ ] Insurance: are students insured (club/association), or should they have their own accident insurance?
+- [ ] May parents watch the children's groups?
+- [ ] Tai Chi and Atemschulung with health problems (back, knees, after illness): what may the site say?
+- [ ] Training in school holidays: does training pause during the NRW school holidays as a rule? (If yes, the closures
+      could be filled in automatically.)
+
+## Question form and closures
+
+- [ ] **Who reads the questions** sent through the FAQ form? Netlify › Forms › "frage" › notifications: set the email
+      address there. Submissions stay in the Netlify dashboard until deleted: delete them once answered (the Datenschutz
+      text promises that).
+- [ ] **Training closures** (CMS: Einstellungen › Trainingsausfälle): Peter enters holidays and cancellations there.
+      The banner shows from 14 days before. OK, or a different lead time?
+
 ## Decisions
 
 - [ ] **Form of address:** du, Sie or ihr? Today mixed: home page "Komm zum Probetraining" (du), contact page

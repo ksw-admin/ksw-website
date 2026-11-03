@@ -4,12 +4,12 @@ import { generateSW } from 'workbox-build';
 
 const { count, size, warnings } = await generateSW({
   globDirectory: 'dist',
-  // Precache: the app shell (CSS/JS/Latin font), home pages, offline page, manifest, icons.
+  // Precache: the app shell (CSS/JS/Latin font), offline page, manifest, icons. No HTML pages: precached pages are
+  // answered from the cache first, so after a deploy a returning visitor would see the old home page once (and could
+  // miss a same-day "Kein Training" notice). Pages go network-first below; offline they come from that cache.
   globPatterns: [
     '_astro/*.{css,js}',
     '_astro/archivo-latin-*.woff2',
-    'index.html',
-    'en/index.html',
     'offline/index.html',
     'manifest.json',
     'favicon.ico',

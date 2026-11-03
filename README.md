@@ -26,6 +26,10 @@ Netlify does the deploys.
 | Training times | `src/content/schedule.json` (week planner, age finder, discipline pages, offline page) |
 | Contact, credentials, social links, video | `src/content/site.json` |
 | Impressum, Datenschutz | `src/content/pages/de/` |
+| FAQ | `src/content/faq/de/` (one file per question, `order` sets the position; English in `.../en/`) |
+| Training closures ("Kein Training" banner) | `src/content/closures.json` (banner from 14 days before; also removed from the calendar feeds) |
+| Calendar feeds | `/kalender/training.ics` and `/kalender/<group id>.ics`, built from training times + closures (`src/lib/ics.ts`) |
+| Question form | FAQ page, Netlify Forms, form name `frage`. Notifications: Netlify › Forms. Nothing sent appears on the site by itself. |
 | Interface texts (de/en) | `src/i18n/ui.ts` |
 | CMS config | `public/admin/config.yml` (branch: `astro-redesign` until the merge, then `main`) |
 | Design tokens | `src/styles/global.css` |

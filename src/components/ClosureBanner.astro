@@ -1,0 +1,59 @@
+---
+/**
+ * "Kein Training" notice under the header, on every page. Data: src/content/closures.json (CMS: Einstellungen ›
+ * Trainingsausfälle). The site is static, so all upcoming closures are in the page and a tiny script shows the
+ * ones due today (from 14 days before until the last day): a closure entered weeks ahead appears and disappears
+ * on time without a new deploy. Without JS the build-time state shows.
+ */
+import { getClosures } from '../lib/closures-data';
+import { addDays, ANNOUNCE_DAYS, endOf, headline, isShown, textOf, todayInGermany } from '../lib/closures';
+import type { Lang } from '../i18n/ui';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const today = todayInGermany();
+const items = (await getClosures()).map((c) => ({
+  show: addDays(c.from, -ANNOUNCE_DAYS),
+  end: endOf(c),
+  visible: isShown(c, today),
+  headline: headline(c, lang),
+  text: textOf(c, lang),
+  textLang: lang === 'en' && !c.text_en?.trim() ? 'de' : undefined,
+}));
+---
+
+{
+  items.length > 0 && (
+    <aside class="closures band" aria-label={lang === 'de' ? 'Trainingsausfall' : 'Training cancelled'} hidden={!items.some((i) => i.visible)}>
+      <ul class="wrap">
+        {items.map((i) => (
+          <li data-show={i.show} data-end={i.end} hidden={!i.visible}>
+            <strong>{i.headline}:</strong> <span lang={i.textLang}>{i.text}</span>
+          </li>
+        ))}
+      </ul>
+    </aside>
+  )
+}
+
+<script is:inline>
+  (function () {
+    var box = document.querySelector('.closures');
+    if (!box) return;
+    var today = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Berlin' });
+    var any = false;
+    box.querySelectorAll('li').forEach(function (li) {
+      var on = li.dataset.show <= today && today <= li.dataset.end;
+      li.hidden = !on;
+      any = any || on;
+    });
+    box.hidden = !any;
+  })();
+</script>
+
+<style>
+  .closures { background: var(--gelb); color: #000; border-bottom: 2px solid #000; }
+  ul { list-style: none; margin: 0 auto; padding-block: 10px; display: grid; gap: 4px; }
+  li { line-height: 1.35; }
+  strong { font-weight: 800; }
+</style>

@@ -30,6 +30,8 @@ const name = (s: Slot) => (s.discipline === 'taichi' ? taichiName : 'Kuk Sool Wo
 const short = (s: Slot) =>
   s.discipline === 'taichi' ? 'Tai Chi' : s.ageMax === undefined ? `${de ? 'ab' : ''} ${s.ageMin}${de ? '' : '+'}`.trim() : `${s.ageMin}–${s.ageMax}`;
 const when = (s: Slot) => `${dayList(s.days, lang)}, ${s.from} ${de ? 'bis' : 'to'} ${s.to}${de ? ' Uhr' : ''}`;
+// Calendar subscription (src/pages/kalender/): webcal:// opens the calendar app's subscribe dialog.
+const webcal = (id: string) => `webcal://${Astro.site!.host}/kalender/${id}.ics`;
 const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bis ' : ' to ')].filter(Boolean).join(', ');
 ---
 
@@ -51,6 +53,8 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
             <a class="more" href={localePath(s.discipline === 'taichi' ? '/category/taichi/' : '/category/kuksoolwon/', lang)}>
               {s.discipline === 'taichi' ? t('week.more.taichi') : t('week.more.ksw')}
             </a>
+            <a class="more cal" href={webcal(s.id)}>{t('week.calendar')}</a>
+            <a class="howto" href={localePath('/faq/#kalender', lang)}>{t('week.calendar.howto')}</a>
           </div>
         ))
       }
@@ -148,6 +152,8 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
   .detail .when { font-size: 1.15rem; font-weight: 600; margin-top: 4px; }
   .detail p + p { margin-top: 4px; }
   .detail .more { display: inline-block; margin-top: 10px; font-weight: 700; text-underline-offset: 4px; }
+  .detail .cal { display: block; margin-top: 6px; }
+  .detail .howto { font-size: 0.9rem; color: var(--stein); }
   .detail .btn { margin-top: 18px; }
   @media (max-width: 860px) { .detail { margin-top: 0; min-height: 0; } }
 

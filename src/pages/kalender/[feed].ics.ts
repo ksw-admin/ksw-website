@@ -1,0 +1,37 @@
+// Calendar subscriptions: /kalender/training.ics (all groups) and /kalender/<group id>.ics (one group, e.g. for
+// parents). Times from schedule.json, closures from closures.json. Calendar apps re-read the file every few hours.
+import type { APIRoute, GetStaticPaths } from 'astro';
+import { getSchedule, ageLabel, type Slot } from '../../lib/schedule';
+import { getClosures } from '../../lib/closures-data';
+import { buildCalendar, type FeedSlot } from '../../lib/ics';
+import { site } from '../../lib/site';
+
+const toFeed = (s: Slot): FeedSlot => ({
+  id: s.id,
+  discipline: s.discipline,
+  days: s.days,
+  from: s.from,
+  to: s.to,
+  title: s.discipline === 'taichi' ? 'Tai Chi und Qi Gong' : ['Kuk Sool Won', ageLabel(s, 'de')].filter(Boolean).join(', '),
+});
+
+export const getStaticPaths = (async () => {
+  const slots = await getSchedule();
+  return [
+    { params: { feed: 'training' }, props: { slots, name: `${site.shortName}: Training` } },
+    ...slots.map((s) => ({ params: { feed: s.id }, props: { slots: [s], name: `${site.shortName}: ${toFeed(s).title}` } })),
+  ];
+}) satisfies GetStaticPaths;
+
+export const GET: APIRoute = async ({ props, site: base }) => {
+  const { slots, name } = props as { slots: Slot[]; name: string };
+  const body = buildCalendar({
+    name,
+    host: base!.host,
+    location: [site.hall.street, site.hall.note, site.hall.city].filter(Boolean).join(', '),
+    url: new URL('/#woche', base).href,
+    slots: slots.map(toFeed),
+    closures: await getClosures(),
+  });
+  return new Response(body, { headers: { 'Content-Type': 'text/calendar; charset=utf-8' } });
+};

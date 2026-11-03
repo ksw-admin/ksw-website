@@ -4,6 +4,7 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import MobileBar from '../components/MobileBar.astro';
+import ClosureBanner from '../components/ClosureBanner.astro';
 import { site } from '../lib/site';
 import { getLangFromUrl } from '../i18n/ui';
 
@@ -90,6 +91,7 @@ const ogImage = new URL(encodeURI(image), Astro.site);
   </head>
   <body>
     <Header lang={lang} alternate={alternate} />
+    <ClosureBanner lang={lang} />
     {isFallback && (
       <aside class="fallback-note band" lang="en" aria-label="Language note">
         <p class="wrap">This page is only available in German. <a href={dePath} hreflang="de" lang="de">Deutsche Version</a></p>

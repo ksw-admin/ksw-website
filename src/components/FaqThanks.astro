@@ -1,0 +1,26 @@
+---
+/** Shown after the question form was sent (Netlify redirects the POST here). Not for search engines. */
+import Base from '../layouts/Base.astro';
+import { useTranslations, localePath, type Lang } from '../i18n/ui';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<Base title={t('faq.thanks.title')} noindex alternate={{ de: '/faq/danke/', en: '/en/faq/danke/' }}>
+  <section class="band">
+    <div class="wrap">
+      <h1 class="cond">{t('faq.thanks.title')}</h1>
+      <p>{t('faq.thanks.text')}</p>
+      <a class="btn" href={localePath('/faq/', lang)}>{t('faq.thanks.back')}</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  section { padding-block: 56px 80px; }
+  h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); line-height: 0.95; font-weight: 900; }
+  p { margin-top: 16px; max-width: 52ch; font-size: 1.1rem; }
+  .btn { margin-top: 24px; }
+</style>
