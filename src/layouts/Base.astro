@@ -39,6 +39,13 @@ const ogImage = new URL(encodeURI(image), Astro.site);
 <html lang={lang}>
   <head>
     <meta charset="utf-8" />
+    <!-- Theme chosen in the footer (Hell/Dunkel); none = follow the system. Runs before first paint: no flash. -->
+    <script is:inline>
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{fullTitle}</title>
     <meta name="description" content={metaDescription} />
