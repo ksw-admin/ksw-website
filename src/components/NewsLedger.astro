@@ -10,8 +10,9 @@ import { capWidth } from '../lib/images';
 import type { Post } from '../lib/posts';
 import type { Lang } from '../i18n/ui';
 
-interface Props { posts: Post[]; lang: Lang }
-const { posts, lang } = Astro.props;
+interface Props { posts: Post[]; lang: Lang; /** h3 under a section h2 (home page), h2 directly under the page h1 (list page) */ level?: 2 | 3 }
+const { posts, lang, level = 3 } = Astro.props;
+const H = level === 2 ? 'h2' : 'h3';
 const fmt = new Intl.DateTimeFormat(lang === 'de' ? 'de-DE' : 'en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
 const teaser = (s: string) => (s.length > 220 ? s.slice(0, 217).replace(/\s+\S*$/, '') + ' …' : s);
 const more = lang === 'de' ? 'Weiterlesen' : 'Read more';
@@ -40,7 +41,7 @@ const fullSize = new Map(
           )}
           <div class="text">
             {(d.kind || d.place) && <span class="kind">{[d.kind, d.place].filter(Boolean).join(', ')}</span>}
-            <h3 lang={p.textLang !== lang ? p.textLang : undefined}>{p.href ? <a href={p.href}>{p.title}</a> : p.title}</h3>
+            <H lang={p.textLang !== lang ? p.textLang : undefined}>{p.href ? <a href={p.href}>{p.title}</a> : p.title}</H>
             {p.hasPage ? (
               <p lang={p.descriptionLang !== lang ? p.descriptionLang : undefined}>{teaser(p.paragraphs[0] ?? '')} <a class="more" href={p.href} lang={lang}>{more}</a></p>
             ) : (
@@ -74,9 +75,9 @@ const fullSize = new Map(
   .thumb :global(img) { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4px; background: var(--linie); }
   .text { grid-area: text; min-width: 0; }
   li > :global(.medals) { grid-area: medals; padding-top: 2px; }
-  h3 { font-size: 1.3rem; font-weight: 700; line-height: 1.2; }
-  h3 a { text-decoration: none; }
-  h3 a:hover { text-decoration: underline; }
+  .text > :is(h2, h3) { font-size: 1.3rem; font-weight: 700; line-height: 1.2; }
+  .text > :is(h2, h3) a { text-decoration: none; }
+  .text > :is(h2, h3) a:hover { text-decoration: underline; }
   p { color: var(--stein); margin-top: 6px; max-width: 62ch; }
   p.full { color: var(--fg); white-space: pre-line; }
   .more { font-weight: 700; color: var(--fg); white-space: nowrap; }

@@ -15,7 +15,7 @@ const label = medals ? [...parts.map(([, name, n]) => `${n} ${name}`), medals.ot
 
 {
   medals && (
-    <div class="medals num" aria-label={label}>
+    <div class="medals num" role="img" aria-label={label}>
       {parts.map(([cls, , n]) => (
         <span><i class={cls} />{n}</span>
       ))}

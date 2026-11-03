@@ -91,9 +91,9 @@ const ogImage = new URL(encodeURI(image), Astro.site);
   <body>
     <Header lang={lang} alternate={alternate} />
     {isFallback && (
-      <p class="fallback-note band" lang="en">
-        <span class="wrap">This page is only available in German. <a href={dePath} hreflang="de" lang="de">Deutsche Version</a></span>
-      </p>
+      <aside class="fallback-note band" lang="en" aria-label="Language note">
+        <p class="wrap">This page is only available in German. <a href={dePath} hreflang="de" lang="de">Deutsche Version</a></p>
+      </aside>
     )}
     <main id="inhalt" lang={isFallback ? 'de' : undefined}>
       <slot />

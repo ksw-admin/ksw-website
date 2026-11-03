@@ -51,7 +51,7 @@ const links = [
               </li>
             ))
           }
-          <li class="langs" role="group" aria-label={lang === 'de' ? 'Sprache' : 'Language'}>
+          <li><div class="langs" role="group" aria-label={lang === 'de' ? 'Sprache' : 'Language'}>
             {languages.map((l, i) => (
               <>
                 {i > 0 && <span class="sep" aria-hidden="true">/</span>}
@@ -62,7 +62,7 @@ const links = [
                 )}
               </>
             ))}
-          </li>
+          </div></li>
         </ul>
       </div>
     </nav>
@@ -151,7 +151,8 @@ const links = [
     #menu li { border-bottom: 1px solid var(--linie); }
     #menu a { display: block; padding: 16px 0; font-size: 1.6rem; font-weight: 800; font-stretch: 62%; }
     #menu .link[aria-current='page'] { text-decoration: none; box-shadow: inset 6px 0 0 var(--gelb); padding-left: 16px; }
-    #menu .langs { border-bottom: 0; padding-top: 18px; font-size: 1.1rem; }
+    #menu li:has(> .langs) { border-bottom: 0; }
+    #menu .langs { padding-top: 18px; font-size: 1.1rem; }
     #menu .langs a { display: inline; padding: 0; font-size: inherit; font-weight: 600; font-stretch: 100%; }
   }
 </style>

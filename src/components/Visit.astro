@@ -2,8 +2,9 @@
 import { site, primaryPhone, telHref } from '../lib/site';
 import type { Lang } from '../i18n/ui';
 
-interface Props { lang: Lang; heading: string; intro?: string }
-const { lang, heading, intro } = Astro.props;
+interface Props { lang: Lang; heading: string; intro?: string; /** 1 on the contact page, where this is the page heading */ level?: 1 | 2 }
+const { lang, heading, intro, level = 2 } = Astro.props;
+const H = level === 1 ? 'h1' : 'h2';
 const de = lang === 'de';
 const others = site.phones.filter((p) => p !== primaryPhone);
 ---
@@ -11,7 +12,7 @@ const others = site.phones.filter((p) => p !== primaryPhone);
 <section class="visit band" id="besuch">
   <div class="wrap">
     <div>
-      <h2 class="cond">{heading}</h2>
+      <H class="cond">{heading}</H>
       {intro && <p class="intro">{intro}</p>}
       <a class="phone cond num" href={telHref(primaryPhone.value)}>
         <span class="icon" aria-hidden="true">
@@ -38,7 +39,7 @@ const others = site.phones.filter((p) => p !== primaryPhone);
 <style>
   .visit { background: #000; color: #fff; padding-block: 64px; }
   .wrap { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 48px; }
-  h2 { font-size: clamp(2.4rem, 6vw, 4.6rem); line-height: 0.9; font-weight: 900; }
+  :is(h1, h2) { font-size: clamp(2.4rem, 6vw, 4.6rem); line-height: 0.9; font-weight: 900; }
   .phone {
     display: inline-flex; align-items: center; gap: 0.25em; margin-top: 26px;
     font-size: clamp(2.4rem, 7vw, 5.2rem); font-weight: 900; line-height: 1; text-decoration: none; letter-spacing: -0.01em; color: var(--gelb);
