@@ -84,41 +84,36 @@ const i18n = lang === 'de'
 </header>
 
 <script>
+  import { findGroup, clampAge } from '../lib/finder';
+
   type S = { id: string; discipline: string; from: string; to: string; ageMin: number | null; ageMax: number | null; days: string };
   const data = JSON.parse(document.getElementById('finder-data')!.textContent!) as { slots: S[]; i18n: Record<string, string>; street: string };
   const fill = (tpl: string, v: Record<string, string | number>) => tpl.replace(/\{(\w+)\}/g, (_, k) => String(v[k] ?? ''));
   const input = document.getElementById('age') as HTMLInputElement;
   const out = document.getElementById('finder-result')!;
   const els = [...document.querySelectorAll<HTMLElement>('.week .slot')];
-  const ksw = data.slots.filter((s) => s.discipline === 'kuksoolwon' && s.ageMin !== null);
-  const taichi = data.slots.filter((s) => s.discipline === 'taichi');
-  const minAge = Math.min(...ksw.map((s) => s.ageMin!));
-  const adultAge = Math.max(...ksw.map((s) => s.ageMin!));
   const L = data.i18n;
-  const taichiList = taichi.map((s) => `${s.days} ${s.from}`).join(L.or);
+  const taichiList = data.slots.filter((s) => s.discipline === 'taichi').map((s) => `${s.days} ${s.from}`).join(L.or);
 
   function render() {
-    const a = Math.max(3, Math.min(95, parseInt(input.value, 10) || 9));
-    const match = ksw.find((s) => a >= s.ageMin! && a <= (s.ageMax ?? 999));
-    const showTaichi = a >= adultAge;
+    const result = findGroup(data.slots, clampAge(input.value));
+    const on = new Set(result.highlight.map((s) => s.id));
     els.forEach((el) => {
-      const s = data.slots.find((x) => x.id === el.dataset.id)!;
-      const on = s === match || (showTaichi && s.discipline === 'taichi');
-      el.classList.toggle('hit', on);
-      el.classList.toggle('dim', !on);
+      el.classList.toggle('hit', on.has(el.dataset.id!));
+      el.classList.toggle('dim', !on.has(el.dataset.id!));
     });
     let strong: string, line: string;
-    if (a < minAge) {
-      const first = ksw.reduce((x, y) => (x.ageMin! < y.ageMin! ? x : y));
-      strong = fill(L.tooYoung, { a: minAge });
-      line = fill(L.firstGroup, { days: first.days, from: first.from, to: first.to });
-    } else if (!match) {
+    if (result.kind === 'tooYoung') {
+      strong = fill(L.tooYoung, { a: result.minAge });
+      line = fill(L.firstGroup, { days: result.first.days, from: result.first.from, to: result.first.to });
+    } else if (result.kind === 'taichiOnly') {
       strong = fill(L.taichiOnly, { list: taichiList });
       line = L.taichiCalm;
     } else {
-      const g = match.ageMax !== null && match.ageMax < 80 ? fill(L.group, { a: match.ageMin!, b: match.ageMax }) : fill(L.adults, { a: match.ageMin! });
-      strong = `${g}: ${fill(L.at, { days: match.days, from: match.from, to: match.to })}.`;
-      line = showTaichi ? fill(L.taichi, { list: taichiList }) : fill(L.hall, { street: data.street });
+      const m = result.group;
+      const g = m.ageMax !== null && m.ageMax < 80 ? fill(L.group, { a: m.ageMin!, b: m.ageMax }) : fill(L.adults, { a: m.ageMin! });
+      strong = `${g}: ${fill(L.at, { days: m.days, from: m.from, to: m.to })}.`;
+      line = result.showTaichi ? fill(L.taichi, { list: taichiList }) : fill(L.hall, { street: data.street });
     }
     out.innerHTML = '';
     const b = document.createElement('strong'); b.textContent = strong;
@@ -127,7 +122,7 @@ const i18n = lang === 'de'
   }
   document.querySelectorAll<HTMLButtonElement>('.stepper [data-step]').forEach((btn) =>
     btn.addEventListener('click', () => {
-      input.value = String(Math.max(3, Math.min(95, (parseInt(input.value, 10) || 9) + Number(btn.dataset.step))));
+      input.value = String(clampAge((parseInt(input.value, 10) || 9) + Number(btn.dataset.step)));
       render();
     }),
   );

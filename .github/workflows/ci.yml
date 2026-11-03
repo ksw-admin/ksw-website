@@ -34,6 +34,9 @@ jobs:
       - name: Type check (astro check)
         run: npm run check
 
+      - name: Unit tests (text rules, age finder, phone links)
+        run: npm test
+
       - name: Build (astro build + redirects + service worker)
         run: npm run build
 

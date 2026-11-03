@@ -1,6 +1,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import type { Lang } from '../i18n/ui';
 import { resolveImage, type ContentImage } from './images';
+import { cleanParagraphs, decideHasPage } from './text';
 
 export type Post = {
   collection: 'news' | 'articles';
@@ -15,8 +16,7 @@ export type Post = {
   paragraphs: string[];
 };
 
-/** Text longer than this (or a Markdown body) gets an own page. */
-const PAGE_MIN_CHARS = 500;
+export { cleanParagraphs } from './text';
 
 const DATE_IN_NAME = /^(\d{4}-\d{2}-\d{2})/;
 
@@ -24,25 +24,6 @@ const DATE_IN_NAME = /^(\d{4}-\d{2}-\d{2})/;
 export function splitId(id: string): { lang: Lang; slug: string } {
   const [lang, ...rest] = id.split('/');
   return { lang: lang as Lang, slug: rest.join('/') };
-}
-
-/**
- * CMS texts carry hard line breaks from the old editor ("bedankt sich bei" / "den Coach").
- * Blank lines separate paragraphs. Inside a paragraph:
- * - a list (3+ lines, all short, like "Platz Leichtkontakt bis 10 Jahre") keeps its line breaks;
- * - otherwise a line break stays after a full sentence (. ! ? :) or after a short heading-like line followed by a
- *   capital letter ("International Open German Championships" / "In Arnsberg"); wrapped lines are joined with a space.
- */
-const keepBreak = (prev: string, next: string) => /[.!?:]$/.test(prev) || (prev.length < 45 && /^\p{Lu}/u.test(next));
-export function cleanParagraphs(text: string): string[] {
-  return text
-    .split(/\n\s*\n/)
-    .map((block) => {
-      const lines = block.split('\n').map((l) => l.trim()).filter(Boolean);
-      if (lines.length >= 3 && lines.every((l) => l.length < 70)) return lines.join('\n');
-      return lines.reduce((out, line, i) => (i === 0 ? line : out + (keepBreak(lines[i - 1], line) ? '\n' : ' ') + line), '');
-    })
-    .filter(Boolean);
 }
 
 function toPost(collection: Post['collection'], entry: Post['entry']): Post {
@@ -53,9 +34,7 @@ function toPost(collection: Post['collection'], entry: Post['entry']): Post {
   const prefix = lang === 'de' ? '' : `/${lang}`;
   const image = resolveImage(entry.filePath, entry.data.image);
   const paragraphs = cleanParagraphs(entry.data.description);
-  const hasBody = (entry.body ?? '').replace(/<!--.*?-->/gs, '').trim().length > 0;
-  // Articles always keep their page: their URLs exist since the old site.
-  const hasPage = entry.data.page ?? (collection === 'articles' || hasBody || entry.data.description.length > PAGE_MIN_CHARS);
+  const hasPage = decideHasPage({ collection, override: entry.data.page, description: entry.data.description, body: entry.body });
   return { collection, entry, slug, lang, date, hasPage, href: hasPage ? `${prefix}${base}${slug}/` : undefined, image, paragraphs };
 }
 

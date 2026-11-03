@@ -25,8 +25,4 @@ export const site = Site.parse(raw);
 
 export const primaryPhone = site.phones.find((p) => p.primary) ?? site.phones[0];
 
-/** "0170 - 90 42 408" -> "+491709042408" for tel: links (German numbers). */
-export function telHref(value: string): string {
-  const digits = value.replace(/[^\d+]/g, '');
-  return 'tel:' + (digits.startsWith('0') ? '+49' + digits.slice(1) : digits);
-}
+export { telHref } from './phone';
