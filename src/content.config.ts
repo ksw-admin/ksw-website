@@ -115,21 +115,4 @@ const faq = defineCollection({
   }),
 });
 
-// Training closures (banner + calendar feeds). { "items": [...] } like schedule.json; ids added here.
-const date = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Datum als JJJJ-MM-TT');
-const closures = defineCollection({
-  loader: file('src/content/closures.json', {
-    parser: (text) => (JSON.parse(text).items as object[]).map((c, i) => ({ id: String(i), ...c })),
-  }),
-  schema: z
-    .object({
-      from: date,
-      to: opt(date),
-      text: z.string().min(1),
-      text_en: opt(z.string()),
-      groups: opt(z.enum(['alle', 'kuksoolwon', 'taichi'])),
-    })
-    .refine((c) => !c.to || c.to >= c.from, { message: '"bis" muss am oder nach "von" liegen' }),
-});
-
-export const collections = { news, articles, disciplines, pages, sponsors, schedule, faq, closures };
+export const collections = { news, articles, disciplines, pages, sponsors, schedule, faq };
