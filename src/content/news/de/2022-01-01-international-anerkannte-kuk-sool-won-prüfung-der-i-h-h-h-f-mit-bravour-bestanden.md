@@ -2,6 +2,7 @@
 title: International anerkannte Kuk Sool Won Prüfung der I.H.H.H.F mit Bravour
   bestanden
 date: 2022-01-01
+kind: Prüfung
 featured: true
 description: Prüfer waren der Grand Master Salvatore Tiso 7. Dan und Senior
   Master Peter Griepentrog 4. Dan.Die Studenten mussten für einen höheren Kup

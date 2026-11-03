@@ -1,6 +1,7 @@
 ---
 title: Prüfung zum 1. Dan bestanden
 date: 2022-01-06
+kind: Prüfung
 featured: true
 description: Herzlichen Glückwunsch zum bestanden 1. Dan von Helena und Lars
   C. Prüfer Grand Master Salvatore Tiso 7. Dan und Master Peter Griepentrog

@@ -1,6 +1,7 @@
 ---
 title: Bestandene Prüfung!
 date: 2022-01-07
+kind: Prüfung
 featured: true
 description: Großmeister Salvatore Tiso, 7. Dan und Meister Peter Griepentrog,
   4. Dan nahmen erfolgreich die Prüfung am 12. Juni 2022 zum 1. Keup (braun

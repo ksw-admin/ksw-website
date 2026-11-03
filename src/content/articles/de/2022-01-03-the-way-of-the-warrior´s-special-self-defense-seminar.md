@@ -1,6 +1,8 @@
 ---
 title: The Way of the Warrior´s Special Self-Defense Seminar
 date: 2022-01-03
+kind: Seminar
+place: Arnsberg
 featured: true
 description: Am 02.10.2021 veranstaltete der I.H.H.H.F. in Arnsberg einen
   interdisziplinären Lehrgang, in dem über 40 (Groß)Meister in stündlichen

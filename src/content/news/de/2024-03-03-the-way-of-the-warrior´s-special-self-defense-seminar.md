@@ -1,6 +1,8 @@
 ---
 title: The Way of the Warrior´s Special Self-Defense Seminar
 date: 2024-03-03
+kind: Seminar
+place: Recklinghausen
 featured: true
 description: Am 08. Juni 2024 findet wieder das  Way of the Warrior´s Special
   Self-Defense Seminar in Recklinghausen statt.

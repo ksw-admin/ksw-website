@@ -1,6 +1,7 @@
 ---
 title: Prüfung mit 78 Jahren
 date: 2026-03-29
+kind: Prüfung
 featured: true
 description: Mein ältester Schüler mit 78 Jahren hat die Gurt Prüfung mit Erfolg
   bestanden. Eine stolze Leistung, der Meister und sein Assistenttrainer (1.

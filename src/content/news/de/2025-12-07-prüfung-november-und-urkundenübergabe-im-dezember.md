@@ -1,6 +1,7 @@
 ---
 title: Prüfung November und Urkundenübergabe im Dezember
 date: 2025-12-07
+kind: Prüfung
 featured: true
 description: >-
   Am 21. November 2025 fand eine Prüfung im Kuk Sool Won statt. 

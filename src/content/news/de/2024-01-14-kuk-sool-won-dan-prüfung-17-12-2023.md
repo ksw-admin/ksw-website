@@ -1,6 +1,8 @@
 ---
 title: Kuk Sool Won Dan-Prüfung, 17.12.2023
 date: 2024-01-14
+kind: Prüfung
+place: Arnsberg
 featured: true
 description: Am 17. Dezember 2023 fand in Arnsberg die Dan-Prüfung im Kuk Sool
   Won statt. Für die Kampfkunst Academy des FC Rumeln-Kaldenhausen 1955 e.V. war

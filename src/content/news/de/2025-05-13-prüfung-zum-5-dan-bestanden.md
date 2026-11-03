@@ -1,6 +1,7 @@
 ---
 title: Prüfung zum 5. Dan bestanden
 date: 2025-05-13
+kind: Prüfung
 featured: true
 description: Wir gratulieren unserem Meister zur erfolgreich bestandenen Prüfung
   zum 5. Dan. Eine beachtliche Leistung und ein weiterer wichtiger Meilenstein
