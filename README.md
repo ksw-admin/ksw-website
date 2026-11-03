@@ -38,6 +38,19 @@ Netlify does the deploys.
 - The live preview in the editor (`src/admin/preview.ts`) uses the site's rules (`src/lib/text.ts`), CSS and font.
   Only the layout of the list row and the post page is written twice; the deploy preview is the exact result.
 
+## Design system
+
+`design-system/` is the design system (brand book, tokens, fonts, logo, component previews). It is the source;
+the claude.ai Design System artifact is its published view: https://claude.ai/artifact/4vfpAacfAhcZxVURsH5WHo
+
+- Start with `design-system/README.md` (the brand book). Colours, type, spacing: `design-system/tokens.json`.
+- `tests/design-tokens.test.ts` checks that every colour in `tokens.json` matches `src/styles/global.css` (light and
+  dark). Change a colour in both places, or CI fails.
+- To republish after a change: ask Claude Code to publish `design-system/` to the artifact URL above (the folder maps
+  1:1 to the artifact's `project/` files; `design-system.json` is the index and goes last). The logo is an upload
+  in the artifact; `assets/Logos/Logo.svg` is the same file.
+- The folder is not part of the website build.
+
 ## Notes
 
 - Photos are optimized at build time (`astro:assets`); a reference to a missing image fails the build.
