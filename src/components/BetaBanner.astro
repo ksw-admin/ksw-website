@@ -1,8 +1,7 @@
 ---
 /**
- * BetaBanner: Shown on the Astro redesign branch during Split Testing.
- * Provides visitors an immediate way to know they are in the beta,
- * an off-ramp button to return to the live production site, and a link to the beta page.
+ * BetaBanner: Quiet black notification band above the header on astro-redesign.
+ * Follows design-system/README.md: panel black, sentence case, left-aligned, no emoji.
  */
 import { useTranslations, localePath, type Lang } from '../i18n/ui';
 
@@ -16,14 +15,14 @@ const t = useTranslations(lang);
 
 <aside id="beta-banner" class="band beta-banner" aria-label={t('beta.banner.title')} hidden>
   <div class="wrap beta-wrap">
-    <div class="beta-message">
-      <span class="beta-tag">BETA</span>
-      <span class="beta-text">{t('beta.banner.title')}</span>
-    </div>
+    <p class="beta-text">
+      <strong>{t('beta.banner.title')}:</strong>
+      <span>{lang === 'de' ? 'Astro-Version' : 'Astro version'}</span>
+    </p>
     <div class="beta-actions">
       <a href={localePath('/beta/', lang)} class="beta-link">{t('beta.banner.info')}</a>
       <button type="button" id="beta-optout-btn" class="beta-btn">{t('beta.banner.optout')}</button>
-      <button type="button" id="beta-dismiss-btn" class="beta-close" aria-label={t('beta.banner.close')}>&times;</button>
+      <button type="button" id="beta-dismiss-btn" class="beta-close" aria-label={t('beta.banner.close')}>✕</button>
     </div>
   </div>
 </aside>
@@ -39,7 +38,6 @@ const t = useTranslations(lang);
       }
     } catch (e) {}
 
-    // Show banner on this branch
     banner.hidden = false;
 
     var dismissBtn = document.getElementById('beta-dismiss-btn');
@@ -70,37 +68,33 @@ const t = useTranslations(lang);
   .beta-banner {
     background: var(--panel);
     color: var(--panel-fg);
-    border-bottom: 2px solid var(--jade);
+    border-bottom: 1px solid var(--linie);
     font-size: 0.875rem;
     line-height: 1.4;
   }
   .beta-wrap {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    gap: 12px 16px;
+    align-items: baseline;
+    gap: 8px 16px;
     flex-wrap: wrap;
     padding-block: 8px;
   }
-  .beta-message {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 500;
+  .beta-text {
+    margin: 0;
+    color: var(--panel-fg);
   }
-  .beta-tag {
-    background: var(--jade);
-    color: #fff;
-    font-size: 0.7rem;
-    font-weight: 800;
-    padding: 2px 6px;
-    border-radius: 3px;
-    letter-spacing: 0.05em;
+  .beta-text strong {
+    font-weight: 700;
+  }
+  .beta-text span {
+    color: #cfd2cb;
+    margin-left: 4px;
   }
   .beta-actions {
     display: flex;
-    align-items: center;
-    gap: 12px;
+    align-items: baseline;
+    gap: 16px;
   }
   .beta-link {
     color: #cfd2cb;
@@ -113,29 +107,27 @@ const t = useTranslations(lang);
   }
   .beta-btn {
     background: none;
-    border: 1px solid var(--linie);
-    color: #fff;
+    border: 1px solid var(--panel-fg);
+    color: var(--panel-fg);
     font: inherit;
     font-size: 0.8125rem;
     font-weight: 600;
-    padding: 3px 10px;
+    padding: 2px 8px;
     border-radius: 4px;
     cursor: pointer;
-    transition: background 0.15s ease, border-color 0.15s ease;
   }
   .beta-btn:hover,
   .beta-btn:focus-visible {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: #fff;
+    background: rgba(255, 255, 255, 0.15);
   }
   .beta-close {
     background: none;
     border: none;
     color: #8f938b;
-    font-size: 1.3rem;
-    line-height: 1;
+    font-size: 0.95rem;
     cursor: pointer;
-    padding: 0 4px;
+    padding: 0;
+    line-height: 1;
   }
   .beta-close:hover,
   .beta-close:focus-visible {
