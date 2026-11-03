@@ -1,5 +1,5 @@
 ---
-title: Kampfkunst Academy Peter Griepentrog in Duisburg-Rheinhausen -  April 2024
+title: Kampfkunst Academy Peter Griepentrog in Duisburg-Rheinhausen - April 2024
 date: 2024-05-11
 featured: true
 description: Herzlichen Glückwunsch den Siegern der Kampfkunst Academy unter der

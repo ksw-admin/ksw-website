@@ -11,7 +11,7 @@ Two audiences, two voices: parents of children (Kuk Sool Won) and adults, often 
 ## Voice
 
 - German first, plain and direct, short sentences. English pages exist only where translated; untranslated pages fall back to German.
-- Name things the way visitors say them: "Trainingszeiten", "Probetraining anfragen", "Anrufen", not "Termine buchen" or "Kontaktformular".
+- Name things the way visitors say them: "Trainingszeiten", "Zum Probetraining", "Anrufen", not "Termine buchen" or "Kontaktformular".
 - Peter's own wording wins over marketing copy ("kein Leistungssport, in jedem Alter erlernbar").
 - Results are facts: dates, places, placings. No superlatives.
 - Form of address (du or Sie) is still open; until decided, avoid addressing the reader in new copy.

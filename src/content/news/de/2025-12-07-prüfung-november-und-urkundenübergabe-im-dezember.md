@@ -1,5 +1,5 @@
 ---
-title: "Prüfung  November und Urkundenübergabe im Dezember "
+title: Prüfung November und Urkundenübergabe im Dezember
 date: 2025-12-07
 featured: true
 description: >-

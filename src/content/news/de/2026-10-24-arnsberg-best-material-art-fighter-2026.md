@@ -1,10 +1,10 @@
 ---
-title: Arnsberg "Best Material Art Fighter" 2026
+title: Arnsberg "Best Martial Art Fighter" 2026
 date: 2026-10-24
 featured: true
 kind: Turnier
 place: Arnsberg
-description: Am 10.10.2026 waren wir mit einem Teil unserer Schüler und Schülerinnen beim internationalen Wettkampf „Best Material Art Fighter“ in Arnsberg.
+description: Am 10.10.2026 waren wir mit einem Teil unserer Schüler und Schülerinnen beim internationalen Wettkampf „Best Martial Art Fighter“ in Arnsberg.
 # Counted from the named list at the end of the report (6 placings).
 medals:
   gold: 4
@@ -33,7 +33,7 @@ Wir sind sehr stolz auf alle unsere Schüler und Schülerinnen. Nicht nur auf di
 
 - **Leichtkontakt:** Im Leichtkontakt wird kontrolliert und nicht mit voller Kraft gekämpft. Im Mittelpunkt stehen Schnelligkeit, Distanzgefühl, Reaktion, Fairness und Kontrolle. Im Leichtkontakt werden vollständige Runden gekämpft.
 - **Pointfighting:** Beim Pointfighting wird nach jedem Treffer neu angefangen.
-- **Kumdo:** Kumdo ist eine koreanische Schwertkampfkunst. Gekämpft wird mit weichen Übungsschwertern und Schutzausrüstung. Wichtig sind präzise Technik, Konzentration, Timing, Haltung und Respekt gegenüber dem Gegener.
+- **Kumdo:** Kumdo ist eine koreanische Schwertkampfkunst. Gekämpft wird mit weichen Übungsschwertern und Schutzausrüstung. Wichtig sind präzise Technik, Konzentration, Timing, Haltung und Respekt gegenüber dem Gegner.
 - **Soft Forms:** Feste Bewegungsabläufe stehen bei den soft Forms im Mittelpunkt. Wichtig sind die Ausführungen der Techniken, Haltung, Gleichgewicht, Atmung und Konzentration. Die fließenden, kontrollierten Bewegungen sind eine tolle Schulung für Körpergefühl, Koordination und Konzentration.
 
 Darüber hinaus trainieren wir in unserem Training auch immer wieder Selbstverteidigung, Kurzstocktechniken, Atemtechniken, Kondition, Koordination, Fusstechniken, Boxen, Falltechniken und die Grundkenntnisse der koreanischen Sprache.

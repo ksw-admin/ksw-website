@@ -4,7 +4,7 @@ date: 2025-12-07
 featured: true
 description: |-
   Masud hat am 06.12.2025 den ersten Platz gemacht bei dem 
-  World CUP Intercontinental Open Campionships.
+  World CUP Intercontinental Open Championships.
   Peter Griepentrog gratulierte seiner Schülerin.
 image: images/whatsapp-image-2025-12-07-at-13.54.28.jpeg
 tags:

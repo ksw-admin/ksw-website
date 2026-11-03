@@ -1,5 +1,5 @@
 ---
-title: Tunier "New Generation Tournament"
+title: Turnier "New Generation Tournament"
 date: 2024-03-03
 featured: true
 description: >-

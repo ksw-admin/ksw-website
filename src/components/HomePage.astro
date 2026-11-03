@@ -32,8 +32,8 @@ const jsonLd = organizationLd(await getSchedule());
   alternate={{ de: '/', en: '/en/' }}
   jsonLd={jsonLd}
   description={de
-    ? 'Kuk Sool Won für Kinder ab 4 Jahren, Jugendliche und Erwachsene, Tai Chi, Qi Gong und Atemschulung in Duisburg-Rheinhausen. Kostenloses Probetraining.'
-    : 'Kuk Sool Won for children from age 4, teenagers and adults, plus Tai Chi, Qi Gong and breathing training in Duisburg-Rheinhausen. Free trial lesson.'}
+    ? 'Kuk Sool Won für Kinder ab 4 Jahren, Jugendliche und Erwachsene, Tai Chi, Qi Gong und Atemschulung in Duisburg-Rheinhausen.'
+    : 'Kuk Sool Won for children from age 4, teenagers and adults, plus Tai Chi, Qi Gong and breathing training in Duisburg-Rheinhausen.'}
 >
   <WeekPlanner lang={lang}>
     <Fragment slot="headline">
@@ -47,22 +47,30 @@ const jsonLd = organizationLd(await getSchedule());
   </WeekPlanner>
 
   <figure class="photo">
-    <Image src={groupPhoto} alt="Gruppenfoto auf der Matte vor den Flaggen von Deutschland, Korea, Kuk Sool Won und China" width={Math.min(groupPhoto.width, 2400)} quality={72} widths={[640, 1024, 1600, 2400]} sizes="100vw" />
+    <Image src={groupPhoto} alt={de ? 'Gruppenfoto auf der Matte vor den Flaggen von Deutschland, Korea, Kuk Sool Won und China' : 'Group photo on the mat in front of the flags of Germany, Korea, Kuk Sool Won and China'} width={Math.min(groupPhoto.width, 2400)} quality={72} widths={[640, 1024, 1600, 2400]} sizes="100vw" />
     <figcaption class="band"><div class="wrap">{de ? 'Lehrgang in der Halle, mit Gästen der IHHHF.' : 'Seminar in our hall with guests from the IHHHF.'}</div></figcaption>
   </figure>
 
   <DisciplinePaths lang={lang}>
     <Fragment slot="ksw">
-      <p>Eine koreanische Kampfkunst, die Schläge, Würfe, Hebel, Fallschule, Stock- und Schwerttechniken in einem System verbindet.</p>
-      <p>Atemübungen gehören von der ersten Stunde an dazu. Kinder lernen Selbstverteidigung, Konzentration und Respekt vor dem Partner.</p>
+      <p>{de
+        ? 'Eine koreanische Kampfkunst, die Schläge, Würfe, Hebel, Fallschule, Stock- und Schwerttechniken in einem System verbindet.'
+        : 'A Korean martial art that combines strikes, throws, joint locks, falling techniques, staff and sword in one system.'}</p>
+      <p>{de
+        ? 'Die von Beginn an geübte Atemtherapie unterstützt die kräftigen und doch schonenden Techniken. Körper und Geist werden eins, was auch auf das tägliche Leben übertragen wird.'
+        : 'Breathing exercises are part of it from the first lesson and support the powerful yet gentle techniques. Body and mind become one, and that carries over into daily life.'}</p>
     </Fragment>
     <Fragment slot="taichi">
-      <p>Leichte Bewegungen aus der eigenen Schrittlänge, immer aus einem sicheren Stand. Dazu eine Atemtechnik, die aus dem Yang-Stil weiterentwickelt wurde.</p>
-      <p>Seit über zehn Jahren gibt Peter Griepentrog diese Atemübungen auch im Krankenhaus weiter. Tai Chi und Qi Gong sind kein Leistungssport und in jedem Alter erlernbar.</p>
+      <p>{de
+        ? 'Leichte Bewegungen aus der eigenen Schrittlänge, immer aus einem sicheren Stand. Dazu eine Atemtechnik, die aus dem Yang-Stil weiterentwickelt wurde.'
+        : 'Gentle movements at your own stride length, always from a safe stance, combined with a breathing technique developed from the Yang style.'}</p>
+      <p>{de
+        ? 'Seit über zehn Jahren gibt Peter Griepentrog diese Atemübungen auch im Krankenhaus weiter. Tai Chi und Qi Gong sind kein Leistungssport und in jedem Alter erlernbar.'
+        : 'For more than ten years Peter Griepentrog has also taught these breathing exercises in hospital. Tai Chi and Qi Gong are not competitive and can be learned at any age.'}</p>
     </Fragment>
   </DisciplinePaths>
 
-  {site.video && <VideoFacade lang={lang} {...site.video} />}
+  {site.video && <VideoFacade lang={lang} {...site.video} heading={de ? site.video.heading : 'This is us!'} />}
 
   <section class="news band" id="aktuelles">
     <div class="wrap">
@@ -72,13 +80,19 @@ const jsonLd = organizationLd(await getSchedule());
     </div>
   </section>
 
-  <Master photo={masterPhoto} photoAlt="Peter Griepentrog im schwarzen Dobok mit einer Urkunde im IHHHF-Headquarters" caption="Urkunde „Bangbeob, der Weg“, IHHHF-Headquarters.">
+  <Master photo={masterPhoto} photoAlt={de ? 'Peter Griepentrog im schwarzen Dobok mit einer Urkunde im IHHHF-Headquarters' : 'Peter Griepentrog in a black dobok holding a certificate at the IHHHF headquarters'} caption={de ? 'Urkunde „Bangbeob, der Weg“, IHHHF-Headquarters.' : 'Certificate "Bangbeob, the way", IHHHF headquarters.'}>
     <p>{de
       ? 'Ich beschäftige mich seit 1986 mit Kampfkunst und unterrichte Kuk Sool Won, Tai Chi und Atemschulung in Rheinhausen.'
       : 'I have practised martial arts since 1986 and teach Kuk Sool Won, Tai Chi and breathing training in Rheinhausen.'}</p>
   </Master>
 
-  <Visit lang={lang} heading={de ? 'Komm zum Probetraining.' : 'Come to a trial lesson.'} />
+  <Visit
+    lang={lang}
+    heading={de ? 'Komm zum Probetraining.' : 'Come to a trial lesson.'}
+    intro={de
+      ? 'Für ein Probetraining einfach zur Trainingszeit in die Halle kommen. Fragen vorab? Ruf an oder schreib eine E-Mail.'
+      : 'For a trial lesson, just come to the hall at training time. Questions first? Call or send an e-mail.'}
+  />
 </Base>
 
 <style>

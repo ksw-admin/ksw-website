@@ -1,11 +1,11 @@
 ---
-title: Open Germann Championship Recklinghausen
+title: Open German Championship Recklinghausen
 date: 2025-10-01
 featured: true
 description: >-
   Wir haben in Recklinghausen am 20.9.2025 teilgenommen an der
 
-  Open Germann Championship teilgenommen.
+  Open German Championship teilgenommen.
 
   Angetreten sind wir in Formen (soft style) und in Point Fighting und Lightcontact.
 
@@ -14,7 +14,7 @@ description: >-
 
   In Point, Fighting und Light Kontakt haben wir den zweiten und dritten Platz belegt
 image: images/bb26b72a-d229-494c-84ed-11447877050b.jpg
-image_text: Open Germann Championship Recklinghausen
+image_text: Open German Championship Recklinghausen
 tags:
   - featured
 ---

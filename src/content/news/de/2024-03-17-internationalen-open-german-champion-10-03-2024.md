@@ -1,5 +1,5 @@
 ---
-title: Internationalen Open German Champion 10.03.2024
+title: International Open German Champion 10.03.2024
 date: 2024-03-17
 featured: true
 description: >-

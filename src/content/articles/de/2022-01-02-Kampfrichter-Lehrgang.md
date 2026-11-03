@@ -1,5 +1,5 @@
 ---
-title: Kuk sool Won Kampfrichter Lehrgang
+title: Kuk Sool Won Kampfrichter Lehrgang
 date: 2022-01-02
 featured: true
 description: Am 04.09.2021 fand in der Kampfkunstakademie Griepentrog das zweite

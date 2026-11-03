@@ -1,5 +1,5 @@
 ---
-title: International Open German Championships  In Arnsberg 2026
+title: International Open German Championships In Arnsberg 2026
 date: 2026-04-09
 featured: true
 description: >-
@@ -7,7 +7,7 @@ description: >-
 
   In Arnsberg 
 
-  In soft Style Formens haben wir den ersten Platz und zweiten Platz belegt.
+  In Soft-Style-Formen haben wir den ersten Platz und zweiten Platz belegt.
 
   In Kumdo Schwertkampf haben wir den ersten Platz belegt.
 

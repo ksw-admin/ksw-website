@@ -25,7 +25,8 @@ const row = (time: string) => (minutes(time) - start) / STEP + 2;
 const hours = Array.from({ length: Math.floor((end - start) / 60) + 1 }, (_, i) => start / 60 + i);
 
 const de = lang === 'de';
-const name = (s: Slot) => (s.discipline === 'taichi' ? 'Tai Chi und Qi Gong' : 'Kuk Sool Won');
+const taichiName = de ? 'Tai Chi und Qi Gong' : 'Tai Chi and Qi Gong';
+const name = (s: Slot) => (s.discipline === 'taichi' ? taichiName : 'Kuk Sool Won');
 const short = (s: Slot) =>
   s.discipline === 'taichi' ? 'Tai Chi' : s.ageMax !== undefined && s.ageMax >= 80 ? `${de ? 'ab' : ''} ${s.ageMin}${de ? '' : '+'}`.trim() : `${s.ageMin}–${s.ageMax}`;
 const when = (s: Slot) => `${dayList(s.days, lang)}, ${s.from} ${de ? 'bis' : 'to'} ${s.to}${de ? ' Uhr' : ''}`;
@@ -86,7 +87,7 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
       </div>
       <div class="legend">
         <span><i style="background:var(--slot-k)"></i>Kuk Sool Won</span>
-        <span><i style="background:var(--jade)"></i>Tai Chi und Qi Gong</span>
+        <span><i style="background:var(--jade)"></i>{taichiName}</span>
         <span><i style="background:var(--gelb);box-shadow:inset 0 0 0 2px #000"></i>{t('week.yours')}</span>
       </div>
     </div>

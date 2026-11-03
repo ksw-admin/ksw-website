@@ -15,7 +15,7 @@ galleryImages:
   - link_text: "Gürtelprüfung 16.06.2023 "
     link: https://www.flickr.com/gp/143500996@N08/ZACcY5MJ8S
     image: images/52979902382_d367ac2c76_c.jpg
-  - link_text: World Open Material Arts Campionships 2022
+  - link_text: World Open Martial Arts Championships 2022
     link: https://www.flickr.com/gp/143500996@N08/57HS4q104b
     image: images/52338899388_bc926d3bcf_c.jpg
   - image: images/52292773976_c6a07b2992_c.jpg

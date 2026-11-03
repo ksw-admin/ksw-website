@@ -2,8 +2,9 @@
 import { site, primaryPhone, telHref } from '../lib/site';
 import type { Lang } from '../i18n/ui';
 
-interface Props { lang: Lang; heading: string }
-const { heading } = Astro.props;
+interface Props { lang: Lang; heading: string; intro?: string }
+const { lang, heading, intro } = Astro.props;
+const de = lang === 'de';
 const others = site.phones.filter((p) => p !== primaryPhone);
 ---
 
@@ -11,11 +12,12 @@ const others = site.phones.filter((p) => p !== primaryPhone);
   <div class="wrap">
     <div>
       <h2 class="cond">{heading}</h2>
+      {intro && <p class="intro">{intro}</p>}
       <a class="phone cond num" href={telHref(primaryPhone.value)}>
         <span class="icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" width="24" height="24" focusable="false"><path fill="currentColor" d="M6.6 10.8a15.2 15.2 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>
         </span>
-        <span class="visually-hidden">Anrufen: </span>{primaryPhone.value.replace(/ - /g, ' ')}
+        <span class="visually-hidden">{de ? 'Anrufen: ' : 'Call: '}</span>{primaryPhone.value.replace(/ - /g, ' ')}
       </a>
       <p class="who">
         {site.contactName}. <a href={`mailto:${site.email}`}>{site.email}</a>
@@ -23,8 +25,8 @@ const others = site.phones.filter((p) => p !== primaryPhone);
       </p>
     </div>
     <div class="side">
-      <address><b>Trainingshalle</b>{site.hall.street}<br />{site.hall.note && <>{site.hall.note}<br /></>}{site.hall.city}</address>
-      <a href={site.hall.osm} rel="noopener">Route in OpenStreetMap öffnen</a>
+      <address><b>{de ? 'Trainingshalle' : 'Training hall'}</b>{site.hall.street}<br />{site.hall.note && <>{site.hall.note}<br /></>}{site.hall.city}</address>
+      <a href={site.hall.osm} rel="noopener">{de ? 'Route in OpenStreetMap öffnen' : 'Directions on OpenStreetMap'}</a>
       {site.social.length > 0 && (
         <p class="social">{site.social.map((s) => <a href={s.url} rel="me noopener">{s.label ?? s.name}</a>)}</p>
       )}
@@ -47,6 +49,7 @@ const others = site.phones.filter((p) => p !== primaryPhone);
   .icon svg { width: 52%; height: 52%; }
   .phone:hover .icon { transform: rotate(-12deg); }
   .who { margin-top: 8px; font-weight: 600; }
+  .intro { margin-top: 14px; font-size: 1.15rem; max-width: 44ch; }
   address { font-style: normal; font-size: 1.15rem; line-height: 1.5; }
   address b { display: block; font-size: 0.95rem; margin-bottom: 4px; }
   .side { display: grid; gap: 24px; align-content: start; border-left: 3px solid var(--gelb); padding-left: 24px; }
