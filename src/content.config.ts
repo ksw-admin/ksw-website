@@ -112,6 +112,8 @@ const faq = defineCollection({
     question: opt(z.string()),
     // Position on the page (small numbers first). Taken from the German entry.
     order: opt(z.number()),
+    // Only shown while this website feature is switched on (site.json).
+    requires: opt(z.enum(['calendar'])),
   }),
 });
 

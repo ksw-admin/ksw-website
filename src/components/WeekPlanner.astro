@@ -30,8 +30,11 @@ const name = (s: Slot) => (s.discipline === 'taichi' ? taichiName : 'Kuk Sool Wo
 const short = (s: Slot) =>
   s.discipline === 'taichi' ? 'Tai Chi' : s.ageMax === undefined ? `${de ? 'ab' : ''} ${s.ageMin}${de ? '' : '+'}`.trim() : `${s.ageMin}–${s.ageMax}`;
 const when = (s: Slot) => `${dayList(s.days, lang)}, ${s.from} ${de ? 'bis' : 'to'} ${s.to}${de ? ' Uhr' : ''}`;
-// Calendar subscription (src/pages/kalender/): webcal:// opens the calendar app's subscribe dialog.
+// Calendar subscription (src/pages/kalender/), if switched on in the CMS (site.json > calendar).
+// webcal:// opens the subscribe dialog of Apple Calendar and Outlook; Google takes the feed as "cid" and shows its
+// own "add calendar" dialog (works in the browser; on Android the calendar then syncs to the phone).
 const webcal = (id: string) => `webcal://${Astro.site!.host}/kalender/${id}.ics`;
+const google = (id: string) => `https://calendar.google.com/calendar/render?cid=${encodeURIComponent(webcal(id))}`;
 const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bis ' : ' to ')].filter(Boolean).join(', ');
 ---
 
@@ -93,10 +96,14 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
         <span><i style="background:var(--gelb);box-shadow:inset 0 0 0 2px #000"></i>{t('week.yours')}</span>
       </div>
       <!-- Calendar subscription: all groups, or the selected group once one is tapped (script below). -->
-      <p class="cal">
-        <a id="cal-link" href={webcal('training')} data-all={webcal('training')} data-label-all={t('week.calendar')} data-label-one={t('week.calendar.one')}>{t('week.calendar')}</a>
-        <a class="howto" href={localePath('/faq/#kalender', lang)}>{t('week.calendar.howto')}</a>
-      </p>
+      {site.calendar && (
+        <p class="cal" id="cal" data-label-all={t('week.calendar')} data-label-one={t('week.calendar.one')}>
+          <span class="cal-label">{t('week.calendar')}</span>
+          <a data-cal="google" href={google('training')} rel="noopener">{de ? 'Google Kalender' : 'Google Calendar'}</a>
+          <a data-cal="webcal" href={webcal('training')}>iPhone, Mac, Outlook</a>
+          <a class="howto" href={localePath('/faq/#kalender', lang)}>{t('week.calendar.howto')}</a>
+        </p>
+      )}
     </div>
   </div>
 </header>
@@ -106,7 +113,10 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
   const panel = document.getElementById('slot-detail')!;
   const details = [...panel.querySelectorAll<HTMLElement>('[data-detail]')];
   const pick = panel.querySelector<HTMLElement>('.pick')!;
-  const cal = document.getElementById('cal-link') as HTMLAnchorElement | null;
+  // Calendar links follow the selection: all groups, or the selected group's feed.
+  const cal = document.getElementById('cal');
+  const calLinks = cal ? [...cal.querySelectorAll<HTMLAnchorElement>('a[data-cal]')] : [];
+  for (const a of calLinks) a.dataset.all = a.href;
   let current: string | null = null;
 
   function select(id: string | null) {
@@ -120,8 +130,9 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
     for (const d of details) d.hidden = d.dataset.detail !== id;
     pick.hidden = id !== null;
     if (cal) {
-      cal.href = id ? cal.dataset.all!.replace(/training\.ics$/, `${id}.ics`) : cal.dataset.all!;
-      cal.textContent = id ? cal.dataset.labelOne! : cal.dataset.labelAll!;
+      // The feed name is in both links (Google: URL-encoded inside cid); swap it for the group id.
+      for (const a of calLinks) a.href = id ? a.dataset.all!.replace('training.ics', `${id}.ics`) : a.dataset.all!;
+      cal.querySelector('.cal-label')!.textContent = id ? cal.dataset.labelOne! : cal.dataset.labelAll!;
     }
   }
 
@@ -195,7 +206,8 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
   .slot.hit { background: var(--gelb); color: #000; box-shadow: inset 0 0 0 2px #000; }
   .empty { grid-row: 2 / -1; display: flex; align-items: center; justify-content: center; color: var(--stein); writing-mode: vertical-rl; font-size: 0.75rem; }
   .cal { display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: baseline; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--linie); }
-  .cal a:first-child { font-weight: 700; text-underline-offset: 4px; }
+  .cal-label { flex-basis: 100%; font-weight: 700; }
+  .cal a[data-cal] { font-weight: 600; text-underline-offset: 4px; }
   .cal .howto { font-size: 0.9rem; color: var(--stein); }
   .legend { display: flex; gap: 18px; margin-top: 12px; font-size: 0.85rem; flex-wrap: wrap; }
   .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }

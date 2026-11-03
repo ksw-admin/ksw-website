@@ -26,7 +26,9 @@ const others = site.phones.filter((p) => p !== primaryPhone);
       </p>
       <p class="faq-hint">
         {de ? 'Vorher lesen: ' : 'Read first: '}<a href={localePath('/faq/', lang)}>{de ? 'Häufige Fragen' : 'Frequently asked questions'}</a>
-        {de ? ' zu Probetraining, Alter, Prüfungen und Kalender-Abo.' : ' about trial lessons, age, gradings and the calendar subscription.'}
+        {site.calendar
+          ? de ? ' zu Probetraining, Alter, Prüfungen und Kalender-Abo.' : ' about trial lessons, age, gradings and the calendar subscription.'
+          : de ? ' zu Probetraining, Alter und Prüfungen.' : ' about trial lessons, age and gradings.'}
       </p>
     </div>
     <div class="side">

@@ -367,6 +367,7 @@ collections:
             fields:
               - { label: Text, name: text, widget: string, default: 'Website: Jonah L.' }
               - { label: Link, name: url, widget: string, required: false, pattern: ['^(https?://.+)?$', 'Vollständige Adresse mit https://'], hint: 'Optional, z.B. ein LinkedIn-Profil. Leer = kein Link.' }
+          - { label: Kalender-Abo der Trainingszeiten, name: calendar, widget: boolean, default: true, required: false, hint: 'An: Links unter dem Wochenplan (Google Kalender, iPhone/Mac/Outlook) und die Kalender-Dateien unter /kalender/. Aus: nichts davon, auch die FAQ-Antwort zum Kalender ist ausgeblendet. Ausfälle stehen weiter oben auf der Website.' }
           - { label: Fragen-Formular auf der FAQ-Seite, name: questionForm, widget: boolean, default: false, required: false, hint: 'An: Besucher können unter der FAQ eine Frage senden (Netlify › Forms, Benachrichtigung dort einstellen). Aus: dort stehen stattdessen Telefon und E-Mail.' }
           - label: Besucherstatistik
             name: analytics

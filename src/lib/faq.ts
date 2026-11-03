@@ -3,6 +3,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import type { Lang } from '../i18n/ui';
 import { splitId } from './posts';
+import { site } from './site';
 
 type Entry = CollectionEntry<'faq'>;
 
@@ -20,6 +21,7 @@ export async function getFaq(lang: Lang): Promise<Faq[]> {
   const english = new Map(all.filter((e) => e.id.startsWith('en/')).map((e) => [splitId(e.id).slug, e]));
   return all
     .filter((e) => e.id.startsWith('de/'))
+    .filter((e) => e.data.requires !== 'calendar' || site.calendar)
     .map((de) => {
       const slug = splitId(de.id).slug;
       if (!de.data.question?.trim()) throw new Error(`${de.filePath}: German FAQ entry needs a question.`);

@@ -16,6 +16,8 @@ const toFeed = (s: Slot): FeedSlot => ({
 });
 
 export const getStaticPaths = (async () => {
+  // Switched off in the CMS: no feeds at all.
+  if (!site.calendar) return [];
   const slots = await getSchedule();
   return [
     { params: { feed: 'training' }, props: { slots, name: `${site.shortName}: Training` } },
