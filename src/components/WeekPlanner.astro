@@ -53,8 +53,6 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
             <a class="more" href={localePath(s.discipline === 'taichi' ? '/category/taichi/' : '/category/kuksoolwon/', lang)}>
               {s.discipline === 'taichi' ? t('week.more.taichi') : t('week.more.ksw')}
             </a>
-            <a class="more cal" href={webcal(s.id)}>{t('week.calendar')}</a>
-            <a class="howto" href={localePath('/faq/#kalender', lang)}>{t('week.calendar.howto')}</a>
           </div>
         ))
       }
@@ -94,6 +92,11 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
         <span><i style="background:var(--jade)"></i>{taichiName}</span>
         <span><i style="background:var(--gelb);box-shadow:inset 0 0 0 2px #000"></i>{t('week.yours')}</span>
       </div>
+      <!-- Calendar subscription: all groups, or the selected group once one is tapped (script below). -->
+      <p class="cal">
+        <a id="cal-link" href={webcal('training')} data-all={webcal('training')} data-label-all={t('week.calendar')} data-label-one={t('week.calendar.one')}>{t('week.calendar')}</a>
+        <a class="howto" href={localePath('/faq/#kalender', lang)}>{t('week.calendar.howto')}</a>
+      </p>
     </div>
   </div>
 </header>
@@ -103,6 +106,7 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
   const panel = document.getElementById('slot-detail')!;
   const details = [...panel.querySelectorAll<HTMLElement>('[data-detail]')];
   const pick = panel.querySelector<HTMLElement>('.pick')!;
+  const cal = document.getElementById('cal-link') as HTMLAnchorElement | null;
   let current: string | null = null;
 
   function select(id: string | null) {
@@ -115,6 +119,10 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
     }
     for (const d of details) d.hidden = d.dataset.detail !== id;
     pick.hidden = id !== null;
+    if (cal) {
+      cal.href = id ? cal.dataset.all!.replace(/training\.ics$/, `${id}.ics`) : cal.dataset.all!;
+      cal.textContent = id ? cal.dataset.labelOne! : cal.dataset.labelAll!;
+    }
   }
 
   for (const b of buttons) {
@@ -152,8 +160,6 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
   .detail .when { font-size: 1.15rem; font-weight: 600; margin-top: 4px; }
   .detail p + p { margin-top: 4px; }
   .detail .more { display: inline-block; margin-top: 10px; font-weight: 700; text-underline-offset: 4px; }
-  .detail .cal { display: block; margin-top: 6px; }
-  .detail .howto { font-size: 0.9rem; color: var(--stein); }
   .detail .btn { margin-top: 18px; }
   @media (max-width: 860px) { .detail { margin-top: 0; min-height: 0; } }
 
@@ -188,6 +194,9 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
   .slot.dim small { color: var(--stein); }
   .slot.hit { background: var(--gelb); color: #000; box-shadow: inset 0 0 0 2px #000; }
   .empty { grid-row: 2 / -1; display: flex; align-items: center; justify-content: center; color: var(--stein); writing-mode: vertical-rl; font-size: 0.75rem; }
+  .cal { display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: baseline; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--linie); }
+  .cal a:first-child { font-weight: 700; text-underline-offset: 4px; }
+  .cal .howto { font-size: 0.9rem; color: var(--stein); }
   .legend { display: flex; gap: 18px; margin-top: 12px; font-size: 0.85rem; flex-wrap: wrap; }
   .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
 </style>

@@ -7,6 +7,7 @@
 import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import { getFaq, plainAnswer } from '../lib/faq';
+import { site, primaryPhone, telHref } from '../lib/site';
 import { useTranslations, localePath, type Lang } from '../i18n/ui';
 
 interface Props { lang: Lang }
@@ -49,6 +50,8 @@ const jsonLd = {
   <section class="band ask" id="frage">
     <div class="wrap">
       <h2>{t('faq.ask.title')}</h2>
+      {site.questionForm ? (
+      <>
       <p class="intro">{t('faq.ask.intro')}</p>
       <form name="frage" method="POST" action={localePath('/faq/danke/', lang)} data-netlify="true" netlify-honeypot="bot-field">
         <input type="hidden" name="form-name" value="frage" />
@@ -61,6 +64,18 @@ const jsonLd = {
         <button class="btn" type="submit">{t('faq.ask.send')}</button>
         <p class="note">{t('faq.ask.privacy')} <a href="/other/datenschutz/" hreflang="de">{t('footer.privacy')}</a>.</p>
       </form>
+      </>
+      ) : (
+      // Form switched off in the CMS (Einstellungen › Kontakt und Allgemeines): point to phone and email.
+      <>
+      <p class="intro">{t('faq.contact.intro').replace('{name}', site.contactName)}</p>
+      <p class="direct">
+        <a href={telHref(primaryPhone.value)}>{primaryPhone.value.replace(/ - /g, ' ')}</a>
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+        <a href={localePath('/other/contact/', lang)}>{t('footer.directions')}</a>
+      </p>
+      </>
+      )}
     </div>
   </section>
 </Base>
@@ -100,5 +115,7 @@ const jsonLd = {
   textarea:focus-visible, input:focus-visible { outline: 3px solid var(--gelb); outline-offset: 1px; }
   .btn { justify-self: start; margin-top: 16px; }
   .note { font-size: 0.9rem; color: var(--stein); margin-top: 6px; }
+  .direct { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px 28px; font-weight: 700; font-size: 1.1rem; }
+  .direct a { text-underline-offset: 4px; }
   .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 </style>

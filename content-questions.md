@@ -33,7 +33,9 @@ answer on the site yet; each one becomes an FAQ entry once answered:
 
 ## Question form and closures
 
-- [ ] **Who reads the questions** sent through the FAQ form? Netlify › Forms › "frage" › notifications: set the email
+- [ ] **Question form is OFF** (CMS: Einstellungen › Kontakt und Allgemeines › Fragen-Formular). The FAQ shows phone and
+      email instead. If it stays off for good, drop the "Fragen-Formular" paragraph from the Datenschutz text.
+- [ ] **Who reads the questions** sent through the FAQ form, once it is on? Netlify › Forms › "frage" › notifications: set the email
       address there. Submissions stay in the Netlify dashboard until deleted: delete them once answered (the Datenschutz
       text promises that).
 - [ ] **Training closures** (CMS: Einstellungen › Trainingsausfälle): Peter enters holidays and cancellations there.

@@ -25,6 +25,8 @@ const Site = z.object({
   credit: z
     .object({ text: z.string().min(1), url: z.url().optional().or(z.literal('')) })
     .default({ text: 'Website: Jonah L.', url: '' }),
+  // FAQ question form (Netlify Forms). Off: the FAQ points to phone and email instead.
+  questionForm: z.boolean().default(false),
   // Cloudflare Web Analytics (cookieless, no consent banner needed). Empty token = no analytics.
   analytics: z.object({ cloudflareToken: z.string().regex(/^([0-9a-f]{32})?$/, '32 hex characters from the Cloudflare dashboard') }).default({ cloudflareToken: '' }),
 });
