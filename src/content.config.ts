@@ -84,7 +84,7 @@ const sponsors = defineCollection({
   }),
 });
 
-// One home for training times (used by the home page week, the finder and the discipline pages).
+// One home for training times (home page week, discipline pages, offline page, schema.org opening hours).
 const time = z.string().regex(/^\d{2}:\d{2}$/, 'Zeit als HH:MM, z.B. 18:30');
 const schedule = defineCollection({
   // { "slots": [...] }: the CMS can only edit an object at the top level of a file.

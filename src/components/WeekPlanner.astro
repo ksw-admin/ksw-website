@@ -1,9 +1,10 @@
 ---
 /**
- * Hero: the training week as a grid plus the age finder (feature idea 1).
- * Data: src/content/schedule.json. Works without JS (the full week shows); the script only highlights.
+ * Hero: the training week. Each slot is a button: tapping a group marks it (both days) and shows its details
+ * in the panel next to the headline (below the week on phones). Without JS the full week still shows.
+ * Data: src/content/schedule.json.
  */
-import { getSchedule, minutes, dayShort, dayList, WEEKDAYS, type Weekday } from '../lib/schedule';
+import { getSchedule, minutes, dayShort, dayList, ageLabel, WEEKDAYS, type Weekday, type Slot } from '../lib/schedule';
 import { useTranslations, localePath, type Lang } from '../i18n/ui';
 import { site } from '../lib/site';
 
@@ -23,30 +24,36 @@ const rows = (end - start) / STEP;
 const row = (time: string) => (minutes(time) - start) / STEP + 2;
 const hours = Array.from({ length: Math.floor((end - start) / 60) + 1 }, (_, i) => start / 60 + i);
 
-const finderData = slots.map((s) => ({
-  discipline: s.discipline, from: s.from, to: s.to, ageMin: s.ageMin ?? null, ageMax: s.ageMax ?? null,
-  days: dayList(s.days, lang),
-}));
-const i18n = lang === 'de'
-  ? { group: 'Gruppe {a} bis {b} Jahre', adults: 'Erwachsene ab {a}', at: '{days}, {from} bis {to} Uhr', tooYoung: 'Kuk Sool Won beginnt mit {a} Jahren.', firstGroup: 'Die jüngste Gruppe trainiert {days}, {from} bis {to} Uhr.', taichi: 'Oder Tai Chi: {list}.', taichiOnly: 'Tai Chi: {list}.', taichiCalm: 'Ruhig, im eigenen Tempo, ohne Leistungsdruck.', or: ' oder ', hall: 'Kuk Sool Won, {street}.' }
-  : { group: 'Group {a} to {b} years', adults: 'Adults {a}+', at: '{days}, {from} to {to}', tooYoung: 'Kuk Sool Won starts at {a}.', firstGroup: 'The youngest group trains {days}, {from} to {to}.', taichi: 'Or Tai Chi: {list}.', taichiOnly: 'Tai Chi: {list}.', taichiCalm: 'Calm, at your own pace, no competition.', or: ' or ', hall: 'Kuk Sool Won, {street}.' };
+const de = lang === 'de';
+const name = (s: Slot) => (s.discipline === 'taichi' ? 'Tai Chi und Qi Gong' : 'Kuk Sool Won');
+const short = (s: Slot) =>
+  s.discipline === 'taichi' ? 'Tai Chi' : s.ageMax !== undefined && s.ageMax >= 80 ? `${de ? 'ab' : ''} ${s.ageMin}${de ? '' : '+'}`.trim() : `${s.ageMin}–${s.ageMax}`;
+const when = (s: Slot) => `${dayList(s.days, lang)}, ${s.from} ${de ? 'bis' : 'to'} ${s.to}${de ? ' Uhr' : ''}`;
+const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bis ' : ' to ')].filter(Boolean).join(', ');
 ---
 
 <header class="hero band" id="woche">
   <div class="wrap">
-    <div>
+    <div class="head">
       <slot name="headline" />
-      <div class="finder">
-        <label for="age">{t('finder.label')}</label>
-        <div class="stepper">
-          <button type="button" data-step="-1" aria-label={t('finder.younger')}>−</button>
-          <input id="age" type="number" inputmode="numeric" min="3" max="95" value="9" aria-describedby="finder-result" />
-          <button type="button" data-step="1" aria-label={t('finder.older')}>+</button>
-          <span class="unit">{t('finder.years')}</span>
-        </div>
-        <div class="result" id="finder-result" aria-live="polite"></div>
-        <a class="btn" href={localePath('/#besuch', lang)}>{t('cta.trial')}</a>
-      </div>
+    </div>
+
+    <div class="detail" id="slot-detail" aria-live="polite">
+      <p class="pick">{t('week.pick')}</p>
+      {
+        slots.map((s) => (
+          <div data-detail={s.id} hidden>
+            <h2>{title(s)}</h2>
+            <p class="when">{when(s)}</p>
+            {s.discipline === 'taichi' && <p>{t('week.taichi.who')}</p>}
+            {s.note && <p>{s.note}</p>}
+            <a class="more" href={localePath(s.discipline === 'taichi' ? '/category/taichi/' : '/category/kuksoolwon/', lang)}>
+              {s.discipline === 'taichi' ? t('week.more.taichi') : t('week.more.ksw')}
+            </a>
+          </div>
+        ))
+      }
+      <a class="btn" href={localePath('/#besuch', lang)}>{t('cta.trial')}</a>
     </div>
 
     <div class="week">
@@ -62,94 +69,86 @@ const i18n = lang === 'de'
         {days.map((d, i) => (!usedDays.has(d) ? <div class="empty" style={`grid-column:${i + 2}`}>{t('week.none')}</div> : null))}
         {slots.flatMap((s) =>
           s.days.map((d) => (
-            <div
+            <button
+              type="button"
               class:list={['slot', s.discipline === 'kuksoolwon' ? 'k' : 't']}
               style={`grid-column:${days.indexOf(d) + 2};grid-row:${row(s.from)} / ${row(s.to)}`}
               data-id={s.id}
+              aria-pressed="false"
+              aria-controls="slot-detail"
+              aria-label={`${title(s)}, ${when(s)}`}
             >
-              {s.discipline === 'taichi' ? 'Tai Chi' : s.ageMax !== undefined && s.ageMax >= 80 ? `ab ${s.ageMin}` : `${s.ageMin}–${s.ageMax}`}
+              <span>{short(s)}</span>
               <small class="num">{s.from}</small>
-            </div>
+            </button>
           )),
         )}
       </div>
       <div class="legend">
         <span><i style="background:var(--slot-k)"></i>Kuk Sool Won</span>
-        <span><i style="background:var(--gelb);box-shadow:inset 0 0 0 2px #000"></i>{t('week.yours')}</span>
         <span><i style="background:var(--jade)"></i>Tai Chi und Qi Gong</span>
+        <span><i style="background:var(--gelb);box-shadow:inset 0 0 0 2px #000"></i>{t('week.yours')}</span>
       </div>
     </div>
   </div>
-  <script type="application/json" id="finder-data" set:html={JSON.stringify({ slots: slots.map((s, i) => ({ id: s.id, ...finderData[i] })), i18n, street: site.hall.street })} />
 </header>
 
 <script>
-  import { findGroup, clampAge } from '../lib/finder';
+  const buttons = [...document.querySelectorAll<HTMLButtonElement>('.week .slot')];
+  const panel = document.getElementById('slot-detail')!;
+  const details = [...panel.querySelectorAll<HTMLElement>('[data-detail]')];
+  const pick = panel.querySelector<HTMLElement>('.pick')!;
+  let current: string | null = null;
 
-  type S = { id: string; discipline: string; from: string; to: string; ageMin: number | null; ageMax: number | null; days: string };
-  const data = JSON.parse(document.getElementById('finder-data')!.textContent!) as { slots: S[]; i18n: Record<string, string>; street: string };
-  const fill = (tpl: string, v: Record<string, string | number>) => tpl.replace(/\{(\w+)\}/g, (_, k) => String(v[k] ?? ''));
-  const input = document.getElementById('age') as HTMLInputElement;
-  const out = document.getElementById('finder-result')!;
-  const els = [...document.querySelectorAll<HTMLElement>('.week .slot')];
-  const L = data.i18n;
-  const taichiList = data.slots.filter((s) => s.discipline === 'taichi').map((s) => `${s.days} ${s.from}`).join(L.or);
-
-  function render() {
-    const result = findGroup(data.slots, clampAge(input.value));
-    const on = new Set(result.highlight.map((s) => s.id));
-    els.forEach((el) => {
-      el.classList.toggle('hit', on.has(el.dataset.id!));
-      el.classList.toggle('dim', !on.has(el.dataset.id!));
-    });
-    let strong: string, line: string;
-    if (result.kind === 'tooYoung') {
-      strong = fill(L.tooYoung, { a: result.minAge });
-      line = fill(L.firstGroup, { days: result.first.days, from: result.first.from, to: result.first.to });
-    } else if (result.kind === 'taichiOnly') {
-      strong = fill(L.taichiOnly, { list: taichiList });
-      line = L.taichiCalm;
-    } else {
-      const m = result.group;
-      const g = m.ageMax !== null && m.ageMax < 80 ? fill(L.group, { a: m.ageMin!, b: m.ageMax }) : fill(L.adults, { a: m.ageMin! });
-      strong = `${g}: ${fill(L.at, { days: m.days, from: m.from, to: m.to })}.`;
-      line = result.showTaichi ? fill(L.taichi, { list: taichiList }) : fill(L.hall, { street: data.street });
+  function select(id: string | null) {
+    current = id;
+    for (const b of buttons) {
+      const on = b.dataset.id === id;
+      b.setAttribute('aria-pressed', String(on));
+      b.classList.toggle('hit', on);
+      b.classList.toggle('dim', id !== null && !on);
     }
-    out.innerHTML = '';
-    const b = document.createElement('strong'); b.textContent = strong;
-    const p = document.createElement('p'); p.textContent = line;
-    out.append(b, p);
+    for (const d of details) d.hidden = d.dataset.detail !== id;
+    pick.hidden = id !== null;
   }
-  document.querySelectorAll<HTMLButtonElement>('.stepper [data-step]').forEach((btn) =>
-    btn.addEventListener('click', () => {
-      input.value = String(clampAge((parseInt(input.value, 10) || 9) + Number(btn.dataset.step)));
-      render();
-    }),
-  );
-  input.addEventListener('input', render);
-  render();
+
+  for (const b of buttons) {
+    b.addEventListener('click', () => {
+      select(b.dataset.id === current ? null : b.dataset.id!);
+      // Phones: the panel sits below the week; bring it into view so the tap visibly does something.
+      if (current && matchMedia('(max-width: 860px)').matches) {
+        const smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+        panel.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'nearest' });
+      }
+    });
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && current) select(null);
+  });
 </script>
 
 <style>
   .hero { padding-block: 28px 56px; }
-  .wrap { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 48px; align-items: start; }
-  @media (max-width: 860px) { .wrap { grid-template-columns: minmax(0, 1fr); gap: 32px; } }
-
-  .finder { margin-top: 34px; border-top: 6px solid var(--gelb); padding-top: 18px; max-width: 30rem; }
-  label { font-weight: 700; display: block; margin-bottom: 10px; }
-  .stepper { display: flex; width: max-content; border: 3px solid var(--fg); border-radius: 4px; background: var(--card); }
-  .stepper button { width: 48px; background: transparent; border: 0; font: 800 1.6rem var(--f); cursor: pointer; color: var(--fg); }
-  .stepper button:hover { background: var(--linie); }
-  .stepper input {
-    width: 4.2ch; text-align: center; border: 0; border-inline: 3px solid var(--fg); background: transparent;
-    font: 900 2.2rem/1 var(--f); font-stretch: 62%; padding: 6px 0; color: var(--fg); appearance: textfield;
+  .wrap {
+    display: grid; gap: 0 48px; align-items: start;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    grid-template-areas: 'head week' 'detail week';
   }
-  .stepper input::-webkit-outer-spin-button, .stepper input::-webkit-inner-spin-button { -webkit-appearance: none; }
-  .unit { align-self: center; padding: 0 14px; font-weight: 600; }
-  .result { margin-top: 16px; min-height: 4.2em; overflow-wrap: anywhere; }
-  .result :global(strong) { display: block; font-size: 1.35rem; line-height: 1.2; }
-  .result :global(p) { margin-top: 4px; }
-  .finder .btn { margin-top: 14px; }
+  .head { grid-area: head; }
+  .week { grid-area: week; }
+  .detail { grid-area: detail; }
+  @media (max-width: 860px) {
+    .wrap { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'head' 'week' 'detail'; gap: 32px; }
+  }
+
+  .detail { margin-top: 34px; border-top: 6px solid var(--gelb); padding-top: 18px; max-width: 30rem; min-height: 11rem; scroll-margin-bottom: 96px; }
+  .pick { font-weight: 700; font-size: 1.15rem; }
+  .detail h2 { font-size: 1.5rem; line-height: 1.15; }
+  .detail .when { font-size: 1.15rem; font-weight: 600; margin-top: 4px; }
+  .detail p + p { margin-top: 4px; }
+  .detail .more { display: inline-block; margin-top: 10px; font-weight: 700; text-underline-offset: 4px; }
+  .detail .btn { margin-top: 18px; }
+  @media (max-width: 860px) { .detail { margin-top: 0; min-height: 0; } }
 
   .week {
     background: var(--card); border: 2px solid var(--fg); border-radius: 4px; padding: 16px 16px 12px;
@@ -167,18 +166,20 @@ const i18n = lang === 'de'
   .tick { grid-column: 1; color: var(--stein); transform: translateY(-0.55em); font-weight: 500; }
   .rule { grid-column: 2 / -1; border-top: 1px solid var(--linie); pointer-events: none; }
   .slot {
-    border-radius: 3px; margin-block: 1px; padding: 3px 6px; min-width: 0; overflow: hidden;
-    display: flex; flex-direction: column; justify-content: center; line-height: 1.1; font-weight: 700;
-    transition: opacity 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+    border: 0; border-radius: 3px; margin-block: 1px; padding: 3px 6px; min-width: 0; overflow: hidden; cursor: pointer;
+    display: flex; flex-direction: column; justify-content: center; align-items: flex-start; text-align: left;
+    font: 700 0.8rem/1.1 var(--f);
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
   }
   .slot small { font-weight: 500; font-size: 0.72rem; }
   .slot.k { background: var(--slot-k); color: var(--slot-k-fg); }
   .slot.t { background: var(--jade); color: #fff; }
-  /* Other groups: only the fill fades, the label stays readable (opacity on the whole slot failed contrast). */
+  .slot:hover { box-shadow: inset 0 0 0 2px var(--gelb); }
+  /* Other groups while one is selected: only the fill fades, the label stays readable. */
   .slot.k.dim { background: color-mix(in srgb, var(--slot-k) 14%, var(--card)); color: var(--fg); }
   .slot.t.dim { background: color-mix(in srgb, var(--jade) 20%, var(--card)); color: var(--fg); }
   .slot.dim small { color: var(--stein); }
-  .slot.k.hit { background: var(--gelb); color: #000; box-shadow: inset 0 0 0 2px #000; }
+  .slot.hit { background: var(--gelb); color: #000; box-shadow: inset 0 0 0 2px #000; }
   .empty { grid-row: 2 / -1; display: flex; align-items: center; justify-content: center; color: var(--stein); writing-mode: vertical-rl; font-size: 0.75rem; }
   .legend { display: flex; gap: 18px; margin-top: 12px; font-size: 0.85rem; flex-wrap: wrap; }
   .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
