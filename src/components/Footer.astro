@@ -69,7 +69,7 @@ const groups = [
       <button type="button" data-theme-choice="light" aria-pressed="false">{t('theme.light')}</button>
       <button type="button" data-theme-choice="dark" aria-pressed="false">{t('theme.dark')}</button>
     </div>
-    <span>Website: Jonah L.</span>
+    {site.credit.url ? <a class="credit" href={site.credit.url} rel="noopener">{site.credit.text}</a> : <span>{site.credit.text}</span>}
   </div>
 </footer>
 
@@ -109,6 +109,8 @@ const groups = [
   ul a:hover, ul a:focus-visible { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
   .bottom { display: flex; justify-content: space-between; align-items: baseline; gap: 12px 24px; flex-wrap: wrap; margin-top: 40px; padding-top: 16px; border-top: 1px solid #2a2c27; font-size: 0.85rem; color: #8f938b; }
   /* Same pattern as the language switch in the header: current choice bold with a yellow underline. */
+  .credit { color: inherit; }
+  .credit:hover, .credit:focus-visible { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
   .theme { display: flex; align-items: baseline; gap: 12px; }
   .theme button { background: none; border: 0; padding: 0; font: inherit; color: #cfd2cb; cursor: pointer; }
   .theme button:hover { color: #fff; text-decoration: underline; text-underline-offset: 3px; }

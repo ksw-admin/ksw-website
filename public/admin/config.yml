@@ -274,6 +274,13 @@ collections:
               - { label: Name, name: name, widget: string, hint: z.B. Instagram }
               - { label: Adresse, name: url, widget: string }
               - { label: Linktext, name: label, widget: string, required: false, hint: 'z.B. „Fotoalben auf Flickr“' }
+          - label: Website-Credit (Fußzeile)
+            name: credit
+            widget: object
+            collapsed: true
+            fields:
+              - { label: Text, name: text, widget: string, default: 'Website: Jonah L.' }
+              - { label: Link, name: url, widget: string, required: false, pattern: ['^(https?://.+)?$', 'Vollständige Adresse mit https://'], hint: 'Optional, z.B. ein LinkedIn-Profil. Leer = kein Link.' }
           - label: Besucherstatistik
             name: analytics
             widget: object
