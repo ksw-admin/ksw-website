@@ -30,6 +30,14 @@ Netlify does the deploys.
 | CMS config | `public/admin/config.yml` (branch: `astro-redesign` until the merge, then `main`) |
 | Design tokens | `src/styles/global.css` |
 
+## CMS
+
+- Online (GitHub login via Netlify): changes are drafts (Entwurf → In Prüfung → Bereit → Veröffentlichen). Each draft is a
+  pull request; CI checks it and Netlify builds a deploy preview, linked in the CMS as "Vorschau ansehen".
+- Locally (`npm run cms`): no drafts, saving writes the files directly.
+- The live preview in the editor (`src/admin/preview.ts`) uses the site's rules (`src/lib/text.ts`), CSS and font.
+  Only the layout of the list row and the post page is written twice; the deploy preview is the exact result.
+
 ## Notes
 
 - Photos are optimized at build time (`astro:assets`); a reference to a missing image fails the build.

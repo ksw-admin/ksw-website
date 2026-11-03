@@ -1,7 +1,7 @@
 ---
 // Decap CMS admin. An Astro page (not public/admin/index.html) so /admin/ also works on the dev server.
 // The config stays in public/admin/config.yml (Decap loads config.yml next to this page).
-// Below the CMS script: live previews in the site's look (news list row, page decision).
+// The live preview (src/admin/preview.ts) is bundled by Astro and uses the site's own rules, CSS and font.
 ---
 
 <!doctype html>
@@ -14,96 +14,12 @@
     <link rel="icon" href="/favicon.ico" />
   </head>
   <body>
+    <!-- Start Decap by hand (src/admin/preview.ts calls CMS.init) so the local mode can switch off drafts. -->
+    <script is:inline>window.CMS_MANUAL_INIT = true;</script>
     <!-- Decap CMS, pinned. Update: change the version in this one line (release notes: github.com/decaporg/decap-cms/releases). -->
     <script is:inline src="https://unpkg.com/decap-cms@3.17.1/dist/decap-cms.js"></script>
-    <script is:inline>
-      // Keep in sync with src/lib/posts.ts (PAGE_MIN_CHARS) and src/components/NewsLedger.astro.
-      var PAGE_MIN_CHARS = 500;
-
-      CMS.registerPreviewStyle(
-        `
-        body { margin: 0; padding: 24px; background: #f4f5f2; color: #000; font: 400 17px/1.55 Arial, sans-serif; }
-        .hint { font: 600 13px/1.4 Arial, sans-serif; padding: 10px 14px; border-radius: 4px; margin-bottom: 20px; }
-        .hint.page { background: #fff8c2; border: 2px solid #000; }
-        .hint.list { background: #ddeae5; border: 2px solid #2c6a60; }
-        .hint.hidden { background: #e6e6e3; border: 2px dashed #5c5f59; }
-        .is-hidden .row { opacity: 0.45; }
-        .row { display: grid; grid-template-columns: 110px 160px minmax(0, 1fr) auto; gap: 20px; align-items: start; padding: 20px 0; border-top: 6px solid #ffdd00; border-bottom: 1px solid #d3d6cf; }
-        .row.noimg { grid-template-columns: 110px minmax(0, 1fr) auto; }
-        time { color: #5c5f59; font-weight: 600; }
-        .thumb { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4px; display: block; }
-        .kind { font-size: 13px; font-weight: 700; color: #5c5f59; }
-        h3 { margin: 0 0 6px; font-size: 21px; line-height: 1.2; }
-        p { margin: 6px 0 0; white-space: pre-line; max-width: 62ch; }
-        .more { font-weight: 700; text-decoration: underline; }
-        .medals { display: flex; gap: 10px; font-weight: 700; white-space: nowrap; }
-        .medals i { display: inline-block; width: 14px; height: 14px; border-radius: 50%; margin-right: 4px; vertical-align: -2px; }
-        .g { background: #c9a227; } .s { background: #a7adb2; } .b { background: #b0703a; }
-        .warn { color: #8a1c12; font-weight: 700; font-size: 13px; margin-top: 8px; }
-        .body { margin-top: 28px; padding-top: 16px; border-top: 1px solid #d3d6cf; }
-        .body h2 { font-size: 20px; }
-        `,
-        { raw: true },
-      );
-
-      function fmtDate(v) {
-        if (!v) return '';
-        var d = new Date(v);
-        return isNaN(d) ? '' : d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
-      }
-
-      var PostPreview = createClass({
-        render: function () {
-          var data = this.props.entry.get('data');
-          var get = function (k) { return data.get(k); };
-          var text = (get('description') || '').trim();
-          var body = (get('body') || '').trim();
-          var choice = get('page') || 'auto';
-          var auto = body.length > 0 || text.length > PAGE_MIN_CHARS;
-          var hasPage = choice === 'ja' ? true : choice === 'nein' ? false : auto;
-          var imgPath = get('image');
-          var img = imgPath && imgPath.indexOf('placeholder') < 0 ? String(this.props.getAsset(imgPath)) : '';
-          var medals = data.get('medals');
-          var m = function (k) { return medals ? Number(medals.get(k) || 0) : 0; };
-          var meta = [get('kind'), get('place')].filter(Boolean).join(', ');
-          var paragraphs = text.split(/\n\s*\n/);
-
-          var hint = hasPage
-            ? h('div', { className: 'hint page' },
-                'Eigene Seite: ja. In der Liste stehen der erste Absatz und „Weiterlesen“.' +
-                  (choice === 'auto' ? (body ? ' (Grund: langer Text ist ausgefüllt.)' : ' (Grund: Text länger als ' + PAGE_MIN_CHARS + ' Zeichen.)') : ''))
-            : h('div', { className: 'hint list' },
-                'Eigene Seite: nein. Der Beitrag steht komplett in der Liste.' +
-                  (choice === 'auto' ? ' (' + text.length + ' von ' + PAGE_MIN_CHARS + ' Zeichen, kein langer Text.)' : ''));
-
-          var medalEls = [];
-          if (m('gold')) medalEls.push(h('span', { key: 'g' }, h('i', { className: 'g' }), m('gold')));
-          if (m('silver')) medalEls.push(h('span', { key: 's' }, h('i', { className: 's' }), m('silver')));
-          if (m('bronze')) medalEls.push(h('span', { key: 'b' }, h('i', { className: 'b' }), m('bronze')));
-          if (m('other')) medalEls.push(h('span', { key: 'o' }, '+' + m('other')));
-
-          var textEls = hasPage
-            ? [h('p', { key: 't' }, paragraphs[0] || '', ' ', h('span', { className: 'more' }, 'Weiterlesen'))]
-            : paragraphs.map(function (p, i) { return h('p', { key: i }, p); });
-
-          var hidden = data.get('featured') === false;
-          return h('div', { className: hidden ? 'is-hidden' : '' },
-            hidden ? h('div', { className: 'hint hidden' }, 'Ausgeblendet: Dieser Beitrag erscheint nirgends auf der Website. „Auf der Website anzeigen“ einschalten, um ihn zu zeigen.') : hint,
-            h('div', { className: 'row' + (img ? '' : ' noimg') },
-              h('time', {}, fmtDate(get('date'))),
-              img ? h('img', { className: 'thumb', src: img, alt: '' }) : null,
-              h('div', {},
-                meta ? h('div', { className: 'kind' }, meta) : null,
-                h('h3', {}, get('title') || 'Titel fehlt'),
-                textEls,
-                img && !get('image_text') ? h('div', { className: 'warn' }, 'Tipp: Bildbeschreibung ausfüllen (für Screenreader und Linkvorschau).') : null),
-              h('div', { className: 'medals' }, medalEls)),
-            hasPage && body ? h('div', { className: 'body' }, this.props.widgetFor('body')) : null);
-        },
-      });
-
-      CMS.registerPreviewTemplate('news', PostPreview);
-      CMS.registerPreviewTemplate('articles', PostPreview);
+    <script>
+      import '../../admin/preview';
     </script>
   </body>
 </html>

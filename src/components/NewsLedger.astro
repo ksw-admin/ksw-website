@@ -31,7 +31,7 @@ const fullSize = new Map(
       const d = p.entry.data;
       const alt = d.image_text && d.image_text !== 'placeholder' ? d.image_text : '';
       return (
-        <li class:list={{ 'no-img': !p.image }}>
+        <li id={p.slug} class:list={{ 'no-img': !p.image }}>
           <time class="num" datetime={p.date.toISOString().slice(0, 10)}>{fmt.format(p.date)}</time>
           {p.image && (
             <a class="thumb" href={p.href ?? fullSize.get(p)} aria-label={p.href ? d.title : `${d.title}: Foto in voller Größe`} tabindex={p.href ? -1 : undefined}>
@@ -56,6 +56,9 @@ const fullSize = new Map(
 
 <style>
   .ledger { list-style: none; margin: 0; padding: 0; }
+  /* Target of /aktuelles/<name>/ for short posts: clear the sticky header and mark the post. */
+  li { scroll-margin-top: 96px; }
+  li:target { box-shadow: inset 6px 0 0 var(--gelb); padding-left: 16px; }
   li {
     display: grid;
     grid-template-columns: 7.5rem 10rem minmax(0, 1fr) auto;

@@ -19,6 +19,12 @@ backend:
 
 local_backend: true
 locale: de
+
+# Drafts: changes are saved as "Entwurf", moved to "In Prüfung" / "Bereit" and only go live with "Veröffentlichen".
+# Each draft is a branch + pull request; CI checks it and Netlify builds a deploy preview, which the CMS links as
+# "Vorschau ansehen" (exact live rendering). The local mode (`npm run cms`) has no drafts and saves directly.
+publish_mode: editorial_workflow
+show_preview_links: true
 site_url: https://www.kuk-sool-won-griepentrog.de
 logo_url: /images/Logo.svg
 
@@ -45,6 +51,8 @@ collections:
       Turniere, Prüfungen, Seminare, Vereinsleben. Kurze Beiträge (ein, zwei Sätze und ein Foto) stehen komplett in der Liste,
       lange Beiträge bekommen eine eigene Seite.
     folder: src/content/news/de
+    # "Live ansehen": long posts open their page, short ones forward to their entry in the list.
+    preview_path: 'aktuelles/{{slug}}/'
     create: true
     slug: '{{year}}-{{month}}-{{day}}-{{title}}'
     # Uploads go next to the entries (images/ beside the .md file); the site makes small WebP versions at build time.
@@ -102,6 +110,7 @@ collections:
     label_singular: Artikel
     description: Ältere Artikel mit eigener Seite unter /articles/. Neue Beiträge bitte unter „Aktuelles“ anlegen.
     folder: src/content/articles/de
+    preview_path: 'articles/{{slug}}/'
     create: false
     slug: '{{year}}-{{month}}-{{day}}-{{title}}'
     # Uploads go next to the entries (images/ beside the .md file); the site makes small WebP versions at build time.
@@ -118,6 +127,7 @@ collections:
     label_singular: Seite
     description: Die Seiten Kuk Sool Won und Tai Chi. Trainingszeiten stehen unter „Einstellungen › Trainingszeiten“.
     folder: src/content/disciplines/de
+    preview_path: 'category/{{slug}}/'
     create: false
     delete: false
     slug: '{{slug}}'
@@ -144,12 +154,14 @@ collections:
       - label: Impressum
         name: impressum
         file: src/content/pages/de/impressum.md
+        preview_path: other/impressum/
         fields:
           - { label: Titel, name: title, widget: string }
           - { label: Text, name: body, widget: markdown }
       - label: Datenschutz
         name: datenschutz
         file: src/content/pages/de/datenschutz.md
+        preview_path: other/datenschutz/
         fields:
           - { label: Titel, name: title, widget: string }
           - { label: Text, name: body, widget: markdown }
@@ -158,6 +170,7 @@ collections:
     label: Sponsoren
     label_singular: Sponsor
     folder: src/content/sponsors
+    preview_path: other/sponsoren/
     create: true
     slug: '{{name}}'
     # Uploads go next to the entries (images/ beside the .md file); the site makes small WebP versions at build time.

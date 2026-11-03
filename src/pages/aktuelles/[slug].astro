@@ -1,13 +1,18 @@
 ---
-// News had no own page on the old site (permalink: false); now each gets /aktuelles/<file name>/
+// /aktuelles/<file name>/ for every visible news post:
+// - posts with an own page render it here;
+// - short posts (shown completely in the list) forward to their entry in the list (/articles/#<name>),
+//   so the CMS "Live ansehen" link and shared links always land on the post.
+//   scripts/netlify-redirects.mjs turns these into real Netlify redirects and drops them from the sitemap.
 import PostPage from '../../components/PostPage.astro';
 import { getPosts } from '../../lib/posts';
 
 export async function getStaticPaths() {
-  const posts = (await getPosts('de')).filter((p) => p.collection === 'news' && p.hasPage);
+  const posts = (await getPosts('de')).filter((p) => p.collection === 'news');
   return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
 }
 const { post } = Astro.props;
+if (!post.hasPage) return Astro.redirect(`/articles/#${encodeURIComponent(post.slug)}`);
 ---
 
 <PostPage post={post} />
