@@ -223,7 +223,7 @@ collections:
               - { label: Von, name: from, widget: string, pattern: ['^\d{2}:\d{2}$', 'Format HH:MM, z.B. 18:30'] }
               - { label: Bis, name: to, widget: string, pattern: ['^\d{2}:\d{2}$', 'Format HH:MM, z.B. 19:30'] }
               - { label: Alter von, name: ageMin, widget: number, value_type: int, required: false }
-              - { label: Alter bis, name: ageMax, widget: number, value_type: int, required: false, hint: '80 = „ab … Jahre“' }
+              - { label: Alter bis, name: ageMax, widget: number, value_type: int, required: false, hint: 'Leer = „ab … Jahre“ (keine Obergrenze)' }
               - { label: Hinweis, name: note, widget: string, required: false }
 
       - label: Kontakt und Allgemeines

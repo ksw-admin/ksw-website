@@ -28,7 +28,7 @@ const de = lang === 'de';
 const taichiName = de ? 'Tai Chi und Qi Gong' : 'Tai Chi and Qi Gong';
 const name = (s: Slot) => (s.discipline === 'taichi' ? taichiName : 'Kuk Sool Won');
 const short = (s: Slot) =>
-  s.discipline === 'taichi' ? 'Tai Chi' : s.ageMax !== undefined && s.ageMax >= 80 ? `${de ? 'ab' : ''} ${s.ageMin}${de ? '' : '+'}`.trim() : `${s.ageMin}–${s.ageMax}`;
+  s.discipline === 'taichi' ? 'Tai Chi' : s.ageMax === undefined ? `${de ? 'ab' : ''} ${s.ageMin}${de ? '' : '+'}`.trim() : `${s.ageMin}–${s.ageMax}`;
 const when = (s: Slot) => `${dayList(s.days, lang)}, ${s.from} ${de ? 'bis' : 'to'} ${s.to}${de ? ' Uhr' : ''}`;
 const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bis ' : ' to ')].filter(Boolean).join(', ');
 ---

@@ -42,7 +42,7 @@ Alles sind wichtige Bestandteile für unsere Gürtelprüfungen und müssen von a
 
 ## Ihr seid ein tolles Team, denn Übung macht den Meister.
 
-- Elif Eriyas: 2. Platz Point Fight, 1. Platz Kumdo
+- Elif E.: 2. Platz Point Fight, 1. Platz Kumdo
 - Timur: 1. Platz Kumdo
 - Masuda: 1. Platz Kumdo
 - Sanad: 2. Platz Leichtkontakt

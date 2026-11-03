@@ -57,8 +57,7 @@
       ],
       "from": "20:00",
       "to": "21:30",
-      "ageMin": 15,
-      "ageMax": 80
+      "ageMin": 15
     },
     {
       "id": "taichi-di",
