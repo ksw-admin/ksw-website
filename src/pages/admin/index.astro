@@ -18,11 +18,11 @@
     <script is:inline>window.CMS_MANUAL_INIT = true;</script>
     <!-- Decap CMS, pinned with a hash (SRI): the browser refuses the file if the CDN serves anything else.
          Update: change the version AND the hash. New hash:
-         curl -sL https://unpkg.com/decap-cms@<version>/dist/decap-cms.js | openssl dgst -sha384 -binary | openssl base64 -A
+         curl -sL https://cdn.jsdelivr.net/npm/decap-cms@<version>/dist/decap-cms.js | openssl dgst -sha384 -binary | openssl base64 -A
          (release notes: github.com/decaporg/decap-cms/releases) -->
     <script
       is:inline
-      src="https://unpkg.com/decap-cms@3.17.1/dist/decap-cms.js"
+      src="https://cdn.jsdelivr.net/npm/decap-cms@3.17.1/dist/decap-cms.js"
       integrity="sha384-d2pbrhjc5asvSK35gKkrgRIk0Wq+2CQynWnXtSsYWQawXCgBXhcAK737jBAKXT4T"
       crossorigin="anonymous"></script>
     <script>
