@@ -1,0 +1,12 @@
+# Old addresses from the Eleventy site (checked against its build output, 2026-11-03).
+# scripts/netlify-redirects.mjs appends the generated redirects below these lines.
+/sitemap.xml                         /sitemap-index.xml  301
+/robots                              /robots.txt         301
+/robots/                             /robots.txt         301
+/category                            /                   301
+/category/                           /                   301
+/articles/2022-09-29-                /articles/          301
+/articles/2022-09-29-/               /articles/          301
+/articles/2023-01-21-turniere-2022   /articles/2022-01-04-turniere-2022/  301
+/articles/2023-01-21-turniere-2022/  /articles/2022-01-04-turniere-2022/  301
+/index.html                          /                   301
