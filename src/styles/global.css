@@ -100,9 +100,15 @@ img { max-width: 100%; height: auto; }
 /* Markdown bodies from the CMS */
 .prose { max-width: 68ch; }
 .prose > * + * { margin-top: 1em; }
-.prose h2 { font-size: 1.6rem; margin-top: 1.6em; }
+.prose h2 { font-size: clamp(1.5rem, 2.4vw, 1.9rem); font-weight: 900; font-stretch: 62%; line-height: 1.05; margin-top: 1.8em; }
 .prose h3 { font-size: 1.25rem; margin-top: 1.4em; }
-.prose ul, .prose ol { padding-left: 1.2em; }
+.prose h2 + *, .prose h3 + * { margin-top: 0.6em; }
+.prose ul, .prose ol { padding-left: 1.3em; margin-bottom: 0; }
+.prose li + li { margin-top: 0.4em; }
+.prose ul li::marker { color: var(--gelb); }
+.prose ol li::marker { font-weight: 700; }
+.prose strong { font-weight: 700; }
+.prose a { text-underline-offset: 3px; }
 .prose img { border-radius: 4px; }
 
 .visually-hidden {

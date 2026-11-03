@@ -39,7 +39,7 @@ const paragraphs = post.paragraphs;
       </header>
       <div class="cols">
         <div class="prose">
-          {paragraphs.map((p) => <p>{p}</p>)}
+          {paragraphs.map((p) => <p class="desc">{p}</p>)}
           <Content />
         </div>
         {post.image && (
@@ -60,7 +60,8 @@ const paragraphs = post.paragraphs;
   .meta { color: var(--stein); display: flex; gap: 16px; flex-wrap: wrap; font-weight: 600; }
   h1 { font-size: clamp(2.2rem, 6vw, 4.2rem); line-height: 0.95; font-weight: 900; }
   .cols { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px; margin-top: 32px; align-items: start; }
-  .prose :global(p) { white-space: pre-line; }
+  /* Short text keeps its line breaks (old CMS texts); the Markdown report below is formatted by Astro. */
+  .desc { white-space: pre-line; }
   figure { margin: 0; }
   figure :global(img) { width: 100%; height: auto; border-radius: 4px; display: block; }
   figcaption { font-size: 0.85rem; color: var(--stein); margin-top: 8px; }

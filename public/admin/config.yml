@@ -70,7 +70,7 @@ collections:
         required: false
         options: [Turnier, Prüfung, Seminar, Verein]
       - { label: Ort, name: place, widget: string, required: false, hint: z.B. Arnsberg }
-      - { label: Text, name: description, widget: text, hint: 'Leerzeile = neuer Absatz. Für die Liste reichen ein, zwei Sätze.' }
+      - { label: Kurztext, name: description, widget: text, hint: 'Ein, zwei Sätze. Steht in der Liste, bei Google und in der Linkvorschau (WhatsApp usw.). Den ausführlichen Bericht unten bei „Bericht“ schreiben.' }
       - { label: Foto, name: image, widget: image, required: false, choose_url: false }
       - { label: Bildbeschreibung, name: image_text, widget: string, required: false, hint: 'Was ist auf dem Foto zu sehen? (für Screenreader und Linkvorschau)' }
       - label: Medaillen und Platzierungen
@@ -93,7 +93,7 @@ collections:
           - { label: 'Automatisch (eigene Seite nur bei langem Text)', value: auto }
           - { label: 'Ja, immer eigene Seite', value: ja }
           - { label: 'Nein, nur in der Liste', value: nein }
-      - { label: Langer Text (optional), name: body, widget: markdown, required: false, hint: 'Ausführlicher Bericht. Ein Beitrag mit langem Text bekommt automatisch eine eigene Seite.' }
+      - { label: Bericht (optional), name: body, widget: markdown, required: false, buttons: [bold, italic, link, heading-two, bulleted-list, numbered-list], editor_components: [image], hint: 'Ausführlicher Bericht mit Überschriften und Listen (z.B. Ergebnisse). Ein Beitrag mit Bericht bekommt automatisch eine eigene Seite.' }
 
   - name: articles
     label: Artikel (alt)
