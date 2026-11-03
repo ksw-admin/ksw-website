@@ -1,25 +1,17 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
-import { readdirSync } from 'node:fs';
-
-// Real English pages = files under src/pages/en. Everything else under /en/ is a fallback redirect (not in the sitemap).
-const enPages = new Set(
-  readdirSync('src/pages/en', { recursive: true })
-    .map(String)
-    .filter((f) => f.endsWith('.astro') && !f.includes('['))
-    .map((f) => '/en/' + f.replaceAll('\\', '/').replace(/(^|\/)index\.astro$/, '').replace(/\.astro$/, '/')),
-);
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://www.kuk-sool-won-griepentrog.de',
   integrations: [
     sitemap({
+      // Untranslated English pages (noindex) and redirect pages are removed after the build
+      // by scripts/netlify-redirects.mjs, which reads each page's robots tag.
       filter: (page) => {
         const path = new URL(page).pathname;
-        if (path.includes('/offline/') || path.includes('/404')) return false;
-        return !path.startsWith('/en/') || enPages.has(path);
+        return !path.includes('/offline/') && !path.includes('/404');
       },
     }),
   ],

@@ -37,6 +37,20 @@ Netlify does the deploys.
 - Locally (`npm run cms`): no drafts, saving writes the files directly.
 - The live preview in the editor (`src/admin/preview.ts`) uses the site's rules (`src/lib/text.ts`), CSS and font.
   Only the layout of the list row and the post page is written twice; the deploy preview is the exact result.
+- **Startseite** (`src/content/home.json`): headline, intro, both discipline texts, photos with captions, master intro,
+  contact heading, German and English side by side. Times and numbers on the home page come from the training times.
+
+### Translating
+
+- In the CMS, open a post, the Kuk Sool Won / Tai Chi page or the Startseite and switch to the **en** tab. Translate
+  the text fields (title, short text, report, photo description). Date, type, place, medals, photo and gallery are
+  only in German; the English page uses them.
+- Files: `src/content/<collection>/en/<same name>.md`. An English post needs a title and a short text, else the site
+  ignores it and shows German.
+- Every German page also exists under `/en/…`. Untranslated, it shows the German text with English navigation and the
+  note "This page is only available in German" (noindex, canonical to German). Translated, it is a normal English
+  page with hreflang links and is listed in the sitemap.
+- Impressum and Datenschutz stay German only.
 
 ## Design system
 

@@ -1,0 +1,30 @@
+---
+/** All posts (German /articles/ and English /en/articles/). Untranslated posts show in German on the English list. */
+import Base from '../layouts/Base.astro';
+import NewsLedger from './NewsLedger.astro';
+import { getPosts } from '../lib/posts';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const posts = await getPosts(lang);
+const de = lang === 'de';
+---
+
+<Base
+  title={de ? 'Aktuelles' : 'News'}
+  description={de ? 'Turniere, Prüfungen und Vereinsleben der Kampfkunst Academy Griepentrog' : 'Tournaments, gradings and club life of the Kampfkunst Academy Griepentrog'}
+  alternate={{ de: '/articles/', en: '/en/articles/' }}
+>
+  <section class="band">
+    <div class="wrap">
+      <div class="sec-h"><h1>{t('news.title')}</h1></div>
+      <NewsLedger posts={posts} lang={lang} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  section { padding-block: 40px 72px; }
+</style>

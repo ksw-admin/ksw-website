@@ -11,17 +11,21 @@ import { capWidth } from '../lib/images';
 interface Props { post: Post }
 const { post } = Astro.props;
 const { data } = post.entry;
-const { Content } = await render(post.entry);
+// Report: the shown language's, else the German one (an English translation may leave the report out).
+const bodyEntry = post.textEntry.body?.trim() ? post.textEntry : post.entry;
+const bodyLang = bodyEntry === post.entry && post.lang !== 'de' ? 'de' : undefined;
+const { Content } = await render(bodyEntry);
 const fmt = new Intl.DateTimeFormat(post.lang === 'de' ? 'de-DE' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 // News keep the whole report in "description" (old CMS form had no body field).
 const paragraphs = post.paragraphs;
 ---
 
 <Base
-  title={data.title}
+  title={post.title}
+  alternate={post.alternate}
   description={paragraphs[0]?.slice(0, 160)}
   image={post.image ? `/og/${post.slug}.jpg` : undefined}
-  imageAlt={data.image_text && data.image_text !== 'placeholder' ? data.image_text : data.title}
+  imageAlt={post.imageText && post.imageText !== 'placeholder' ? post.imageText : post.title}
   ogType="article"
   articleDate={post.date.toISOString().slice(0, 10)}
   jsonLd={articleLd(post)}
@@ -34,22 +38,22 @@ const paragraphs = post.paragraphs;
           {data.kind && <span>{data.kind}</span>}
           {data.place && <span>{data.place}</span>}
         </p>
-        <h1 class="cond">{data.title}</h1>
+        <h1 class="cond">{post.title}</h1>
         <Medals medals={data.medals} />
       </header>
       <div class="cols">
         <div class="prose">
-          {paragraphs.map((p) => <p class="desc">{p}</p>)}
-          <Content />
+          {paragraphs.map((p) => <p class="desc" lang={post.textLang !== post.lang ? post.textLang : undefined}>{p}</p>)}
+          <div lang={bodyLang}><Content /></div>
         </div>
         {post.image && (
           <figure>
-            <Image src={post.image.meta} alt={data.image_text || ''} width={capWidth(post.image.meta, 1600)} quality={75} widths={[480, 800, 1200, 1600]} sizes="(max-width: 800px) 100vw, 40vw" />
-            {data.image_text && data.image_text !== 'placeholder' && <figcaption>{data.image_text}</figcaption>}
+            <Image src={post.image.meta} alt={post.imageText || ''} width={capWidth(post.image.meta, 1600)} quality={75} widths={[480, 800, 1200, 1600]} sizes="(max-width: 800px) 100vw, 40vw" />
+            {post.imageText && post.imageText !== 'placeholder' && <figcaption>{post.imageText}</figcaption>}
           </figure>
         )}
       </div>
-      <p class="back"><a href={localePath('/articles/', post.lang)}>Alle Beiträge</a></p>
+      <p class="back"><a href={localePath('/articles/', post.lang)}>{post.lang === 'de' ? 'Alle Beiträge' : 'All posts'}</a></p>
     </div>
   </article>
 </Base>

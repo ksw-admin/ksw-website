@@ -1,10 +1,23 @@
 ---
-/** Two full-bleed halves, two voices of one typeface: condensed/heavy for Kuk Sool Won, wide/light for Tai Chi. */
+/**
+ * Two full-bleed halves, two voices of one typeface: condensed/heavy for Kuk Sool Won, wide/light for Tai Chi.
+ * Texts come from home.json (CMS: Startseite); every number and time comes from schedule.json (Trainingszeiten).
+ */
 import { localePath, type Lang } from '../i18n/ui';
+import { getSchedule, dayShort } from '../lib/schedule';
+import { paragraphsOf } from '../lib/home';
 
-interface Props { lang: Lang }
-const { lang } = Astro.props;
+interface Props { lang: Lang; kswText: string; taichiText: string }
+const { lang, kswText, taichiText } = Astro.props;
 const de = lang === 'de';
+
+const ksw = await getSchedule('kuksoolwon');
+const taichi = await getSchedule('taichi');
+const youngest = Math.min(...ksw.map((s) => s.ageMin ?? Infinity));
+const taichiFacts = taichi.map((s) => ({
+  days: s.days.map((d) => dayShort(d, lang)).join('/'),
+  time: de ? `${s.from} bis ${s.to} Uhr` : `${s.from} to ${s.to}`,
+}));
 ---
 
 <section class="paths">
@@ -12,11 +25,16 @@ const de = lang === 'de';
     <div class="inner">
       <div class="hangul" lang="ko" aria-hidden="true">국술원</div>
       <h2 class="cond">Kuk Sool Won</h2>
-      <div class="body"><slot name="ksw" /></div>
+      <div class="body">{paragraphsOf(kswText).map((p) => <p>{p}</p>)}</div>
       <ul class="facts">
         <li><b class="cond num">2608</b><span>{de ? 'Techniken (Soo)' : 'techniques (Soo)'}</span></li>
         <li><b class="cond num">270</b><span>{de ? 'Zielpunkte (Ki)' : 'target points (Ki)'}</span></li>
-        <li><b class="cond num">{de ? 'ab 4' : '4+'}</b><span>{de ? 'Jahren, 5 Altersgruppen' : 'years, 5 age groups'}</span></li>
+        {Number.isFinite(youngest) && (
+          <li>
+            <b class="cond num">{de ? `ab ${youngest}` : `${youngest}+`}</b>
+            <span>{de ? `Jahren, ${ksw.length} Altersgruppen` : `years, ${ksw.length} age groups`}</span>
+          </li>
+        )}
       </ul>
       <a class="more" href={localePath('/category/kuksoolwon/', lang)}>{de ? 'Mehr über Kuk Sool Won' : 'More about Kuk Sool Won'}</a>
     </div>
@@ -24,10 +42,9 @@ const de = lang === 'de';
   <div class="path t" id="taichi">
     <div class="inner">
       <h2 class="wide">{de ? 'Tai Chi, Qi Gong und Atemschulung' : 'Tai Chi, Qi Gong and breathing training'}</h2>
-      <div class="body"><slot name="taichi" /></div>
+      <div class="body">{paragraphsOf(taichiText).map((p) => <p>{p}</p>)}</div>
       <ul class="facts">
-        <li><b class="wide">{de ? 'Di' : 'Tue'}</b><span>{de ? '18:30 bis 19:30 Uhr' : '18:30 to 19:30'}</span></li>
-        <li><b class="wide">{de ? 'Do' : 'Thu'}</b><span>{de ? '19:15 bis 20:15 Uhr' : '19:15 to 20:15'}</span></li>
+        {taichiFacts.map((f) => <li><b class="wide">{f.days}</b><span class="num">{f.time}</span></li>)}
         <li><b class="wide">{de ? 'jedes' : 'any'}</b><span>{de ? 'Alter, kein Leistungssport' : 'age, not competitive'}</span></li>
       </ul>
       <a class="more" href={localePath('/category/taichi/', lang)}>{de ? 'Mehr über Tai Chi und Atemschulung' : 'More about Tai Chi and breathing training'}</a>
@@ -48,7 +65,7 @@ const de = lang === 'de';
   .t h2 { font-size: clamp(1.9rem, 3.6vw, 2.9rem); line-height: 1.08; font-weight: 300; margin-top: 6px; }
   .body { margin-top: 22px; max-width: 42ch; }
   .t .body { line-height: 1.75; }
-  .body :global(p + p) { margin-top: 12px; }
+  .body p + p { margin-top: 12px; }
   .facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin: 30px 0 0; padding: 0; list-style: none; }
   .facts b { display: block; font-size: 2.4rem; line-height: 1; font-weight: 900; }
   .k .facts b { color: var(--gelb); }

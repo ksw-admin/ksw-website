@@ -25,19 +25,29 @@ async function walk(dir) {
 
 await walk(DIST);
 
-// Redirect pages are not real pages: remove them from the sitemap.
+// The sitemap lists only real pages: no redirect pages, and no page marked noindex
+// (untranslated English pages, which show German content).
 const sitemapFile = join(DIST, 'sitemap-0.xml');
 const redirected = new Set(lines.map((l) => l.split(/\s+/)[0]));
+async function isNoindex(path) {
+  try {
+    const html = await readFile(join(DIST, decodeURI(path), 'index.html'), 'utf8');
+    return /<meta name="robots" content="noindex"/.test(html);
+  } catch {
+    return false;
+  }
+}
 try {
   const xml = await readFile(sitemapFile, 'utf8');
-  let removed = 0;
-  const pruned = xml.replace(/<url>\s*<loc>([^<]+)<\/loc>[\s\S]*?<\/url>/g, (block, loc) => {
+  const blocks = [...xml.matchAll(/<url>\s*<loc>([^<]+)<\/loc>[\s\S]*?<\/url>/g)];
+  let removedRedirects = 0, removedNoindex = 0, pruned = xml;
+  for (const [block, loc] of blocks) {
     const path = encodeURI(decodeURI(new URL(loc).pathname));
-    if (redirected.has(path)) { removed++; return ''; }
-    return block;
-  });
+    if (redirected.has(path)) { removedRedirects++; pruned = pruned.replace(block, ''); }
+    else if (await isNoindex(path)) { removedNoindex++; pruned = pruned.replace(block, ''); }
+  }
   await writeFile(sitemapFile, pruned);
-  console.log(`[redirects] removed ${removed} redirect pages from the sitemap`);
+  console.log(`[redirects] sitemap: removed ${removedRedirects} redirect and ${removedNoindex} noindex pages`);
 } catch (e) {
   if (e.code !== 'ENOENT') throw e;
 }

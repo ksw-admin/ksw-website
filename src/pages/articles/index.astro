@@ -1,20 +1,5 @@
 ---
-import Base from '../../layouts/Base.astro';
-import NewsLedger from '../../components/NewsLedger.astro';
-import { getPosts } from '../../lib/posts';
-
-const posts = await getPosts('de');
+import PostList from '../../components/PostList.astro';
 ---
 
-<Base title="Aktuelles" description="Turniere, Prüfungen und Vereinsleben der Kampfkunst Academy Griepentrog">
-  <section class="band">
-    <div class="wrap">
-      <div class="sec-h"><h1>Turniere, Prüfungen, Verein</h1></div>
-      <NewsLedger posts={posts} lang="de" />
-    </div>
-  </section>
-</Base>
-
-<style>
-  section { padding-block: 40px 72px; }
-</style>
+<PostList lang="de" />

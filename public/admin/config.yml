@@ -39,8 +39,14 @@ slug:
 media_folder: public/images
 public_folder: /images
 
-# German content only for now. English (src/content/*/en/) is added when translating starts;
-# untranslated English URLs redirect to German (astro.config.mjs › i18n.fallback).
+# Translations: German is the main language. An English version holds ONLY the text fields (marked i18n: true);
+# date, type, place, medals, photos and galleries stay in the German entry and the English page uses them.
+# Files: src/content/<collection>/de/<name>.md and .../en/<name>.md. Untranslated English pages show German
+# content with an English note. An English entry without title is ignored by the site.
+i18n:
+  structure: multiple_folders
+  locales: [de, en]
+  default_locale: de
 
 collections:
   # ---------------------------------------------------------------- Beiträge
@@ -50,7 +56,8 @@ collections:
     description: >-
       Turniere, Prüfungen, Seminare, Vereinsleben. Kurze Beiträge (ein, zwei Sätze und ein Foto) stehen komplett in der Liste,
       lange Beiträge bekommen eine eigene Seite.
-    folder: src/content/news/de
+    folder: src/content/news
+    i18n: true
     # "Live ansehen": long posts open their page, short ones forward to their entry in the list.
     preview_path: 'aktuelles/{{slug}}/'
     create: true
@@ -71,7 +78,7 @@ collections:
       - { label: Mit Medaillen, field: medals.gold, pattern: '[1-9]' }
       - { label: Ausgeblendet, field: featured, pattern: 'false' }
     fields: &postFields
-      - { label: Titel, name: title, widget: string }
+      - { label: Titel, name: title, widget: string, i18n: true }
       - { label: Auf der Website anzeigen, name: featured, widget: boolean, default: true, hint: 'Aus: Der Beitrag bleibt gespeichert, erscheint aber nirgends (Liste, Startseite, eigene Seite, Google).' }
       - { label: Datum, name: date, widget: datetime, date_format: DD.MM.YYYY, time_format: false, format: YYYY-MM-DD, picker_utc: true, default: '{{now}}', hint: 'Tag des Turniers oder der Prüfung. Bestimmt die Reihenfolge auf der Website.' }
       - label: Art
@@ -80,9 +87,9 @@ collections:
         required: false
         options: [Turnier, Prüfung, Seminar, Verein]
       - { label: Ort, name: place, widget: string, required: false, hint: z.B. Arnsberg }
-      - { label: Kurztext, name: description, widget: text, hint: 'Ein, zwei Sätze. Steht in der Liste, bei Google und in der Linkvorschau (WhatsApp usw.). Den ausführlichen Bericht unten bei „Bericht“ schreiben.' }
+      - { label: Kurztext, name: description, widget: text, i18n: true, hint: 'Ein, zwei Sätze. Steht in der Liste, bei Google und in der Linkvorschau (WhatsApp usw.). Den ausführlichen Bericht unten bei „Bericht“ schreiben.' }
       - { label: Foto, name: image, widget: image, required: false, choose_url: false }
-      - { label: Bildbeschreibung, name: image_text, widget: string, required: false, hint: 'Was ist auf dem Foto zu sehen? (für Screenreader und Linkvorschau)' }
+      - { label: Bildbeschreibung, name: image_text, widget: string, required: false, i18n: true, hint: 'Was ist auf dem Foto zu sehen? (für Screenreader und Linkvorschau)' }
       - label: Medaillen und Platzierungen
         name: medals
         widget: object
@@ -103,13 +110,14 @@ collections:
           - { label: 'Automatisch (eigene Seite nur bei langem Text)', value: auto }
           - { label: 'Ja, immer eigene Seite', value: ja }
           - { label: 'Nein, nur in der Liste', value: nein }
-      - { label: Bericht (optional), name: body, widget: markdown, required: false, buttons: [bold, italic, link, heading-two, bulleted-list, numbered-list], editor_components: [image], hint: 'Ausführlicher Bericht mit Überschriften und Listen (z.B. Ergebnisse). Ein Beitrag mit Bericht bekommt automatisch eine eigene Seite.' }
+      - { label: Bericht (optional), name: body, widget: markdown, required: false, i18n: true, buttons: [bold, italic, link, heading-two, bulleted-list, numbered-list], editor_components: [image], hint: 'Ausführlicher Bericht mit Überschriften und Listen (z.B. Ergebnisse). Ein Beitrag mit Bericht bekommt automatisch eine eigene Seite.' }
 
   - name: articles
     label: Artikel (alt)
     label_singular: Artikel
     description: Ältere Artikel mit eigener Seite unter /articles/. Neue Beiträge bitte unter „Aktuelles“ anlegen.
-    folder: src/content/articles/de
+    folder: src/content/articles
+    i18n: true
     preview_path: 'articles/{{slug}}/'
     create: false
     slug: '{{year}}-{{month}}-{{day}}-{{title}}'
@@ -126,7 +134,8 @@ collections:
     label: Kampfkunst-Seiten
     label_singular: Seite
     description: Die Seiten Kuk Sool Won und Tai Chi. Trainingszeiten stehen unter „Einstellungen › Trainingszeiten“.
-    folder: src/content/disciplines/de
+    folder: src/content/disciplines
+    i18n: true
     preview_path: 'category/{{slug}}/'
     create: false
     delete: false
@@ -135,9 +144,9 @@ collections:
     media_folder: images
     public_folder: images
     fields:
-      - { label: Titel, name: title, widget: string }
-      - { label: Kurzbeschreibung (für Google), name: description, widget: string, required: false }
-      - { label: Text, name: body, widget: markdown }
+      - { label: Titel, name: title, widget: string, i18n: true }
+      - { label: Kurzbeschreibung (für Google), name: description, widget: string, required: false, i18n: true }
+      - { label: Text, name: body, widget: markdown, i18n: true }
       - label: Bildergalerie
         name: galleryImages
         widget: list
@@ -186,6 +195,38 @@ collections:
       - { label: Website, name: link, widget: string, required: false }
       - { label: Logo, name: image, widget: image, required: false, choose_url: false }
       - { label: Logo-Beschreibung, name: image_text, widget: string, required: false }
+
+  # ---------------------------------------------------------------- Startseite
+  - name: home
+    label: Startseite
+    i18n:
+      structure: single_file
+      locales: [de, en]
+      default_locale: de
+    files:
+      - label: Startseite
+        name: home
+        file: src/content/home.json
+        format: json
+        description: Texte und Fotos der Startseite. Trainingszeiten, Beiträge, Kontaktdaten und Qualifikationen werden an ihrer eigenen Stelle gepflegt. Leere englische Felder zeigen den deutschen Text.
+        media_folder: images
+        public_folder: images
+        fields:
+          - { label: Überschrift, name: headline, widget: string, i18n: true }
+          - { label: Einleitung, name: lead, widget: text, i18n: true }
+          - { label: Beschreibung für Google und Linkvorschau, name: description, widget: text, i18n: true }
+          - { label: Großes Foto, name: photo, widget: image, i18n: duplicate, choose_url: false }
+          - { label: Großes Foto – Beschreibung (Screenreader), name: photoAlt, widget: string, i18n: true }
+          - { label: Großes Foto – Bildunterschrift, name: photoCaption, widget: string, i18n: true }
+          - { label: Text Kuk Sool Won, name: kswText, widget: text, i18n: true, hint: 'Leerzeile = neuer Absatz. Zahlen und Altersgruppen kommen aus den Trainingszeiten.' }
+          - { label: Text Tai Chi und Atemschulung, name: taichiText, widget: text, i18n: true, hint: 'Leerzeile = neuer Absatz. Tage und Uhrzeiten kommen aus den Trainingszeiten.' }
+          - { label: Überschrift über dem Video, name: videoHeading, widget: string, i18n: true }
+          - { label: Einleitung Meister, name: masterIntro, widget: text, i18n: true }
+          - { label: Foto Meister, name: masterPhoto, widget: image, i18n: duplicate, choose_url: false }
+          - { label: Foto Meister – Beschreibung (Screenreader), name: masterPhotoAlt, widget: string, i18n: true }
+          - { label: Foto Meister – Bildunterschrift, name: masterPhotoCaption, widget: string, i18n: true }
+          - { label: Überschrift Kontakt, name: contactHeading, widget: string, i18n: true }
+          - { label: Einleitung Kontakt, name: contactIntro, widget: text, i18n: true }
 
   # ---------------------------------------------------------------- Einstellungen
   - name: settings
@@ -293,5 +334,4 @@ collections:
             required: false
             fields:
               - { label: YouTube-ID, name: youtubeId, widget: string, hint: 'Die 11 Zeichen nach „watch?v=“ in der YouTube-Adresse' }
-              - { label: Titel, name: title, widget: string }
-              - { label: Überschrift, name: heading, widget: string }
+              - { label: Titel, name: title, widget: string, hint: 'Für Screenreader; die Überschrift über dem Video steht unter „Startseite“.' }

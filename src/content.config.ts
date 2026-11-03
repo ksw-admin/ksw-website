@@ -14,9 +14,11 @@ const tags = z
   .optional()
   .transform((t) => (t === undefined ? [] : Array.isArray(t) ? t : [t]));
 
+// German entries must have title and description (checked in lib/posts.ts); an English translation file may
+// hold only some text fields, so they are optional here.
 const post = z.object({
-  title: z.string(),
-  description: z.string(),
+  title: opt(z.string()),
+  description: opt(z.string()),
   image: opt(z.string()),
   image_text: opt(z.string()),
   tags,
@@ -56,7 +58,7 @@ const articles = defineCollection({
 const disciplines = defineCollection({
   loader: glob({ base: './src/content/disciplines', pattern: '**/*.md', generateId: keepName }),
   schema: z.object({
-    title: z.string(),
+    title: opt(z.string()),
     description: opt(z.string()),
     tags,
     galleryImages: z

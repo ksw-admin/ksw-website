@@ -1,0 +1,13 @@
+---
+// /en/articles/<name>/ for every old article: English text when translated, else German with a note.
+import PostPage from '../../../components/PostPage.astro';
+import { getPosts } from '../../../lib/posts';
+
+export async function getStaticPaths() {
+  const posts = (await getPosts('en')).filter((p) => p.collection === 'articles');
+  return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+const { post } = Astro.props;
+---
+
+<PostPage post={post} />

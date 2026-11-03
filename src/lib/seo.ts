@@ -44,10 +44,10 @@ export function articleLd(post: Post) {
   return {
     '@context': 'https://schema.org',
     '@type': 'NewsArticle',
-    headline: d.title,
-    description: d.description.split(/\n\s*\n/)[0].slice(0, 300),
+    headline: post.title,
+    description: post.paragraphs[0]?.slice(0, 300) ?? '',
     datePublished: post.date.toISOString().slice(0, 10),
-    inLanguage: post.lang,
+    inLanguage: post.textLang,
     ...(post.href ? { url: SITE_URL + post.href } : {}),
     ...(post.image && post.hasPage ? { image: [SITE_URL + encodeURI(`/og/${post.slug}.jpg`)] } : {}),
     author: { '@type': 'Person', name: site.contactName },

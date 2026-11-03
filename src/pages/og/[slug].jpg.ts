@@ -2,12 +2,13 @@
 // /og/default.jpg for normal pages, /og/<post slug>.jpg for every post with its own page and a photo.
 import type { APIRoute, GetStaticPaths } from 'astro';
 import sharp from 'sharp';
-import path from 'node:path';
 import { getPosts } from '../../lib/posts';
+import { getHome, homeImage } from '../../lib/home';
 
 export const OG_WIDTH = 1200;
 export const OG_HEIGHT = 630;
-const DEFAULT_IMAGE = path.join(process.cwd(), 'src/assets/images/lehrgang.jpeg');
+// Normal pages use the home page group photo (home.json › photo).
+const DEFAULT_IMAGE = homeImage(getHome('de').photo).fsPath;
 
 export const getStaticPaths = (async () => {
   const posts = (await getPosts('de')).filter((p) => p.hasPage && p.image);

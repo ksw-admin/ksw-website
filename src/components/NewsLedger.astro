@@ -29,22 +29,22 @@ const fullSize = new Map(
   {
     posts.map((p) => {
       const d = p.entry.data;
-      const alt = d.image_text && d.image_text !== 'placeholder' ? d.image_text : '';
+      const alt = p.imageText && p.imageText !== 'placeholder' ? p.imageText : '';
       return (
         <li id={p.slug} class:list={{ 'no-img': !p.image }}>
           <time class="num" datetime={p.date.toISOString().slice(0, 10)}>{fmt.format(p.date)}</time>
           {p.image && (
-            <a class="thumb" href={p.href ?? fullSize.get(p)} aria-label={p.href ? d.title : `${d.title}: Foto in voller Größe`} tabindex={p.href ? -1 : undefined}>
+            <a class="thumb" href={p.href ?? fullSize.get(p)} aria-label={p.href ? p.title : `${p.title}: ${lang === 'de' ? 'Foto in voller Größe' : 'full-size photo'}`} tabindex={p.href ? -1 : undefined}>
               <Image src={p.image.meta} alt={alt} width={capWidth(p.image.meta, 720)} quality={75} widths={[240, 480, 720]} sizes="(max-width: 760px) 100vw, 160px" loading="lazy" decoding="async" />
             </a>
           )}
           <div class="text">
             {(d.kind || d.place) && <span class="kind">{[d.kind, d.place].filter(Boolean).join(', ')}</span>}
-            <h3>{p.href ? <a href={p.href}>{d.title}</a> : d.title}</h3>
+            <h3 lang={p.textLang !== lang ? p.textLang : undefined}>{p.href ? <a href={p.href}>{p.title}</a> : p.title}</h3>
             {p.hasPage ? (
-              <p>{teaser(p.paragraphs[0] ?? '')} <a class="more" href={p.href}>{more}</a></p>
+              <p lang={p.textLang !== lang ? p.textLang : undefined}>{teaser(p.paragraphs[0] ?? '')} <a class="more" href={p.href} lang={lang}>{more}</a></p>
             ) : (
-              p.paragraphs.map((t) => <p class="full">{t}</p>)
+              p.paragraphs.map((t) => <p class="full" lang={p.textLang !== lang ? p.textLang : undefined}>{t}</p>)
             )}
           </div>
           <Medals medals={d.medals} />

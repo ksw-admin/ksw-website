@@ -19,7 +19,8 @@ const Site = z.object({
   // Profiles (Instagram, Facebook, YouTube, Flickr ...): footer, contact band, schema.org sameAs.
   social: z.array(z.object({ name: z.string(), url: z.url(), label: z.string().optional() })).default([]),
   // Home page video. Loads from YouTube only after a click (privacy, no Google request on page view).
-  video: z.object({ youtubeId: z.string().regex(/^[\w-]{11}$/), title: z.string(), heading: z.string() }).optional(),
+  // The heading above the video is a home page text (home.json › videoHeading).
+  video: z.object({ youtubeId: z.string().regex(/^[\w-]{11}$/), title: z.string() }).optional(),
   // Footer credit for whoever built the site; the link (e.g. a LinkedIn profile) is optional.
   credit: z
     .object({ text: z.string().min(1), url: z.url().optional().or(z.literal('')) })
