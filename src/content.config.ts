@@ -24,6 +24,8 @@ const post = z.object({
   date: opt(z.coerce.date()),
   kind: opt(z.enum(['Turnier', 'Prüfung', 'Seminar', 'Verein'])),
   place: opt(z.string()),
+  // Shown on the website? Old site: only posts tagged "featured" appeared. See isVisible() in lib/text.ts.
+  featured: z.boolean().optional(),
   // Own detail page? Default ("auto"): only if the post has real article text (see lib/posts.ts).
   // CMS select writes "auto" | "ja" | "nein"; true/false also accepted.
   page: z

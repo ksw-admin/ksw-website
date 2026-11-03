@@ -24,6 +24,15 @@ export function cleanParagraphs(text: string): string[] {
     .filter(Boolean);
 }
 
+/**
+ * Is a post shown on the website? The CMS switch "Auf der Website anzeigen" (featured) wins;
+ * without it, the old site's rule applies: only posts tagged "featured" were shown.
+ */
+export function isVisible(post: { featured?: boolean; tags?: string[] }): boolean {
+  if (post.featured !== undefined) return post.featured;
+  return (post.tags ?? []).includes('featured');
+}
+
 /** True if a Markdown body has real content (HTML comments from the old editor don't count). */
 export const hasRealBody = (body: string | undefined) => (body ?? '').replace(/<!--.*?-->/gs, '').trim().length > 0;
 

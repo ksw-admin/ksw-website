@@ -5,14 +5,14 @@ tags: taichi
 galleryImages:
   - link_text: Duisburg bewegt sich-Tai Chi - 2024
     link: https://www.flickr.com/gp/143500996@N08/Qeqm9tA2j4
-    image: ./images/53995613852_fecc199914_w.jpg
-  - image: ./images/DuBwT.jpg
+    image: images/53995613852_fecc199914_w.jpg
+  - image: images/DuBwT.jpg
     link: https://www.flickr.com/gp/143500996@N08/un9hHn
     link_text: DU bewegt sich 2016
-  - image: ./images/Gem17T.jpg
+  - image: images/Gem17T.jpg
     link: https://www.flickr.com/gp/143500996@N08/yf6273
     link_text: Gemeindefest 2017
-  - image: ./images/Ge16T.jpg
+  - image: images/Ge16T.jpg
     link: https://www.flickr.com/gp/143500996@N08/t3e5X5
     link_text: Gemeindefest 2016
 ---

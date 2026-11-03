@@ -1,6 +1,7 @@
 ---
 title: International Open German Championships
 date: 2023-03-29
+featured: true
 description: >
   Bei der International Open German Championships am 18. März 2023 in Arnsberg
   haben meine Studenten den 1. Platz in Formen und den 2. Platz in Kumdo
@@ -10,7 +11,7 @@ description: >
   Herzlichen Glückwunsch
 
   Meister Peter Griepentrog
-image: ./images/img_8331.jpg
+image: images/img_8331.jpg
 image_text: International Open German Championships
 tags:
   - featured

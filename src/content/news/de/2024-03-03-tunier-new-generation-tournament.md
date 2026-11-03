@@ -1,6 +1,7 @@
 ---
 title: Tunier "New Generation Tournament"
 date: 2024-03-03
+featured: true
 description: >-
   Kampfkunst Academy Griepentrog, Abteilung des FC Rumeln -Kaldenhausen 1955
   e.V. wieder erfolgreich:
@@ -15,7 +16,7 @@ description: >-
 
 
   Meister Peter Griepentrog gratuliert allen Teilnehmern.
-image: ./images/b90c9856-1ed4-4f2f-bc86-576f0eb79601.jpg
+image: images/b90c9856-1ed4-4f2f-bc86-576f0eb79601.jpg
 tags:
   - featured
 ---

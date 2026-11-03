@@ -1,5 +1,5 @@
 // Content images live next to their Markdown files (src/content/<collection>/.../images/) and the CMS writes
-// "./images/<file>" into the front matter. This module turns that string into Astro image metadata, so pages
+// "images/<file>" into the front matter. This module turns that string into Astro image metadata, so pages
 // get resized WebP versions via <Image>, and a reference to a missing file fails the build.
 import type { ImageMetadata } from 'astro';
 import path from 'node:path';
@@ -22,7 +22,7 @@ export const capWidth = (meta: ImageMetadata, max: number) => Math.min(meta.widt
 /**
  * Resolve an image reference from a content entry.
  * @param entryFile entry.filePath, e.g. "src/content/news/de/2026-05-31-gurtelprufung-2026.md"
- * @param ref the front matter value, e.g. "./images/img_4031.jpg"
+ * @param ref the front matter value, e.g. "images/img_4031.jpg" (CMS style) or "./images/img_4031.jpg"
  */
 export function resolveImage(entryFile: string | undefined, ref: string | undefined): ContentImage | undefined {
   if (!ref || !entryFile || ref.includes('placeholder')) return undefined;

@@ -1,6 +1,7 @@
 ---
 title: International Open German Championships  In Arnsberg 2026
 date: 2026-04-09
+featured: true
 description: >-
   International Open German Championships 
 
@@ -11,7 +12,7 @@ description: >-
   In Kumdo Schwertkampf haben wir den ersten Platz belegt.
 
   In Point, Fighting haben wir den ersten Platz belegt. Der Meister gratulierte seinen Schüler für die gute Leistung.
-image: ./images/d7853b5e-1c28-4a86-b3e2-22843970b05f.jpg
+image: images/d7853b5e-1c28-4a86-b3e2-22843970b05f.jpg
 image_text: Arnsberg_2026
 tags:
   - featured

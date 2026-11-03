@@ -78,3 +78,12 @@ test('own page: the CMS choice wins in both directions', () => {
   assert.equal(decideHasPage({ collection: 'news', override: true, description: 'kurz' }), true);
   assert.equal(decideHasPage({ collection: 'articles', override: false, description: 'x'.repeat(900) }), false);
 });
+
+test('visibility: the CMS switch wins, otherwise the old "featured" tag decides', async () => {
+  const { isVisible } = await import('../src/lib/text.ts');
+  assert.equal(isVisible({ featured: true }), true);
+  assert.equal(isVisible({ featured: false, tags: ['featured'] }), false);
+  assert.equal(isVisible({ tags: ['articles', 'featured'] }), true); // old site: tagged = shown
+  assert.equal(isVisible({ tags: ['articles'] }), false); // old site: untagged = not shown
+  assert.equal(isVisible({}), false);
+});

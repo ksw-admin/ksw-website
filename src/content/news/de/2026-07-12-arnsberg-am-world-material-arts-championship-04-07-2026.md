@@ -1,6 +1,7 @@
 ---
 title: World Martial Arts Championship in Arnsberg
 date: 2026-07-04
+featured: true
 kind: Turnier
 place: Arnsberg
 medals:
@@ -21,7 +22,7 @@ description: >-
   Der Meister ist sehr erfreut über die gute Leistung seiner Schüler und bedankt sich bei 
 
   den Coach für die Unterstützung.
-image: ./images/0a695caa-91b6-4e54-a93f-1b64e6ba1b81.jpg
+image: images/0a695caa-91b6-4e54-a93f-1b64e6ba1b81.jpg
 image_text: Arnsberg_2026
 tags:
   - featured

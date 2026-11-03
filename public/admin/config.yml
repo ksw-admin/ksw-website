@@ -49,7 +49,7 @@ collections:
     slug: '{{year}}-{{month}}-{{day}}-{{title}}'
     # Uploads go next to the entries (images/ beside the .md file); the site makes small WebP versions at build time.
     media_folder: images
-    public_folder: ./images
+    public_folder: images
     summary: '{{date | date("DD.MM.YYYY")}}  {{title}}'
     # Decap 3.17 has no default sort order: click "Datum" in the list to sort newest first.
     sortable_fields: [date, title]
@@ -61,8 +61,10 @@ collections:
       - { label: Seminare, field: kind, pattern: Seminar }
       - { label: Verein, field: kind, pattern: Verein }
       - { label: Mit Medaillen, field: medals.gold, pattern: '[1-9]' }
+      - { label: Ausgeblendet, field: featured, pattern: 'false' }
     fields: &postFields
       - { label: Titel, name: title, widget: string }
+      - { label: Auf der Website anzeigen, name: featured, widget: boolean, default: true, hint: 'Aus: Der Beitrag bleibt gespeichert, erscheint aber nirgends (Liste, Startseite, eigene Seite, Google).' }
       - { label: Datum, name: date, widget: datetime, date_format: DD.MM.YYYY, time_format: false, format: YYYY-MM-DD, picker_utc: true, default: '{{now}}', hint: 'Tag des Turniers oder der Prüfung. Bestimmt die Reihenfolge auf der Website.' }
       - label: Art
         name: kind
@@ -104,7 +106,7 @@ collections:
     slug: '{{year}}-{{month}}-{{day}}-{{title}}'
     # Uploads go next to the entries (images/ beside the .md file); the site makes small WebP versions at build time.
     media_folder: images
-    public_folder: ./images
+    public_folder: images
     summary: '{{date | date("DD.MM.YYYY")}}  {{title}}'
     # Decap 3.17 has no default sort order: click "Datum" in the list to sort newest first.
     sortable_fields: [date, title]
@@ -121,7 +123,7 @@ collections:
     slug: '{{slug}}'
     # Uploads go next to the entries (images/ beside the .md file); the site makes small WebP versions at build time.
     media_folder: images
-    public_folder: ./images
+    public_folder: images
     fields:
       - { label: Titel, name: title, widget: string }
       - { label: Kurzbeschreibung (für Google), name: description, widget: string, required: false }
@@ -160,7 +162,7 @@ collections:
     slug: '{{name}}'
     # Uploads go next to the entries (images/ beside the .md file); the site makes small WebP versions at build time.
     media_folder: images
-    public_folder: ./images
+    public_folder: images
     identifier_field: name
     summary: '{{name}}'
     fields:

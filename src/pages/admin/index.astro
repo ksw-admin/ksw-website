@@ -26,6 +26,8 @@
         .hint { font: 600 13px/1.4 Arial, sans-serif; padding: 10px 14px; border-radius: 4px; margin-bottom: 20px; }
         .hint.page { background: #fff8c2; border: 2px solid #000; }
         .hint.list { background: #ddeae5; border: 2px solid #2c6a60; }
+        .hint.hidden { background: #e6e6e3; border: 2px dashed #5c5f59; }
+        .is-hidden .row { opacity: 0.45; }
         .row { display: grid; grid-template-columns: 110px 160px minmax(0, 1fr) auto; gap: 20px; align-items: start; padding: 20px 0; border-top: 6px solid #ffdd00; border-bottom: 1px solid #d3d6cf; }
         .row.noimg { grid-template-columns: 110px minmax(0, 1fr) auto; }
         time { color: #5c5f59; font-weight: 600; }
@@ -84,8 +86,9 @@
             ? [h('p', { key: 't' }, paragraphs[0] || '', ' ', h('span', { className: 'more' }, 'Weiterlesen'))]
             : paragraphs.map(function (p, i) { return h('p', { key: i }, p); });
 
-          return h('div', {},
-            hint,
+          var hidden = data.get('featured') === false;
+          return h('div', { className: hidden ? 'is-hidden' : '' },
+            hidden ? h('div', { className: 'hint hidden' }, 'Ausgeblendet: Dieser Beitrag erscheint nirgends auf der Website. „Auf der Website anzeigen“ einschalten, um ihn zu zeigen.') : hint,
             h('div', { className: 'row' + (img ? '' : ' noimg') },
               h('time', {}, fmtDate(get('date'))),
               img ? h('img', { className: 'thumb', src: img, alt: '' }) : null,

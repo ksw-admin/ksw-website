@@ -1,8 +1,9 @@
 ---
 title: "Kids Tournament International Championship "
 date: 2026-02-16
+featured: true
 description: Am 14.02.2026 haben wir am Turnier International Championship teilgenommen.
-image: ./images/ed1828bd-c889-41a2-9e74-ebdd273bc3ea.jpg
+image: images/ed1828bd-c889-41a2-9e74-ebdd273bc3ea.jpg
 image_text: International Championship
 tags:
   - articles

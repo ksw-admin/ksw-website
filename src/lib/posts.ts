@@ -1,7 +1,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import type { Lang } from '../i18n/ui';
 import { resolveImage, type ContentImage } from './images';
-import { cleanParagraphs, decideHasPage } from './text';
+import { cleanParagraphs, decideHasPage, isVisible } from './text';
 
 export type Post = {
   collection: 'news' | 'articles';
@@ -38,11 +38,11 @@ function toPost(collection: Post['collection'], entry: Post['entry']): Post {
   return { collection, entry, slug, lang, date, hasPage, href: hasPage ? `${prefix}${base}${slug}/` : undefined, image, paragraphs };
 }
 
-/** News and articles merged, newest first. */
+/** News and articles merged, newest first. Hidden posts (CMS switch off) are left out everywhere. */
 export async function getPosts(lang: Lang = 'de'): Promise<Post[]> {
   const [news, articles] = await Promise.all([getCollection('news'), getCollection('articles')]);
   return [...news.map((e) => toPost('news', e)), ...articles.map((e) => toPost('articles', e))]
-    .filter((p) => p.lang === lang)
+    .filter((p) => p.lang === lang && isVisible(p.entry.data))
     .sort((a, b) => b.date.getTime() - a.date.getTime());
 }
 
