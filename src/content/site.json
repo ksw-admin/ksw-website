@@ -1,26 +1,4 @@
 {
-  "name": "Kampfkunst Academy Peter Griepentrog",
-  "shortName": "Kampfkunst Academy",
-  "description": "Kuk Sool Won, Tai Chi und Qi Gong in Duisburg-Rheinhausen",
-  "contactName": "Peter Griepentrog",
-  "email": "info@atemschulung-griepentrog.de",
-  "phones": [
-    {
-      "label": "Mobil",
-      "value": "0170 - 90 42 408",
-      "primary": true
-    },
-    {
-      "label": "Tel.",
-      "value": "020 65 - 67 96 31"
-    }
-  ],
-  "hall": {
-    "street": "Beethovenstr. 18a",
-    "note": "im Regenbogenhaus",
-    "city": "47226 Duisburg-Rheinhausen",
-    "osm": "https://www.openstreetmap.org/search?query=Beethovenstra%C3%9Fe%2018a%2047226%20Duisburg"
-  },
   "master": {
     "dan": 5,
     "since": 1986,
@@ -43,6 +21,23 @@
       }
     ]
   },
+  "phones": [
+    {
+      "label": "Mobil",
+      "value": "0170 - 90 42 408",
+      "primary": true
+    },
+    {
+      "label": "Tel.",
+      "value": "020 65 - 67 96 31"
+    }
+  ],
+  "analytics": {
+    "cloudflareToken": "5f7f1ea0441c4966ad1e864554f85b6a"
+  },
+  "shortName": "Kampfkunst Academy",
+  "name": "Kampfkunst Academy Peter Griepentrog",
+  "contactName": "Peter Griepentrog",
   "social": [
     {
       "name": "Flickr",
@@ -50,12 +45,17 @@
       "label": "Fotoalben auf Flickr"
     }
   ],
+  "hall": {
+    "street": "Beethovenstr. 18a",
+    "note": "im Regenbogenhaus",
+    "city": "47226 Duisburg-Rheinhausen",
+    "osm": "https://www.openstreetmap.org/search?query=Beethovenstra%C3%9Fe%2018a%2047226%20Duisburg"
+  },
   "video": {
     "youtubeId": "0nRRr8sdZXg",
     "title": "Wir sind sehr stolz auf unsere erfolgreiche Kampfkunst-Abteilung in Duisburg",
     "heading": "Und das sind wir!"
   },
-  "analytics": {
-    "cloudflareToken": ""
-  }
+  "email": "info@atemschulung-griepentrog.de",
+  "description": "Kuk Sool Won, Tai Chi und Qi Gong in Duisburg-Rheinhausen"
 }
