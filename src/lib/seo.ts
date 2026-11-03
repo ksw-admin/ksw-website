@@ -40,7 +40,6 @@ export function organizationLd(slots: Slot[]) {
 }
 
 export function articleLd(post: Post) {
-  const d = post.entry.data;
   return {
     '@context': 'https://schema.org',
     '@type': 'NewsArticle',
