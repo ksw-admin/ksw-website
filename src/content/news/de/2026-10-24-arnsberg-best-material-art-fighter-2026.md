@@ -4,6 +4,12 @@ date: 2026-10-24
 kind: Turnier
 place: Arnsberg
 description: Am 10.10.2026 waren wir mit einem Teil unserer Schüler und Schülerinnen beim internationalen Wettkampf „Best Material Art Fighter“ in Arnsberg.
+# Counted from the named list at the end of the report (6 placings).
+medals:
+  gold: 4
+  silver: 2
+  bronze: 0
+  other: 0
 image: ./images/318e9512-06eb-4e87-b377-51e779aaa0cc.jpg
 image_text: ArtFight
 tags:
