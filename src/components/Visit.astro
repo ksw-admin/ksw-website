@@ -1,6 +1,6 @@
 ---
 import { site, primaryPhone, telHref } from '../lib/site';
-import type { Lang } from '../i18n/ui';
+import { localePath, type Lang } from '../i18n/ui';
 
 interface Props { lang: Lang; heading: string; intro?: string; /** 1 on the contact page, where this is the page heading */ level?: 1 | 2 }
 const { lang, heading, intro, level = 2 } = Astro.props;
@@ -23,6 +23,10 @@ const others = site.phones.filter((p) => p !== primaryPhone);
       <p class="who">
         {site.contactName}. <a href={`mailto:${site.email}`}>{site.email}</a>
         {others.map((p) => <><br />{p.label} {p.value}</>)}
+      </p>
+      <p class="faq-hint">
+        {de ? 'Vorher lesen: ' : 'Read first: '}<a href={localePath('/faq/', lang)}>{de ? 'Häufige Fragen' : 'Frequently asked questions'}</a>
+        {de ? ' zu Probetraining, Alter, Prüfungen und Kalender-Abo.' : ' about trial lessons, age, gradings and the calendar subscription.'}
       </p>
     </div>
     <div class="side">
@@ -50,6 +54,8 @@ const others = site.phones.filter((p) => p !== primaryPhone);
   .icon svg { width: 52%; height: 52%; }
   .phone:hover .icon { transform: rotate(-12deg); }
   .who { margin-top: 8px; font-weight: 600; }
+  .faq-hint { margin-top: 20px; color: #cfd2cb; max-width: 48ch; }
+  .faq-hint a { color: #fff; font-weight: 700; text-underline-offset: 4px; }
   .intro { margin-top: 14px; font-size: 1.15rem; max-width: 44ch; }
   address { font-style: normal; font-size: 1.15rem; line-height: 1.5; }
   address b { display: block; font-size: 0.95rem; margin-bottom: 4px; }
