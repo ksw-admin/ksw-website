@@ -78,14 +78,21 @@ function postPreview(collection: 'news' | 'articles') {
   return createClass({
     render() {
       const data: Imm = this.props.entry.get('data');
-      const get = (k: string) => data.get(k);
+      // English tab: the entry holds only the translated text fields. Like the site, everything else (and any text
+      // not translated yet) comes from the German entry, when Decap hands it to the preview.
+      const deData: Imm | undefined = this.props.entry.getIn?.(['i18n', 'de', 'data']);
+      const own = (v: unknown) => v !== undefined && v !== null && v !== '';
+      const get = (k: string) => (own(data.get(k)) ? data.get(k) : deData?.get(k));
       const text = String(get('description') ?? '');
       const body = String(get('body') ?? '');
       const choice = get('page') ?? 'auto';
       const override = choice === 'ja' ? true : choice === 'nein' ? false : choice === true || choice === false ? choice : undefined;
       const hasPage = decideHasPage({ collection, override, description: text, body });
       const tags = get('tags');
-      const visible = isVisible({ featured: get('featured') ?? undefined, tags: tags?.toJS ? tags.toJS() : tags ?? [] });
+      const featured = get('featured');
+      // No switch and no old tags here (an English entry without the German data): the German entry decides on the
+      // site, so the preview must not claim the post is hidden.
+      const visible = featured === undefined && tags === undefined ? true : isVisible({ featured: featured ?? undefined, tags: tags?.toJS ? tags.toJS() : tags ?? [] });
       const paragraphs = cleanParagraphs(text);
       const imgPath = get('image');
       const img = imgPath && !String(imgPath).includes('placeholder') ? String(this.props.getAsset(imgPath)) : '';
