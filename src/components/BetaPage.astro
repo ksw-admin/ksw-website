@@ -119,12 +119,13 @@ const isDe = lang === 'de';
     function updateUI() {
       if (hasMainCookie && !hasBetaCookie) {
         if (statusDot) statusDot.classList.add('inactive');
-        if (statusText) statusText.textContent = 'Klassische Version aktiv';
+        if (statusText) statusText.textContent = isDe ? 'Bisherige Website aktiv' : 'Classic site active';
         if (cookieLabel) cookieLabel.textContent = 'nf_ab=main';
         if (btnJoin) btnJoin.hidden = false;
         if (btnLeave) btnLeave.hidden = true;
       } else {
         if (statusDot) statusDot.classList.remove('inactive');
+        if (statusText) statusText.textContent = isDe ? 'Vorschau aktiv (Neues Design)' : 'Preview active (New design)';
         if (cookieLabel) cookieLabel.textContent = 'nf_ab=astro-redesign';
         if (btnJoin) btnJoin.hidden = true;
         if (btnLeave) btnLeave.hidden = false;

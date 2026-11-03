@@ -17,7 +17,7 @@ const t = useTranslations(lang);
   <div class="wrap beta-wrap">
     <p class="beta-text">
       <strong>{t('beta.banner.title')}:</strong>
-      <span>{lang === 'de' ? 'Astro-Version' : 'Astro version'}</span>
+      <span>{t('beta.banner.desc')}</span>
     </p>
     <div class="beta-actions">
       <a href={localePath('/beta/', lang)} class="beta-link">{t('beta.banner.info')}</a>
