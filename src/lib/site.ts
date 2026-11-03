@@ -7,16 +7,16 @@ const Site = z.object({
   shortName: z.string(),
   description: z.string(),
   contactName: z.string(),
-  email: z.string().email(),
+  email: z.email(),
   phones: z.array(z.object({ label: z.string(), value: z.string(), primary: z.boolean().optional() })).min(1),
-  hall: z.object({ street: z.string(), note: z.string().optional().or(z.literal('')), city: z.string(), osm: z.string().url() }),
+  hall: z.object({ street: z.string(), note: z.string().optional().or(z.literal('')), city: z.string(), osm: z.url() }),
   master: z.object({
     dan: z.number().int(),
     since: z.number().int(),
     credentials: z.array(z.object({ label: z.string(), value: z.string() })),
   }),
   // Profiles (Instagram, Facebook, YouTube, Flickr ...): footer, contact band, schema.org sameAs.
-  social: z.array(z.object({ name: z.string(), url: z.string().url(), label: z.string().optional() })).default([]),
+  social: z.array(z.object({ name: z.string(), url: z.url(), label: z.string().optional() })).default([]),
   // Home page video. Loads from YouTube only after a click (privacy, no Google request on page view).
   video: z.object({ youtubeId: z.string().regex(/^[\w-]{11}$/), title: z.string(), heading: z.string() }).optional(),
 });

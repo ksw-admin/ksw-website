@@ -10,7 +10,8 @@
     "build": "astro build && node scripts/netlify-redirects.mjs && node scripts/build-sw.mjs",
     "preview": "astro preview",
     "astro": "astro",
-    "cms": "decap-server"
+    "cms": "decap-server",
+    "check": "astro check"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
@@ -19,7 +20,9 @@
     "sharp": "0.35.5"
   },
   "devDependencies": {
+    "@astrojs/check": "0.9.11",
     "decap-server": "3.11.5",
+    "typescript": "6.0.3",
     "workbox-build": "7.4.1"
   }
 }

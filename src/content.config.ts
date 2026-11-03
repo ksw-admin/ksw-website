@@ -6,7 +6,7 @@ import { z } from 'astro/zod';
 const keepName = ({ entry }: { entry: string }) => entry.replace(/\.md$/, '');
 
 // Decap writes "" for empty optional fields; treat that as "not set".
-const opt = <T extends z.ZodTypeAny>(schema: T) => z.preprocess((v) => (v === '' || v === null ? undefined : v), schema.optional());
+const opt = <T extends z.ZodType>(schema: T) => z.preprocess((v) => (v === '' || v === null ? undefined : v), schema.optional());
 
 // Decap/Netlify CMS wrote tags as a list, older files as a single string.
 const tags = z
@@ -58,7 +58,7 @@ const disciplines = defineCollection({
     description: opt(z.string()),
     tags,
     galleryImages: z
-      .array(z.object({ image: z.string(), link: z.string().url(), link_text: z.string() }))
+      .array(z.object({ image: z.string(), link: z.url(), link_text: z.string() }))
       .default([]),
   }),
 });
