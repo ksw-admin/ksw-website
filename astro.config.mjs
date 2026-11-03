@@ -27,8 +27,9 @@ export default defineConfig({
     defaultLocale: 'de',
     locales: ['de', 'en'],
     // German keeps today's URLs (/category/kuksoolwon, /articles/...); English lives under /en/
-    routing: { prefixDefaultLocale: false, fallbackType: 'redirect' },
-    // Untranslated English pages forward to the German page (no 404, no duplicate content).
+    routing: { prefixDefaultLocale: false, fallbackType: 'rewrite' },
+    // Untranslated English pages show the German content with English navigation and a note (Base.astro);
+    // they point to the German page as canonical and are noindex, so no duplicate content.
     fallback: { en: 'de' },
   },
 });

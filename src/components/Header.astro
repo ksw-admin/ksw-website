@@ -12,15 +12,17 @@ interface Props {
 }
 const { lang, alternate } = Astro.props;
 const t = useTranslations(lang);
-// Language switch "Deutsch / English": the current language is marked, the other links to the same page
-// in that language if it exists, else to that language's home page.
+// Language switch "Deutsch / English": the current language is marked, the other links to the same page in that
+// language. Untranslated English pages exist too (German content, English navigation), so you stay on the page.
+const reqPath = Astro.originPathname || Astro.url.pathname; // see Base.astro
+const dePath = reqPath.replace(/^\/en(?=\/|$)/, '') || '/';
 const languages = (['de', 'en'] as const).map((code) => ({
   code,
   name: code === 'de' ? 'Deutsch' : 'English',
   current: code === lang,
-  href: alternate?.[code] ?? localePath('/', code),
+  href: alternate?.[code] ?? (code === 'de' ? dePath : `/en${dePath}`),
 }));
-const path = Astro.url.pathname;
+const path = reqPath;
 const links = [
   { href: '/category/kuksoolwon/', label: t('nav.ksw') },
   { href: '/category/taichi/', label: t('nav.taichi') },

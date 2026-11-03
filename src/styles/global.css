@@ -111,6 +111,10 @@ img { max-width: 100%; height: auto; }
 .prose a { text-underline-offset: 3px; }
 .prose img { border-radius: 4px; }
 
+.fallback-note { margin: 0; padding-block: 10px; background: var(--card); border-bottom: 1px solid var(--linie); font-size: 0.95rem; color: var(--stein); }
+.fallback-note .wrap { display: block; }
+.fallback-note a { color: var(--fg); font-weight: 600; margin-left: 8px; }
+
 .visually-hidden {
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
   clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;

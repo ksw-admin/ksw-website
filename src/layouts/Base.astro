@@ -24,14 +24,20 @@ interface Props {
 }
 
 const { title, description = site.description, alternate, image = '/og/default.jpg', imageAlt = 'Gruppenfoto der Kampfkunst Academy auf der Matte', jsonLd, noindex = false, ogType = 'website', articleDate } = Astro.props;
-const lang = getLangFromUrl(Astro.url);
+// The requested address. On an untranslated English page the i18n fallback rewrites to the German route, and
+// Astro.url then holds the German address; originPathname keeps the /en/... one the visitor asked for.
+const reqPath = Astro.originPathname || Astro.url.pathname;
+const lang = getLangFromUrl(new URL(reqPath, Astro.site));
 // One line for meta tags (post texts contain line breaks), max ~160 characters for search results and previews.
 const metaDescription = (() => {
   const s = description.replace(/\s+/g, ' ').trim();
   return s.length > 160 ? s.slice(0, 157).replace(/\s+\S*$/, '') + ' …' : s;
 })();
 const fullTitle = title ? `${title} | ${site.shortName} Griepentrog` : `${site.name} | Kuk Sool Won & Tai Chi in Duisburg`;
-const canonical = new URL(Astro.url.pathname, Astro.site);
+// An English URL whose page has no English version renders the German content (i18n fallback rewrite).
+const dePath = reqPath.replace(/^\/en(?=\/|$)/, '') || '/';
+const isFallback = lang !== 'de' && alternate?.[lang] !== reqPath;
+const canonical = new URL(isFallback ? dePath : reqPath, Astro.site);
 const ogImage = new URL(encodeURI(image), Astro.site);
 ---
 
@@ -49,11 +55,11 @@ const ogImage = new URL(encodeURI(image), Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{fullTitle}</title>
     <meta name="description" content={metaDescription} />
-    {noindex && <meta name="robots" content="noindex" />}
+    {(noindex || isFallback) && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={canonical} />
-    {alternate?.de && <link rel="alternate" hreflang="de" href={new URL(alternate.de, Astro.site)} />}
-    {alternate?.en && <link rel="alternate" hreflang="en" href={new URL(alternate.en, Astro.site)} />}
-    {alternate?.de && <link rel="alternate" hreflang="x-default" href={new URL(alternate.de, Astro.site)} />}
+    {!isFallback && alternate?.de && <link rel="alternate" hreflang="de" href={new URL(alternate.de, Astro.site)} />}
+    {!isFallback && alternate?.en && <link rel="alternate" hreflang="en" href={new URL(alternate.en, Astro.site)} />}
+    {!isFallback && alternate?.de && <link rel="alternate" hreflang="x-default" href={new URL(alternate.de, Astro.site)} />}
 
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={site.name} />
@@ -84,7 +90,12 @@ const ogImage = new URL(encodeURI(image), Astro.site);
   </head>
   <body>
     <Header lang={lang} alternate={alternate} />
-    <main id="inhalt">
+    {isFallback && (
+      <p class="fallback-note band" lang="en">
+        <span class="wrap">This page is only available in German. <a href={dePath} hreflang="de" lang="de">Deutsche Version</a></span>
+      </p>
+    )}
+    <main id="inhalt" lang={isFallback ? 'de' : undefined}>
       <slot />
     </main>
     <Footer lang={lang} />
