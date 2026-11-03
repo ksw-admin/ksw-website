@@ -3,8 +3,6 @@ title: Datenschutzerklärung
 tags: footer
 ---
 
-<!--StartFragment-->
-
 Peter Griepentrog, Ritterstr. 62, 47228 Duisburg
 
 ## allg. Datenschutzhinweise
@@ -72,7 +70,7 @@ Ihnen als von der Datenverarbeitung betroffenen Person stehen verschiedene Recht
 - Recht auf Einschränkung der Verarbeitung: Sie können die Einschränkung der Verarbeitung Ihrer personenbezogenen Daten verlangen, soweit die Richtigkeit der Daten von Ihnen bestritten wird, die Verarbeitung unrechtmäßig ist, Sie aber deren Löschung ablehnen. Außerdem steht Ihnen dieses Recht zu, wenn wir die Daten nicht mehr benötigen, Sie diese jedoch zur Geltendmachung, Ausübung oder Verteidigung von Rechtsansprüchen benötigen. Darüber hinaus haben Sie dieses Recht, wenn Sie Widerspruch gegen die Verarbeitung Ihrer personenbezogenen Daten eingelegt haben;
 - Recht auf Datenübertragbarkeit: Sie können verlangen, dass wir Ihnen Ihre personenbezogenen Daten, die Sie uns bereitgestellt haben, in einem strukturierten, gängigen und maschinenlesebaren Format übermitteln. Alternativ können Sie die direkte Übermittlung der von Ihnen uns bereitgestellten personenbezogenen Daten an einen anderen Verantwortlichen verlangen, soweit dies möglich ist.
 - Beschwerderecht: Sie können sich bei der für uns zuständigen Aufsichtsbehörde beschweren, z.B. wenn Sie der Ansicht sind, dass wir Ihre personenbezogenen Daten in unrechtmäßiger Weise verarbeiten. Die für uns zuständige Behörde ist: Landesbeauftragte für Datenschutz und Informationsfreiheit Nordrhein-Westfalen
-- Kavelleriestr. 2 – 4
+- Kavalleriestraße 2–4
 - 40213 Düsseldorf
 - Tel.: 0211 38424-0
 - Fax: 0211 38424-10
@@ -82,8 +80,18 @@ Ihnen als von der Datenverarbeitung betroffenen Person stehen verschiedene Recht
 
 Sofern wir Ihre personenbezogenen Daten auf Basis eines berechtigten Interesses verarbeiten, haben Sie das Recht, Widerspruch gegen diese Verarbeitung einzulegen. Möchten Sie von Ihrem Widerspruchsrecht Gebrauch machen, genügt eine Mitteilung in Textform. Sie können uns also gerne anschreiben, ein Fax schicken oder sich per E-Mail an uns wenden. Unsere Kontaktdaten finden Sie unter Punkt 1. dieser Datenschutzhinweise.
 
-### Datenverarbeitung online
+<!-- ENTWURF 2026-11-03: Abschnitt "Datenverarbeitung über unsere Website" von Peter prüfen lassen. -->
 
-Auch über unsere Internetseite unter [www.kuk-sool-won-griepentrog.de](https://www.kuk-sool-won-griepentrog.de/index.html) erfolgt die Verarbeitung bestimmter personenbezogener Daten, u.a. der IP-Adresse der Website-Besucher. Ergänzende Datenschutzhinweise finden Sie daher online unter [www.kuk-sool-won-griepentrog.de/datenschutz](https://www.kuk-sool-won-griepentrog.de/other/datenschutz/index.html)
+### Datenverarbeitung über unsere Website
 
-<!--EndFragment-->
+Diese Website setzt keine Cookies und erstellt keine Nutzerprofile.
+
+**Hosting:** Die Website liegt bei Netlify, Inc. (USA). Beim Aufruf werden technisch notwendige Daten wie IP-Adresse, Uhrzeit und aufgerufene Seite in Server-Logfiles gespeichert, um den sicheren Betrieb zu gewährleisten (Art. 6 Abs. 1 lit. f DSGVO).
+
+**Besucherstatistik:** Wir zählen Seitenaufrufe mit Cloudflare Web Analytics (Cloudflare, Inc., USA), ohne Cookies und ohne Besucher über andere Websites zu verfolgen (Art. 6 Abs. 1 lit. f DSGVO).
+
+Netlify und Cloudflare sind unter dem EU-US Data Privacy Framework zertifiziert.
+
+**YouTube-Video:** Das Video auf der Startseite wird erst nach einem Klick auf „Video abspielen“ von YouTube (Google Ireland Ltd.) geladen; erst dann werden Daten wie Ihre IP-Adresse an Google übertragen (Art. 6 Abs. 1 lit. a DSGVO).
+
+**Fotos und Namen:** Fotos und Vornamen von Schülerinnen und Schülern veröffentlichen wir nur mit Einwilligung, bei Minderjährigen der Erziehungsberechtigten. Die Einwilligung kann jederzeit widerrufen werden.
