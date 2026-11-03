@@ -1,0 +1,144 @@
+---
+/**
+ * BetaBanner: Shown on the Astro redesign branch during Split Testing.
+ * Provides visitors an immediate way to know they are in the beta,
+ * an off-ramp button to return to the live production site, and a link to the beta page.
+ */
+import { useTranslations, localePath, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<aside id="beta-banner" class="band beta-banner" aria-label={t('beta.banner.title')} hidden>
+  <div class="wrap beta-wrap">
+    <div class="beta-message">
+      <span class="beta-tag">BETA</span>
+      <span class="beta-text">{t('beta.banner.title')}</span>
+    </div>
+    <div class="beta-actions">
+      <a href={localePath('/beta/', lang)} class="beta-link">{t('beta.banner.info')}</a>
+      <button type="button" id="beta-optout-btn" class="beta-btn">{t('beta.banner.optout')}</button>
+      <button type="button" id="beta-dismiss-btn" class="beta-close" aria-label={t('beta.banner.close')}>&times;</button>
+    </div>
+  </div>
+</aside>
+
+<script is:inline>
+  (function () {
+    var banner = document.getElementById('beta-banner');
+    if (!banner) return;
+    try {
+      if (sessionStorage.getItem('ksw-beta-dismissed') === '1') {
+        banner.hidden = true;
+        return;
+      }
+    } catch (e) {}
+
+    // Show banner on this branch
+    banner.hidden = false;
+
+    var dismissBtn = document.getElementById('beta-dismiss-btn');
+    if (dismissBtn) {
+      dismissBtn.addEventListener('click', function () {
+        banner.hidden = true;
+        try {
+          sessionStorage.setItem('ksw-beta-dismissed', '1');
+        } catch (e) {}
+      });
+    }
+
+    var optOutBtn = document.getElementById('beta-optout-btn');
+    if (optOutBtn) {
+      optOutBtn.addEventListener('click', function () {
+        var secure = location.protocol === 'https:' ? '; Secure' : '';
+        document.cookie = 'nf_ab=main; path=/; max-age=31536000; SameSite=Lax' + secure;
+        try {
+          sessionStorage.removeItem('ksw-beta-dismissed');
+        } catch (e) {}
+        window.location.replace('/');
+      });
+    }
+  })();
+</script>
+
+<style>
+  .beta-banner {
+    background: var(--panel);
+    color: var(--panel-fg);
+    border-bottom: 2px solid var(--jade);
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+  .beta-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px 16px;
+    flex-wrap: wrap;
+    padding-block: 8px;
+  }
+  .beta-message {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+  }
+  .beta-tag {
+    background: var(--jade);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 3px;
+    letter-spacing: 0.05em;
+  }
+  .beta-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .beta-link {
+    color: #cfd2cb;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .beta-link:hover,
+  .beta-link:focus-visible {
+    color: #fff;
+  }
+  .beta-btn {
+    background: none;
+    border: 1px solid var(--linie);
+    color: #fff;
+    font: inherit;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .beta-btn:hover,
+  .beta-btn:focus-visible {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: #fff;
+  }
+  .beta-close {
+    background: none;
+    border: none;
+    color: #8f938b;
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 4px;
+  }
+  .beta-close:hover,
+  .beta-close:focus-visible {
+    color: #fff;
+  }
+</style>

@@ -5,6 +5,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import MobileBar from '../components/MobileBar.astro';
 import ClosureBanner from '../components/ClosureBanner.astro';
+import BetaBanner from '../components/BetaBanner.astro';
 import { site } from '../lib/site';
 import { getLangFromUrl } from '../i18n/ui';
 
@@ -53,6 +54,36 @@ const ogImage = new URL(encodeURI(image), Astro.site);
         if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
       } catch (e) {}
     </script>
+    <!-- Netlify Split Testing (?beta=1 opt-in, ?beta=0 opt-out). Runs early so cookie is set before paint. -->
+    <script is:inline>
+      (function () {
+        try {
+          var p = new URLSearchParams(window.location.search);
+          var b = p.get('beta');
+          if (b !== null) {
+            var v = b.trim().toLowerCase();
+            var secure = location.protocol === 'https:' ? '; Secure' : '';
+            var hasBeta = /(?:^|;\s*)nf_ab=astro-redesign/.test(document.cookie);
+            var hasMain = /(?:^|;\s*)nf_ab=main/.test(document.cookie);
+            if (v === '1' || v === 'true' || v === 'on' || v === 'astro-redesign') {
+              document.cookie = 'nf_ab=astro-redesign; path=/; max-age=31536000; SameSite=Lax' + secure;
+              p.delete('beta');
+              var q = p.toString();
+              var clean = window.location.pathname + (q ? '?' + q : '') + window.location.hash;
+              if (!hasBeta) window.location.replace(clean);
+              else window.history.replaceState(null, '', clean);
+            } else if (v === '0' || v === 'false' || v === 'off' || v === 'main') {
+              document.cookie = 'nf_ab=main; path=/; max-age=31536000; SameSite=Lax' + secure;
+              p.delete('beta');
+              var q = p.toString();
+              var clean = window.location.pathname + (q ? '?' + q : '') + window.location.hash;
+              if (!hasMain) window.location.replace(clean);
+              else window.history.replaceState(null, '', clean);
+            }
+          }
+        } catch (e) {}
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{fullTitle}</title>
     <meta name="description" content={metaDescription} />
@@ -90,6 +121,7 @@ const ogImage = new URL(encodeURI(image), Astro.site);
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
   </head>
   <body>
+    <BetaBanner lang={lang} />
     <Header lang={lang} alternate={alternate} />
     <ClosureBanner lang={lang} />
     {isFallback && (

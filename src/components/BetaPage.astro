@@ -1,0 +1,432 @@
+---
+/**
+ * Beta page: Opt-in and opt-out interface for Netlify Split Testing.
+ * Allows users to inspect their current variant, switch between main and astro-redesign,
+ * copy an opt-in invite link, and read about new features.
+ */
+import Base from '../layouts/Base.astro';
+import { useTranslations, localePath, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const isDe = lang === 'de';
+
+const features = isDe
+  ? [
+      {
+        icon: '⚡',
+        title: 'Modernste Astro-Architektur',
+        text: 'Von Grund auf neu entwickelt: Extrem schnelle Ladezeiten, minimale Skripte und ein spürbar flüssigeres Surferlebnis auf allen Geräten.',
+      },
+      {
+        icon: '📅',
+        title: 'Trainingskalender & Ausfälle',
+        text: 'Trainingszeiten für alle Altersgruppen mit Live-Abonnement (.ics) für Apple Kalender, Google Kalender und Outlook – inklusive automatischer Kennzeichnung von Ferien und Ausfällen.',
+      },
+      {
+        icon: '🌓',
+        title: 'Design & Dunkelmodus',
+        text: 'Frisches Erscheinungsbild nach dem neuen Designsystem mit automatischer und manueller Umschaltung zwischen Hell- und Dunkelmodus.',
+      },
+      {
+        icon: '♿',
+        title: 'Barrierefreiheit & Lesbarkeit',
+        text: 'Optimierte Kontraste, klare Schriftweiten, vollständige Tastatur- und Screenreader-Unterstützung.',
+      },
+      {
+        icon: '🔒',
+        title: 'Datenschutz & Privatsphäre',
+        text: 'Vollständig DSGVO-konform ohne Tracking-Cookies, mit lokal gehosteten Schriftarten und YouTube-Zwei-Klick-Lösung.',
+      },
+    ]
+  : [
+      {
+        icon: '⚡',
+        title: 'Cutting-Edge Astro Architecture',
+        text: 'Rebuilt from the ground up: Blazing-fast page loads, minimal script footprint, and smooth navigation on all devices.',
+      },
+      {
+        icon: '📅',
+        title: 'Live Timetable & Calendar Subscriptions',
+        text: 'Age-filtered training times with one-click calendar subscriptions (.ics) for Apple, Google, and Outlook – with holiday closure notices included.',
+      },
+      {
+        icon: '🌓',
+        title: 'Design System & Dark Mode',
+        text: 'Clean aesthetic matching our design tokens with automatic and manual switching between light and dark modes.',
+      },
+      {
+        icon: '♿',
+        title: 'Accessibility & Usability',
+        text: 'Enhanced contrast, fluid typography, full keyboard accessibility, and screen reader testing.',
+      },
+      {
+        icon: '🔒',
+        title: 'Privacy by Default',
+        text: 'Fully privacy-friendly with zero tracking cookies, self-hosted fonts, and click-to-load YouTube videos.',
+      },
+    ];
+---
+
+<Base
+  title={t('beta.page.title')}
+  description={t('beta.page.lead')}
+  alternate={{ de: '/beta/', en: '/en/beta/' }}
+  noindex
+>
+  <section class="band beta-hero">
+    <div class="wrap">
+      <div class="sec-h">
+        <h1>{t('beta.page.title')}</h1>
+      </div>
+      <p class="lead">{t('beta.page.lead')}</p>
+
+      <!-- Status & Switcher Card -->
+      <div class="beta-card switcher-card">
+        <div class="status-row">
+          <div id="status-badge" class="badge">
+            <span class="dot"></span>
+            <span id="status-text">{t('beta.page.active')}</span>
+          </div>
+          <span class="branch-pill">Branch: <code>astro-redesign</code></span>
+        </div>
+
+        <div class="actions-row">
+          <button type="button" id="btn-leave-beta" class="btn btn-leave">
+            {t('beta.page.btn.leave')}
+          </button>
+          <button type="button" id="btn-join-beta" class="btn btn-join" hidden>
+            {t('beta.page.btn.join')}
+          </button>
+          <a href={localePath('/', lang)} class="btn btn-home">
+            {isDe ? 'Startseite ansehen' : 'Explore home page'}
+          </a>
+        </div>
+      </div>
+
+      <!-- Highlights Grid -->
+      <div class="highlights-section">
+        <h2>{isDe ? 'Was ist neu in dieser Version?' : "What's new in this version?"}</h2>
+        <div class="features-grid">
+          {
+            features.map((f) => (
+              <article class="feature-card">
+                <span class="feature-icon" aria-hidden="true">{f.icon}</span>
+                <h3>{f.title}</h3>
+                <p>{f.text}</p>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- Share Box -->
+      <div class="beta-card share-card">
+        <h2>{t('beta.page.share')}</h2>
+        <p>
+          {
+            isDe
+              ? 'Teile diesen Link mit anderen Vereinsmitgliedern oder Testern, damit sie die Vorschau mit einem Klick aktivieren können:'
+              : 'Share this link with club members or testers so they can activate the preview with a single click:'
+          }
+        </p>
+        <div class="share-input-row">
+          <input
+            type="text"
+            id="share-link-input"
+            readonly
+            value="https://www.kuk-sool-won-griepentrog.de/?beta=1"
+            aria-label={t('beta.page.share')}
+          />
+          <button type="button" id="btn-copy-link" class="btn btn-copy">
+            {isDe ? 'Link kopieren' : 'Copy link'}
+          </button>
+        </div>
+        <p id="copy-confirmation" class="copy-success" aria-live="polite" hidden>
+          ✓ {t('beta.page.share.copied')}
+        </p>
+      </div>
+
+      <!-- Feedback Card -->
+      <div class="beta-card feedback-card">
+        <h2>{t('beta.page.feedback.title')}</h2>
+        <p>{t('beta.page.feedback.text')}</p>
+        <div class="feedback-links">
+          <a href={localePath('/faq/#frage', lang)} class="btn btn-feedback">
+            {isDe ? 'Frage / Feedback senden' : 'Send feedback'}
+          </a>
+          <a href={localePath('/other/contact/', lang)} class="link-contact">
+            {isDe ? 'Kontakt aufnehmen' : 'Contact us'} &rarr;
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script is:inline>
+  (function () {
+    var hasBetaCookie = /(?:^|;\s*)nf_ab=astro-redesign/.test(document.cookie);
+    var hasMainCookie = /(?:^|;\s*)nf_ab=main/.test(document.cookie);
+
+    var statusBadge = document.getElementById('status-badge');
+    var statusText = document.getElementById('status-text');
+    var btnJoin = document.getElementById('btn-join-beta');
+    var btnLeave = document.getElementById('btn-leave-beta');
+
+    function updateUI() {
+      // If we are served this Astro page, we are on the beta branch!
+      if (hasMainCookie && !hasBetaCookie) {
+        if (statusBadge) statusBadge.classList.add('inactive');
+        if (statusText) statusText.textContent = 'Klassische Version aktiv';
+        if (btnJoin) btnJoin.hidden = false;
+        if (btnLeave) btnLeave.hidden = true;
+      } else {
+        if (statusBadge) statusBadge.classList.remove('inactive');
+        if (btnJoin) btnJoin.hidden = true;
+        if (btnLeave) btnLeave.hidden = false;
+      }
+    }
+
+    updateUI();
+
+    if (btnLeave) {
+      btnLeave.addEventListener('click', function () {
+        var secure = location.protocol === 'https:' ? '; Secure' : '';
+        document.cookie = 'nf_ab=main; path=/; max-age=31536000; SameSite=Lax' + secure;
+        try {
+          sessionStorage.removeItem('ksw-beta-dismissed');
+        } catch (e) {}
+        window.location.replace('/');
+      });
+    }
+
+    if (btnJoin) {
+      btnJoin.addEventListener('click', function () {
+        var secure = location.protocol === 'https:' ? '; Secure' : '';
+        document.cookie = 'nf_ab=astro-redesign; path=/; max-age=31536000; SameSite=Lax' + secure;
+        window.location.replace('/');
+      });
+    }
+
+    // Share link copy
+    var btnCopy = document.getElementById('btn-copy-link');
+    var shareInput = document.getElementById('share-link-input');
+    var copyConf = document.getElementById('copy-confirmation');
+    if (shareInput && location.origin) {
+      shareInput.value = location.origin + '/?beta=1';
+    }
+
+    if (btnCopy && shareInput) {
+      btnCopy.addEventListener('click', function () {
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(shareInput.value).then(function () {
+            if (copyConf) {
+              copyConf.hidden = false;
+              setTimeout(function () {
+                copyConf.hidden = true;
+              }, 3500);
+            }
+          });
+        } else {
+          shareInput.select();
+          document.execCommand('copy');
+          if (copyConf) {
+            copyConf.hidden = false;
+            setTimeout(function () {
+              copyConf.hidden = true;
+            }, 3500);
+          }
+        }
+      });
+    }
+  })();
+</script>
+
+<style>
+  .beta-hero {
+    padding-block: 48px 96px;
+  }
+  .lead {
+    font-size: clamp(1.1rem, 2vw, 1.35rem);
+    color: var(--stein);
+    margin-top: 16px;
+    max-width: 65ch;
+  }
+  .beta-card {
+    background: var(--card);
+    border: 1px solid var(--linie);
+    border-radius: 8px;
+    padding: 24px;
+    margin-top: 32px;
+  }
+  .switcher-card {
+    border-left: 6px solid var(--jade);
+  }
+  .status-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #e6f4f1;
+    color: #124b42;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+  :root[data-theme='dark'] .badge,
+  :root:not([data-theme='light']) .badge {
+    background: #14352f;
+    color: #9fe0d4;
+  }
+  .badge .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #18987b;
+  }
+  .badge.inactive {
+    background: #eef0ea;
+    color: var(--stein);
+  }
+  .badge.inactive .dot {
+    background: var(--stein);
+  }
+  .branch-pill {
+    font-size: 0.85rem;
+    color: var(--stein);
+  }
+  .branch-pill code {
+    background: var(--bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--linie);
+    font-family: monospace;
+  }
+  .actions-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .btn-leave {
+    background: #fff;
+    color: #000;
+    border-color: #000;
+  }
+  .btn-leave:hover {
+    background: #f0f0f0;
+  }
+  :root[data-theme='dark'] .btn-leave,
+  :root:not([data-theme='light']) .btn-leave {
+    background: #2a2c28;
+    color: #fff;
+    border-color: #555;
+  }
+  .btn-home {
+    background: var(--gelb);
+    color: #000;
+  }
+  .highlights-section {
+    margin-top: 48px;
+  }
+  .highlights-section h2 {
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    font-weight: 800;
+    margin-bottom: 20px;
+  }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  .feature-card {
+    background: var(--card);
+    border: 1px solid var(--linie);
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .feature-icon {
+    font-size: 1.8rem;
+    display: block;
+    margin-bottom: 12px;
+  }
+  .feature-card h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .feature-card p {
+    font-size: 0.95rem;
+    color: var(--stein);
+    line-height: 1.5;
+  }
+  .share-card h2,
+  .feedback-card h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .share-card p,
+  .feedback-card p {
+    color: var(--stein);
+    margin-bottom: 16px;
+    max-width: 65ch;
+  }
+  .share-input-row {
+    display: flex;
+    gap: 8px;
+    max-width: 540px;
+  }
+  .share-input-row input {
+    flex: 1;
+    background: var(--bg);
+    color: var(--fg);
+    border: 1px solid var(--linie);
+    border-radius: 4px;
+    padding: 10px 14px;
+    font: inherit;
+    font-size: 0.95rem;
+  }
+  .btn-copy {
+    white-space: nowrap;
+    background: var(--gelb);
+    color: #000;
+    border-color: #000;
+  }
+  .copy-success {
+    margin-top: 8px;
+    color: var(--jade);
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+  .feedback-links {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .btn-feedback {
+    background: var(--jade);
+    color: #fff;
+    border-color: var(--jade);
+  }
+  .btn-feedback:hover {
+    background: #23554d;
+  }
+  .link-contact {
+    font-weight: 700;
+    text-underline-offset: 4px;
+  }
+</style>
