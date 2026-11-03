@@ -1,27 +1,87 @@
 ---
-import { useTranslations, type Lang } from '../i18n/ui';
-import { site } from '../lib/site';
+/**
+ * Footer: bookend to the header (yellow line, logo), three short link groups, then a quiet bottom line.
+ * Impressum and Datenschutz stay German only (legally binding text).
+ */
+import { useTranslations, localePath, type Lang } from '../i18n/ui';
+import { site, primaryPhone, telHref } from '../lib/site';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
-// Impressum and Datenschutz stay German only (legally binding text).
+const year = new Date().getFullYear();
+const groups = [
+  {
+    title: t('footer.training'),
+    links: [
+      { href: localePath('/category/kuksoolwon/', lang), label: t('nav.ksw') },
+      { href: localePath('/category/taichi/', lang), label: t('nav.taichi') },
+      { href: localePath('/#woche', lang), label: t('footer.times') },
+      { href: localePath('/articles/', lang), label: t('nav.news') },
+    ],
+  },
+  {
+    title: t('footer.contact'),
+    links: [
+      { href: telHref(primaryPhone.value), label: primaryPhone.value.replace(/ - /g, ' ') },
+      { href: `mailto:${site.email}`, label: site.email },
+      { href: localePath('/other/contact/', lang), label: t('footer.directions') },
+    ],
+  },
+  {
+    title: t('footer.more'),
+    links: [
+      { href: '/other/impressum/', label: t('footer.impressum'), hreflang: 'de' },
+      { href: '/other/datenschutz/', label: t('footer.privacy'), hreflang: 'de' },
+      { href: '/other/sponsoren/', label: t('footer.sponsors') },
+      ...site.social.map((s) => ({ href: s.url, label: s.name, rel: 'me noopener' })),
+    ],
+  },
+];
 ---
 
 <footer class="band">
-  <div class="wrap">
-    <a href="/other/impressum/" hreflang="de">{t('footer.impressum')}</a>
-    <a href="/other/datenschutz/" hreflang="de">{t('footer.privacy')}</a>
-    <a href="/other/sponsoren/">{t('footer.sponsors')}</a>
-    {site.social.map((s) => <a href={s.url} rel="me noopener">{s.name}</a>)}
-    <span class="by">Website: Jonah L.</span>
+  <div class="wrap top">
+    <a class="brand" href={localePath('/', lang)}>
+      <img src="/images/Logo.svg" alt="" width="36" height="48" loading="lazy" />
+      <span>Kampfkunst Academy<small>Peter Griepentrog</small></span>
+    </a>
+    {
+      groups.map((g) => (
+        <nav aria-label={g.title}>
+          <h2>{g.title}</h2>
+          <ul>
+            {g.links.map((l) => (
+              <li>
+                <a href={l.href} hreflang={'hreflang' in l ? l.hreflang : undefined} rel={'rel' in l ? l.rel : undefined}>{l.label}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      ))
+    }
+  </div>
+  <div class="wrap bottom">
+    <span>© {year} {site.name}</span>
+    <span>Website: Jonah L.</span>
   </div>
 </footer>
 
 <style>
-  footer { background: #000; color: #bfc2bb; font-size: 0.9rem; padding-block: 22px 86px; border-top: 1px solid #2a2c27; }
-  .wrap { display: flex; gap: 22px; flex-wrap: wrap; }
-  a { color: #bfc2bb; }
-  .by { margin-left: auto; }
-  @media (min-width: 701px) { footer { padding-block: 22px; } }
+  footer { background: #000; color: #cfd2cb; border-top: 6px solid var(--gelb); padding-block: 48px 92px; font-size: 0.95rem; }
+  @media (min-width: 701px) { footer { padding-block: 48px 24px; } }
+  .top { display: grid; grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr)); gap: 32px; align-items: start; }
+  .brand { display: flex; align-items: center; gap: 12px; color: #fff; text-decoration: none; font-weight: 800; line-height: 1.1; font-size: 1.1rem; }
+  .brand img { width: 36px; height: 48px; }
+  .brand small { display: block; font-weight: 500; font-size: 0.85rem; color: #cfd2cb; }
+  h2 { font-size: 0.95rem; font-weight: 700; color: #fff; margin-bottom: 10px; }
+  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  a { color: #cfd2cb; text-decoration: none; overflow-wrap: anywhere; }
+  ul a:hover, ul a:focus-visible { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+  .bottom { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 40px; padding-top: 16px; border-top: 1px solid #2a2c27; font-size: 0.85rem; color: #8f938b; }
+  @media (max-width: 860px) {
+    .top { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .brand { grid-column: 1 / -1; }
+  }
+  @media (max-width: 420px) { .top { grid-template-columns: 1fr; } }
 </style>

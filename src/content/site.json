@@ -5,19 +5,27 @@
     "credentials": [
       {
         "label": "Kuk Sool Won",
-        "value": "5. Dan, Kampfkunst seit 1986"
+        "value": "5. Dan"
       },
       {
-        "label": "Tai Chi Chuan, Qi Gong",
+        "label": "Kampfkunst",
+        "value": "seit 1986"
+      },
+      {
+        "label": "Tai Chi Chuan / Qi Gong",
         "value": "Lehrbefähigung"
       },
       {
         "label": "Rehabilitationssport",
-        "value": "Fachübungsleiter Innere Medizin und Orthopädie"
+        "value": "Fachübungsleiterlizenz für Innere Medizin"
       },
       {
-        "label": "Verbände",
-        "value": "IHHHF, WTKA"
+        "label": "Rehabilitationssport",
+        "value": "Fachübungsleiterlizenz für Orthopädie"
+      },
+      {
+        "label": "Verbandszugehörigkeiten",
+        "value": "IHHHF & WTKA"
       }
     ]
   },

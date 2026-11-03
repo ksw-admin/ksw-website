@@ -13,6 +13,7 @@ const Site = z.object({
   master: z.object({
     dan: z.number().int(),
     since: z.number().int(),
+    // Area + qualification, worded as on the old site's "Über mich" list.
     credentials: z.array(z.object({ label: z.string(), value: z.string() })),
   }),
   // Profiles (Instagram, Facebook, YouTube, Flickr ...): footer, contact band, schema.org sameAs.

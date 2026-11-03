@@ -263,8 +263,8 @@ collections:
                 widget: list
                 summary: '{{fields.label}}: {{fields.value}}'
                 fields:
-                  - { label: Bereich, name: label, widget: string }
-                  - { label: Qualifikation, name: value, widget: string }
+                  - { label: Bereich, name: label, widget: string, hint: z.B. Kuk Sool Won }
+                  - { label: Qualifikation, name: value, widget: string, hint: z.B. 5. Dan }
           - label: Social Media
             name: social
             widget: list
