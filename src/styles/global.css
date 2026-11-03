@@ -53,6 +53,11 @@
   unicode-range: U+AD6D, U+C220, U+C6D0;
 }
 
+/* Smooth cross-fade between pages of this site (Chrome, Edge, Safari 18+; others ignore it). */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+}
+
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
 body {

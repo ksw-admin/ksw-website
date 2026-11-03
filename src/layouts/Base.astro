@@ -100,6 +100,16 @@ const ogImage = new URL(encodeURI(image), Astro.site);
     </main>
     <Footer lang={lang} />
     <MobileBar lang={lang} />
+    <!-- After a language switch: restore the reading position before the first paint (stored by Header.astro). -->
+    <script is:inline>
+      try {
+        var s = JSON.parse(sessionStorage.getItem('lang-switch-scroll') || 'null');
+        sessionStorage.removeItem('lang-switch-scroll');
+        if (s && s.to === location.pathname && !location.hash && s.share > 0) {
+          window.scrollTo(0, s.share * (document.documentElement.scrollHeight - window.innerHeight));
+        }
+      } catch (e) {}
+    </script>
     {
       // Cloudflare Web Analytics: production build only, and only once a token is set in site.json (CMS: Einstellungen).
       import.meta.env.PROD && site.analytics.cloudflareToken && (
