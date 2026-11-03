@@ -76,7 +76,7 @@ Only in answer to an action: the selected timetable group changes colour, a gall
 - Text meets 4.5:1 on its background in both themes; large display text at least 3:1.
 - Keyboard focus is a 3px `jade` outline with offset.
 - Timetable slots are real buttons with full spoken names ("Kuk Sool Won, 9 bis 11 Jahre, Montag und Freitag, 18:00 bis 19:00 Uhr").
-- The mobile menu uses the browser's popover; the sticky bottom bar on phones keeps "Anrufen" and "Zeiten" in reach.
+- The mobile menu uses the browser's popover; the sticky bottom bar on phones keeps "Kontakt" and "Zeiten" in reach (contact page rather than a direct call: visitors choose phone, e-mail or the route themselves).
 
 ## Not synced
 

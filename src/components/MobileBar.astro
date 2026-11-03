@@ -1,14 +1,14 @@
 ---
+/** Phones only: a bar at the bottom with the two things visitors come for, contact and training times. */
 import { useTranslations, localePath, type Lang } from '../i18n/ui';
-import { primaryPhone, telHref } from '../lib/site';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 ---
 
-<nav class="mbar" aria-label={t('cta.times')}>
-  <a href={telHref(primaryPhone.value)}>{t('cta.call')}</a>
+<nav class="mbar" aria-label={t('nav.quick')}>
+  <a href={localePath('/other/contact/', lang)}>{t('nav.contact')}</a>
   <a href={localePath('/#woche', lang)}>{t('cta.times')}</a>
 </nav>
 
