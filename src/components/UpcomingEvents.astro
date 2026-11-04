@@ -3,12 +3,12 @@
  * "Demnächst" inside the news section of the home page (same topic: tournaments, gradings, club life, here the ones
  * still to come), from src/content/events.json (CMS: Einstellungen › Termine). The next three show; any further ones
  * sit behind "Weitere … Termine anzeigen" in place, so a long list never pushes the posts down.
- * Nothing upcoming = no block at all (no empty state). Static site: the script hides dates that have passed since the
+ * Nothing upcoming = a one-line empty state (no tournaments announced, training as in the timetable). Static site: the script hides dates that have passed since the
  * last build, moves the next ones up and counts the rest. Without JS all upcoming dates show.
  */
 import { getEvents } from '../lib/events-data';
 import { kindOf, lastDay, titleOf, whenOf } from '../lib/events';
-import type { Lang } from '../i18n/ui';
+import { localePath, type Lang } from '../i18n/ui';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -18,10 +18,15 @@ const events = await getEvents();
 const SHOWN = 3;
 ---
 
-{
-  events.length > 0 && (
-    <div class="upcoming" id="dates" data-shown={SHOWN}>
-      <h3 class="sub">{de ? 'Demnächst' : 'Coming up'}</h3>
+<div class="upcoming" id="dates" data-shown={SHOWN}>
+  <h3 class="sub">{de ? 'Demnächst' : 'Coming up'}</h3>
+  <!-- Empty state: always true, however long the list stays empty, and points somewhere useful. -->
+  <p class="empty" hidden={events.length > 0}>
+    {de ? 'Gerade sind keine Turniere oder Prüfungen angekündigt. Das Training läuft wie im ' : 'No tournaments or gradings announced right now. Training runs as in the '}<a href={localePath('/#schedule', lang)}>{de ? 'Wochenplan' : 'timetable'}</a>.
+  </p>
+  {
+    events.length > 0 && (
+      <>
       <ul id="dates-list">
         {events.map((e) => (
           <li data-end={lastDay(e)}>
@@ -46,9 +51,10 @@ const SHOWN = 3;
         data-more-one={de ? 'Einen weiteren Termin anzeigen' : 'Show 1 more date'}
         data-less={de ? 'Weniger anzeigen' : 'Show fewer'}
       ></button>
-    </div>
-  )
-}
+      </>
+    )
+  }
+</div>
 
 <script is:inline>
   (function () {
@@ -61,7 +67,8 @@ const SHOWN = 3;
       if (li.dataset.end >= today) upcoming.push(li);
       else li.hidden = true;
     });
-    if (!upcoming.length) { box.hidden = true; return; }
+    // All dates passed since the last build: show the empty state instead.
+    if (!upcoming.length) { box.querySelector('.empty').hidden = false; return; }
     var extra = upcoming.slice(shownMax);
     if (!extra.length) return;
     var btn = box.querySelector('.more-dates');
@@ -83,6 +90,8 @@ const SHOWN = 3;
 <style>
   .upcoming { margin-top: 26px; margin-bottom: 40px; }
   .sub { font-size: var(--fs-sub); font-weight: 800; }
+  .empty { margin-top: 10px; color: var(--stein); max-width: 62ch; }
+  .empty a { color: var(--fg); font-weight: 700; text-underline-offset: 3px; }
   ul { list-style: none; margin: 8px 0 0; padding: 0; }
   li { display: grid; grid-template-columns: 15.5rem minmax(0, 1fr); gap: 4px 24px; padding-block: 14px; border-bottom: 1px solid var(--linie); align-items: baseline; }
   /* display: grid above would otherwise override the hidden attribute (past or further dates). */

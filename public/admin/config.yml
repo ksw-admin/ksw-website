@@ -295,7 +295,7 @@ collections:
         description: >-
           Turniere, Prüfungen, Seminare, Vereinstermine. Die nächsten drei stehen auf der Startseite unter „Nächste Termine“
           und im Kalender-Abo. Vorbei = verschwindet von selbst; der Bericht danach kommt wie immer unter „Aktuelles“.
-          Keine kommenden Termine = kein Block auf der Startseite.
+          Keine kommenden Termine: dort steht „Gerade sind keine Turniere oder Prüfungen angekündigt“.
         fields:
           - label: Termine
             label_singular: Termin

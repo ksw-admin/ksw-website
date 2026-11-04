@@ -28,7 +28,7 @@ Netlify does the deploys.
 | Impressum, Datenschutz | `src/content/pages/de/` |
 | FAQ | `src/content/faq/de/` (one file per question, `order` sets the position; English in `.../en/`) |
 | Training closures ("Kein Training" banner) | `src/content/closures.json` (banner from 14 days before; also removed from the calendar feeds) |
-| Upcoming dates (Termine) | `src/content/events.json` (CMS: Einstellungen › Termine): next 3 on the home page (`/#dates`, hidden when none), and in every calendar feed |
+| Upcoming dates (Termine) | `src/content/events.json` (CMS: Einstellungen › Termine): next 3 in "Demnächst" in the home news section (`/#dates`; none upcoming: one-line empty state "keine Turniere oder Prüfungen angekündigt"), and in every calendar feed |
 | Calendar feeds | `/calendar/training.ics` and `/calendar/<group id>.ics`, built from training times + closures (`src/lib/ics.ts`) |
 | Links to home page sections | `/#schedule` (timetable), `/#ksw`, `/#taichi`, `/#video`, `/#dates`, `/#news`, `/#master`, `/#contact` (contact, trial lesson); FAQ answers `/faq/#<file name>`, e.g. `/faq/#kalender`. Same with `/en/`. |
 | Question form | FAQ page, Netlify Forms, form name `frage`. Notifications: Netlify › Forms. Nothing sent appears on the site by itself. |
