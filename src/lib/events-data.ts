@@ -22,6 +22,7 @@ const Events = z.object({
           kind: opt(z.enum(['Turnier', 'Prüfung', 'Seminar', 'Verein'])),
           place: opt(z.string()),
           link: opt(z.url({ protocol: /^https?$/, message: 'Termine: Link als vollständige Adresse mit https://' })),
+          cancelled: z.preprocess((v) => (v === null ? undefined : v), z.boolean().optional()),
         })
         .refine((e) => !e.to || e.to >= e.from, { message: 'Termine: "bis" muss am oder nach "von" liegen' }),
     )

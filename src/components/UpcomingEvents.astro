@@ -3,6 +3,8 @@
  * "Demnächst" inside the news section of the home page (same topic: tournaments, gradings, club life, here the ones
  * still to come), from src/content/events.json (CMS: Einstellungen › Termine). The next three show; any further ones
  * sit behind "Weitere … Termine anzeigen" in place, so a long list never pushes the posts down.
+ * Cancelled dates stay until their day: "Abgesagt" in front of kind and place, date and title struck through (<s>,
+ * "no longer accurate"; the word carries the meaning for screen readers).
  * Nothing upcoming = a one-line empty state (no tournaments announced, training as in the timetable). Static site: the script hides dates that have passed since the
  * last build, moves the next ones up and counts the rest. Without JS all upcoming dates show.
  */
@@ -29,12 +31,24 @@ const SHOWN = 3;
       <>
       <ul id="dates-list">
         {events.map((e) => (
-          <li data-end={lastDay(e)}>
-            <p class="when num">{whenOf(e, lang)}</p>
+          <li data-end={lastDay(e)} class:list={{ cancelled: e.cancelled }}>
+            <p class="when num">{e.cancelled ? <s>{whenOf(e, lang)}</s> : whenOf(e, lang)}</p>
             <div>
-              {(e.kind || e.place) && <p class="meta">{[kindOf(e, lang), e.place].filter(Boolean).join(', ')}</p>}
+              {(e.cancelled || e.kind || e.place) && (
+                <p class="meta">
+                  {e.cancelled && <strong>{de ? 'Abgesagt' : 'Cancelled'}</strong>}
+                  {e.cancelled && (e.kind || e.place) && ', '}
+                  {[kindOf(e, lang), e.place].filter(Boolean).join(', ')}
+                </p>
+              )}
               <h4 lang={lang === 'en' && !e.title_en?.trim() ? 'de' : undefined}>
-                {e.link ? <a href={e.link} rel="noopener">{titleOf(e, lang)}</a> : titleOf(e, lang)}
+                {e.cancelled ? (
+                  <s>{e.link ? <a href={e.link} rel="noopener">{titleOf(e, lang)}</a> : titleOf(e, lang)}</s>
+                ) : e.link ? (
+                  <a href={e.link} rel="noopener">{titleOf(e, lang)}</a>
+                ) : (
+                  titleOf(e, lang)
+                )}
               </h4>
             </div>
           </li>
@@ -100,6 +114,10 @@ const SHOWN = 3;
   .meta { font-size: var(--fs-meta); font-weight: 600; color: var(--stein); margin-bottom: 2px; }
   h4 { margin: 0; font-size: var(--fs-item); font-weight: 700; line-height: 1.2; }
   h4 a { text-underline-offset: 4px; }
+  /* Cancelled: kept in place so nobody misses it; muted and struck through, the word in full colour. */
+  .cancelled .when, .cancelled h4 { color: var(--stein); }
+  .cancelled s { text-decoration-thickness: 2px; }
+  .cancelled .meta strong { color: var(--fg); font-weight: 800; }
   /* Plain text button in the link style: shows more of the same list, not a call to action. */
   .more-dates {
     margin-top: 12px; padding: 4px 0; background: none; border: 0; cursor: pointer;

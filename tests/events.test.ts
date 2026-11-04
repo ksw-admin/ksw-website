@@ -56,3 +56,18 @@ test('events.json (as edited in the CMS) is valid', () => {
     if (e.to) assert.ok(e.to >= e.from, `${e.from}: "bis" liegt vor "von"`);
   }
 });
+
+test('calendar: a cancelled date keeps its UID and is marked cancelled', () => {
+  const ics = buildCalendar({
+    name: 'Training', host: 'example.org', location: 'Halle', url: 'https://example.org/',
+    slots: [], closures: [], events: [{ ...turnier, cancelled: true }], now: new Date('2026-05-01T12:00:00Z'),
+  });
+  assert.match(ics, /UID:termin-2026-05-09-new-generation-turnier@example.org/);
+  assert.match(ics, /SUMMARY:Abgesagt: Turnier: New Generation Turnier\r\nSTATUS/);
+  assert.match(ics, /STATUS:CANCELLED\r\nSEQUENCE:1\r\nTRANSP:TRANSPARENT/);
+  const normal = buildCalendar({
+    name: 'Training', host: 'example.org', location: 'Halle', url: 'https://example.org/',
+    slots: [], closures: [], events: [turnier], now: new Date('2026-05-01T12:00:00Z'),
+  });
+  assert.doesNotMatch(normal, /STATUS:CANCELLED/);
+});

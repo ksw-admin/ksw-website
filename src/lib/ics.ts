@@ -131,6 +131,7 @@ export function buildCalendar(opts: {
     );
   }
   // Upcoming dates: all-day (multi-day or without time) or timed (end: given, else start + 2 hours).
+  // Cancelled: same UID, STATUS:CANCELLED and a higher SEQUENCE, so subscribed calendars mark the existing entry.
   for (const e of opts.events ?? []) {
     const multi = lastDay(e) !== e.from;
     const timed = !multi && !!e.time;
@@ -141,7 +142,8 @@ export function buildCalendar(opts: {
       ...(timed
         ? [`DTSTART;TZID=Europe/Berlin:${local(e.from, e.time!)}`, `DTEND;TZID=Europe/Berlin:${local(e.from, endTime(e)!)}`]
         : [`DTSTART;VALUE=DATE:${compact(e.from)}`, `DTEND;VALUE=DATE:${compact(addDays(lastDay(e), 1))}`]),
-      `SUMMARY:${esc(e.kind ? `${e.kind}: ${e.title.trim()}` : e.title.trim())}`,
+      `SUMMARY:${esc(`${e.cancelled ? 'Abgesagt: ' : ''}${e.kind ? `${e.kind}: ${e.title.trim()}` : e.title.trim()}`)}`,
+      ...(e.cancelled ? ['STATUS:CANCELLED', 'SEQUENCE:1', 'TRANSP:TRANSPARENT'] : []),
       ...(e.place ? [`LOCATION:${esc(e.place)}`] : []),
       ...(e.link ? [`URL:${e.link}`] : []),
       'END:VEVENT',

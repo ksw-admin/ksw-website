@@ -14,6 +14,8 @@ export type SiteEvent = {
   kind?: EventKind;
   place?: string;
   link?: string;
+  /** Called off: stays in the list (struck through, "Abgesagt") until its date, STATUS:CANCELLED in the calendar. */
+  cancelled?: boolean;
 };
 
 export const lastDay = (e: SiteEvent) => (e.to && e.to >= e.from ? e.to : e.from);
