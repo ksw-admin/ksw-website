@@ -41,7 +41,7 @@ const { master } = site;
   .master { padding-block: 0 72px; }
   .cols { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 56px; align-items: start; margin-top: 32px; }
   figure { margin: 0; }
-  figure :global(img) { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: 30% 30%; border-radius: 4px; display: block; }
+  figure :global(img) { width: 100%; height: auto; aspect-ratio: 5 / 4; object-fit: cover; object-position: 30% 30%; border-radius: 4px; display: block; }
   figcaption { font-size: 0.85rem; color: var(--stein); margin-top: 8px; }
   h3 { font-size: clamp(2.4rem, 5vw, 3.8rem); line-height: 0.95; font-weight: 900; }
   .intro { margin-top: 16px; font-size: 1.2rem; max-width: 44ch; }
@@ -54,5 +54,11 @@ const { master } = site;
     dl { grid-template-columns: 1fr; gap: 2px; }
     dd.cont { grid-column: auto; }
     dd { margin-bottom: 10px; }
+  }
+  /* Landscape crop 5:4 everywhere (portrait 4:5 left the photo twice as tall as the text on desktop and took a whole
+     screen on phones). Desktop: slightly larger text, so photo and text end at about the same height. */
+  @media (min-width: 761px) {
+    .intro { font-size: 1.4rem; max-width: 40ch; }
+    dl { gap: 16px 28px; margin-top: 36px; font-size: 1.1rem; }
   }
 </style>

@@ -84,6 +84,9 @@ const bodyLang = bodyEntry === entry && lang !== 'de' ? 'de' : undefined;
   .k h1 { font-size: clamp(3rem, 8vw, 6rem); line-height: 0.9; font-weight: 900; margin-top: 10px; }
   .t h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 300; }
   .body { padding-block: 48px 64px; }
+  /* Long running text (the old site's wording): a step larger with more line spacing, the first paragraph as the lead. */
+  .body .prose { font-size: 1.125rem; line-height: 1.65; max-width: 64ch; }
+  .body .prose > :global(p:first-child) { font-size: 1.3rem; line-height: 1.45; font-weight: 500; }
   .cols { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 56px; align-items: start; }
   aside { background: var(--card); border: 2px solid var(--fg); border-radius: 4px; padding: 20px; box-shadow: 12px 12px 0 var(--gelb); margin-right: 12px; }
   aside h2 { font-size: 1.4rem; margin-bottom: 10px; }
