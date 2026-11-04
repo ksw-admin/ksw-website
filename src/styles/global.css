@@ -35,6 +35,22 @@
   --gutter: clamp(16px, 4vw, 64px);
   --gutter-l: max(var(--gutter), env(safe-area-inset-left, 0px));
   --gutter-r: max(var(--gutter), env(safe-area-inset-right, 0px));
+
+  /* Type scale (steps after Tailwind's: sm 0.875, lg 1.125, xl 1.25, 2xl 1.5, 3xl 1.875 ... 6xl 3.75). One size per
+     role; components use these instead of their own numbers. Display headlines (home, discipline pages, contact
+     band) stay individual on purpose. Fluid sizes run between two steps with clamp(). */
+  --fs-meta: 0.875rem;                                   /* sm: dates, type lines, captions, notes, hints */
+  --fs-body-lg: 1.125rem;                                /* lg: long running text on the discipline pages */
+  --fs-lead: 1.25rem;                                    /* xl: intros and leads (Meister, contact, page leads) */
+  --fs-item: 1.25rem;                                    /* xl: titles of list items (posts, dates, FAQ, sponsors) */
+  --fs-sub: 1.5rem;                                      /* 2xl: sub-headings (times box, forms, "Demnächst", prose h2) */
+  --fs-section: clamp(1.875rem, 1.2rem + 2.2vw, 3rem);  /* 3xl -> 5xl: section headings (.sec-h) */
+  --fs-page-title: clamp(2.25rem, 1.3rem + 3.2vw, 3.75rem); /* 4xl -> 6xl: page titles on text pages */
+
+  /* Spacing: three steps instead of per-section values. */
+  --space-page-top: 2.5rem;                              /* above the title of a text page */
+  --space-section: clamp(3rem, 2rem + 3vw, 4.5rem);      /* between and around sections (48 -> 72px) */
+  --space-compact: clamp(2.5rem, 2rem + 1.5vw, 3.5rem);  /* coloured header bands (40 -> 56px) */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -126,17 +142,19 @@ img { max-width: 100%; height: auto; }
   display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap;
   border-bottom: 2px solid var(--fg); padding-bottom: 10px;
 }
-.sec-h h1, .sec-h h2 { font-size: clamp(2rem, 4.5vw, 3.2rem); line-height: 1; font-weight: 900; font-stretch: 62%; }
+.sec-h h1, .sec-h h2 { font-size: var(--fs-section); line-height: 1; font-weight: 900; font-stretch: 62%; }
+/* Page title of every text page (news, post, FAQ, legal, sponsors, 404, thank-you pages): one size. */
+.sec-h h1.page-title, h1.page-title { font-size: var(--fs-page-title); line-height: 0.95; font-weight: 900; font-stretch: 62%; }
 .sec-h a { font-weight: 700; }
 
 /* Markdown bodies from the CMS */
 .prose { max-width: 68ch; }
-.prose > * + * { margin-top: 1em; }
+.prose > * + * { margin-top: 1.25em; }
 /* Also when the Markdown sits in a wrapper inside .prose (post pages: <div lang><Content /></div>), paragraphs, lists
    and headings keep their spacing. :where() = no extra specificity, so the h2/h3 rules below still win. */
-.prose :where(p, ul, ol, blockquote, figure, table, h2, h3) + :where(p, ul, ol, blockquote, figure, table, h2, h3) { margin-top: 1em; }
-.prose h2 { font-size: clamp(1.5rem, 2.4vw, 1.9rem); font-weight: 900; font-stretch: 62%; line-height: 1.05; margin-top: 1.8em; }
-.prose h3 { font-size: 1.25rem; margin-top: 1.4em; }
+.prose :where(p, ul, ol, blockquote, figure, table, h2, h3) + :where(p, ul, ol, blockquote, figure, table, h2, h3) { margin-top: 1.25em; }
+.prose h2 { font-size: var(--fs-sub); font-weight: 900; font-stretch: 62%; line-height: 1.1; margin-top: 1.8em; }
+.prose h3 { font-size: var(--fs-item); margin-top: 1.4em; }
 .prose h2 + *, .prose h3 + * { margin-top: 0.6em; }
 .prose ul, .prose ol { padding-left: 1.3em; margin-bottom: 0; }
 .prose li + li { margin-top: 0.4em; }

@@ -19,12 +19,12 @@ const de = lang === 'de';
 >
   <section class="band">
     <div class="wrap">
-      <div class="sec-h"><h1>{t('news.title')}</h1></div>
+      <div class="sec-h"><h1 class="page-title">{t('news.title')}</h1></div>
       <NewsLedger posts={posts} lang={lang} level={2} />
     </div>
   </section>
 </Base>
 
 <style>
-  section { padding-block: 40px 72px; }
+  section { padding-block: var(--space-page-top) var(--space-section); }
 </style>

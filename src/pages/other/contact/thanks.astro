@@ -6,7 +6,7 @@ import Base from '../../../layouts/Base.astro';
 <Base title="Nachricht gesendet" noindex>
   <section class="band">
     <div class="wrap">
-      <h1 class="cond">Danke für die Nachricht.</h1>
+      <h1 class="page-title">Danke für die Nachricht.</h1>
       <p>Sie ist angekommen. Peter Griepentrog meldet sich per E-Mail oder Telefon.</p>
       <a class="btn" href="/">Zur Startseite</a>
     </div>
@@ -14,8 +14,7 @@ import Base from '../../../layouts/Base.astro';
 </Base>
 
 <style>
-  section { padding-block: 56px 80px; }
-  h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); line-height: 0.95; font-weight: 900; }
-  p { margin-top: 16px; max-width: 52ch; font-size: 1.1rem; }
+  section { padding-block: var(--space-page-top) var(--space-section); }
+  p { margin-top: 16px; max-width: 52ch; font-size: var(--fs-lead); }
   .btn { margin-top: 24px; }
 </style>

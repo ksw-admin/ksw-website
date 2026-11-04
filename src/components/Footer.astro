@@ -104,12 +104,12 @@ const groups = [
   .top { display: grid; grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr)); gap: 32px; align-items: start; }
   .brand { display: flex; align-items: center; gap: 12px; color: var(--panel-fg); text-decoration: none; font-weight: 800; line-height: 1.1; font-size: 1.1rem; }
   .brand img { width: 36px; height: 48px; }
-  .brand small { display: block; font-weight: 500; font-size: 0.85rem; color: var(--stein); }
+  .brand small { display: block; font-weight: 500; font-size: var(--fs-meta); color: var(--stein); }
   h2 { font-size: 0.95rem; font-weight: 700; color: var(--panel-fg); margin-bottom: 10px; }
   ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
   a { color: var(--stein); text-decoration: none; overflow-wrap: anywhere; }
   ul a:hover, ul a:focus-visible { color: var(--panel-fg); text-decoration: underline; text-underline-offset: 3px; }
-  .bottom { display: flex; justify-content: space-between; align-items: baseline; gap: 12px 24px; flex-wrap: wrap; margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--linie); font-size: 0.85rem; color: var(--stein); }
+  .bottom { display: flex; justify-content: space-between; align-items: baseline; gap: 12px 24px; flex-wrap: wrap; margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--linie); font-size: var(--fs-meta); color: var(--stein); }
   /* Same pattern as the language switch in the header: current choice bold with a yellow underline. */
   .credit { color: inherit; }
   .credit:hover, .credit:focus-visible { color: var(--panel-fg); text-decoration: underline; text-underline-offset: 3px; }

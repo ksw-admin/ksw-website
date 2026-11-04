@@ -29,7 +29,7 @@ const isDe = lang === 'de';
   <section class="band beta-section">
     <div class="wrap">
       <div class="sec-h">
-        <h1>{t('beta.page.title')}</h1>
+        <h1 class="page-title">{t('beta.page.title')}</h1>
       </div>
 
       <p class="intro">{t('beta.page.lead')}</p>
@@ -159,7 +159,7 @@ const isDe = lang === 'de';
 
 <style>
   .beta-section {
-    padding-block: 48px 96px;
+    padding-block: var(--space-page-top) var(--space-section);
   }
   .intro {
     font-size: 1.15rem;
@@ -184,7 +184,7 @@ const isDe = lang === 'de';
     gap: 4px;
   }
   .status-label {
-    font-size: 0.85rem;
+    font-size: var(--fs-meta);
     color: var(--stein);
     margin: 0;
   }
@@ -205,7 +205,7 @@ const isDe = lang === 'de';
     background: var(--stein);
   }
   .status-cookie {
-    font-size: 0.85rem;
+    font-size: var(--fs-meta);
     color: var(--stein);
     margin: 4px 0 0;
   }
@@ -241,7 +241,7 @@ const isDe = lang === 'de';
     max-width: 640px;
   }
   h2 {
-    font-size: 1.35rem;
+    font-size: var(--fs-sub);
     font-weight: 800;
     font-stretch: 62%;
     margin-bottom: 8px;

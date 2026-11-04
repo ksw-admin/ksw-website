@@ -75,7 +75,7 @@ const bodyLang = bodyEntry === entry && lang !== 'de' ? 'de' : undefined;
 </Base>
 
 <style>
-  .head { padding-block: 56px; }
+  .head { padding-block: var(--space-compact); }
   .head.k { background: var(--panel); color: var(--panel-fg); }
   .head.t { background: var(--tc-bg); color: var(--tc-fg); }
   .hangul { font-family: var(--hangul); font-weight: 800; color: var(--gelb-ink); font-size: clamp(3rem, 7vw, 5.5rem); line-height: 1; letter-spacing: 0.06em; }
@@ -83,19 +83,19 @@ const bodyLang = bodyEntry === entry && lang !== 'de' ? 'de' : undefined;
   .t h1 { margin-top: 10px; }
   .k h1 { font-size: clamp(3rem, 8vw, 6rem); line-height: 0.9; font-weight: 900; margin-top: 10px; }
   .t h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 300; }
-  .body { padding-block: 48px 64px; }
+  .body { padding-block: var(--space-page-top) var(--space-section); }
   /* Long running text (the old site's wording): a step larger with more line spacing, the first paragraph as the lead. */
-  .body .prose { font-size: 1.125rem; line-height: 1.65; max-width: 64ch; }
-  .body .prose > :global(p:first-child) { font-size: 1.3rem; line-height: 1.45; font-weight: 500; }
+  .body .prose { font-size: var(--fs-body-lg); line-height: 1.65; max-width: 64ch; }
+  .body .prose > :global(p:first-child) { font-size: var(--fs-lead); line-height: 1.5; font-weight: 500; }
   .cols { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 56px; align-items: start; }
   aside { background: var(--card); border: 2px solid var(--fg); border-radius: 4px; padding: 20px; box-shadow: 12px 12px 0 var(--gelb); margin-right: 12px; }
-  aside h2 { font-size: 1.4rem; margin-bottom: 10px; }
+  aside h2 { font-size: var(--fs-sub); margin-bottom: 10px; }
   table { width: 100%; border-collapse: collapse; }
   th, td { text-align: left; padding: 8px 8px 8px 0; border-bottom: 1px solid var(--linie); vertical-align: top; }
   th { font-weight: 600; }
   .hall { margin-top: 16px; color: var(--stein); }
   aside .btn { margin-top: 16px; }
-  .gallery { padding-block: 0 72px; }
+  .gallery { padding-block: 0 var(--space-section); }
   .gallery ul { list-style: none; padding: 0; margin: 24px 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
   .gallery a { text-decoration: none; display: grid; gap: 6px; font-weight: 600; transition: transform 300ms ease-in; }
   /* Same subtle zoom as the old site's .gal-item:hover */

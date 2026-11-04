@@ -57,7 +57,7 @@ const appleRoute = `https://maps.apple.com/?daddr=${encodeURIComponent(destinati
 </script>
 
 <style>
-  .visit { background: var(--panel); color: var(--panel-fg); padding-block: 64px; }
+  .visit { background: var(--panel); color: var(--panel-fg); padding-block: var(--space-section); }
   .wrap { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 48px; }
   :is(h1, h2) { font-size: clamp(2.4rem, 6vw, 4.6rem); line-height: 0.9; font-weight: 900; }
   .phone {
@@ -72,13 +72,13 @@ const appleRoute = `https://maps.apple.com/?daddr=${encodeURIComponent(destinati
   .who { margin-top: 8px; font-weight: 600; }
   .faq-hint { margin-top: 20px; color: var(--stein); max-width: 48ch; }
   .faq-hint a { color: var(--panel-fg); font-weight: 700; text-underline-offset: 4px; }
-  .intro { margin-top: 14px; font-size: 1.15rem; max-width: 44ch; }
+  .intro { margin-top: 14px; font-size: var(--fs-lead); max-width: 44ch; }
   address { font-style: normal; font-size: 1.15rem; line-height: 1.5; }
   address b { display: block; font-size: 0.95rem; margin-bottom: 4px; }
   .side { display: grid; gap: 24px; align-content: start; border-left: 1px solid var(--linie); padding-left: 24px; }
   .side a { font-weight: 700; }
   .route { display: grid; gap: 4px; }
-  .side .route-alt { font-weight: 500; font-size: 0.9rem; color: var(--stein); }
+  .side .route-alt { font-weight: 500; font-size: var(--fs-meta); color: var(--stein); }
   .social { display: flex; flex-wrap: wrap; gap: 8px 20px; }
   @media (max-width: 760px) {
     .wrap { grid-template-columns: 1fr; }

@@ -10,9 +10,9 @@ import { capWidth } from '../lib/images';
 import type { Post } from '../lib/posts';
 import type { Lang } from '../i18n/ui';
 
-interface Props { posts: Post[]; lang: Lang; /** h3 under a section h2 (home page), h2 directly under the page h1 (list page) */ level?: 2 | 3 }
+interface Props { posts: Post[]; lang: Lang; /** h2 directly under the page h1 (list page), h4 under "Zuletzt" (home page) */ level?: 2 | 3 | 4 }
 const { posts, lang, level = 3 } = Astro.props;
-const H = level === 2 ? 'h2' : 'h3';
+const H = (`h${level}`) as 'h2' | 'h3' | 'h4';
 const fmt = new Intl.DateTimeFormat(lang === 'de' ? 'de-DE' : 'en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
 const teaser = (s: string) => (s.length > 220 ? s.slice(0, 217).replace(/\s+\S*$/, '') + ' …' : s);
 const more = lang === 'de' ? 'Weiterlesen' : 'Read more';
@@ -74,13 +74,13 @@ const fullSize = new Map(
   .thumb :global(img) { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4px; background: var(--linie); }
   .text { grid-area: text; min-width: 0; }
   li > :global(.medals) { grid-area: medals; padding-top: 2px; }
-  .text > :is(h2, h3) { font-size: 1.3rem; font-weight: 700; line-height: 1.2; }
-  .text > :is(h2, h3) a { text-decoration: none; }
-  .text > :is(h2, h3) a:hover { text-decoration: underline; }
+  .text > :is(h2, h3, h4) { margin: 0; font-size: var(--fs-item); font-weight: 700; line-height: 1.2; }
+  .text > :is(h2, h3, h4) a { text-decoration: none; }
+  .text > :is(h2, h3, h4) a:hover { text-decoration: underline; }
   p { color: var(--stein); margin-top: 6px; max-width: 62ch; }
   p.full { color: var(--fg); white-space: pre-line; }
   .more { font-weight: 700; color: var(--fg); white-space: nowrap; }
-  .kind { font-size: 0.85rem; font-weight: 600; color: var(--stein); display: block; margin-bottom: 2px; }
+  .kind { font-size: var(--fs-meta); font-weight: 600; color: var(--stein); display: block; margin-bottom: 2px; }
   @media (max-width: 760px) {
     li, li.no-img {
       grid-template-columns: minmax(0, 1fr) auto;

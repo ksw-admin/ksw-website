@@ -174,7 +174,7 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
 
   .detail { margin-top: 34px; border-top: 2px solid var(--fg); padding-top: 18px; max-width: 30rem; min-height: 11rem; scroll-margin-bottom: 96px; }
   .pick { font-weight: 700; font-size: 1.15rem; }
-  .detail h2 { font-size: 1.5rem; line-height: 1.15; }
+  .detail h2 { font-size: var(--fs-sub); line-height: 1.15; }
   .detail .when { font-size: 1.15rem; font-weight: 600; margin-top: 4px; }
   .detail p + p { margin-top: 4px; }
   .detail .more { display: inline-block; margin-top: 10px; font-weight: 700; text-underline-offset: 4px; }
@@ -187,7 +187,7 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
   }
   @media (max-width: 500px) { .week { box-shadow: 8px 8px 0 var(--gelb); margin-right: 8px; } }
   .week-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; font-weight: 700; }
-  .week-head span { font-weight: 500; font-size: 0.9rem; color: var(--stein); }
+  .week-head span { font-weight: 500; font-size: var(--fs-meta); color: var(--stein); }
   .grid {
     display: grid; column-gap: 6px; font-size: 0.8rem;
     grid-template-columns: 3.2rem repeat(var(--cols), minmax(0, 1fr));
@@ -215,7 +215,7 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
   .cal { display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: baseline; margin: 22px 12px 0 0; }
   .cal-label { flex-basis: 100%; font-weight: 700; }
   .cal a[data-cal] { font-weight: 600; text-underline-offset: 4px; }
-  .cal .howto { font-size: 0.9rem; color: var(--stein); }
-  .legend { display: flex; gap: 18px; margin-top: 12px; font-size: 0.85rem; flex-wrap: wrap; }
+  .cal .howto { font-size: var(--fs-meta); color: var(--stein); }
+  .legend { display: flex; gap: 18px; margin-top: 12px; font-size: var(--fs-meta); flex-wrap: wrap; }
   .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
 </style>

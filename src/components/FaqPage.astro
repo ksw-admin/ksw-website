@@ -35,7 +35,7 @@ const jsonLd = {
 >
   <section class="band faq">
     <div class="wrap">
-      <h1 class="cond">{t('faq.title')}</h1>
+      <h1 class="page-title">{t('faq.title')}</h1>
       <div class="list">
         {items.map((f) => (
           <details id={f.slug}>
@@ -91,13 +91,12 @@ const jsonLd = {
 </script>
 
 <style>
-  .faq { padding-block: 40px 56px; }
-  h1 { font-size: clamp(2.6rem, 6vw, 4.8rem); line-height: 0.9; font-weight: 900; }
+  .faq { padding-block: var(--space-page-top) var(--space-section); }
   .list { margin-top: 28px; max-width: 52rem; border-top: 2px solid var(--fg); }
   details { border-bottom: 1px solid var(--linie); }
   summary {
     cursor: pointer; list-style: none; padding: 18px 40px 18px 0; position: relative;
-    font-size: 1.2rem; font-weight: 700; line-height: 1.25;
+    font-size: var(--fs-item); font-weight: 700; line-height: 1.25;
   }
   summary::-webkit-details-marker { display: none; }
   summary::after { content: '+'; position: absolute; right: 6px; top: 14px; font-size: 1.6rem; font-weight: 500; }
@@ -105,8 +104,8 @@ const jsonLd = {
   summary:hover { text-decoration: underline; text-underline-offset: 4px; }
   .prose { padding: 0 0 22px; max-width: 62ch; }
 
-  .ask { padding-block: 48px 72px; background: var(--card); border-top: 1px solid var(--linie); }
-  .ask h2 { font-size: 1.6rem; }
+  .ask { padding-block: var(--space-section); background: var(--card); border-top: 1px solid var(--linie); }
+  .ask h2 { font-size: var(--fs-sub); }
   .intro { margin-top: 8px; max-width: 60ch; color: var(--stein); }
   form { margin-top: 20px; display: grid; gap: 6px; max-width: 40rem; }
   label { font-weight: 700; margin-top: 10px; }
@@ -114,8 +113,8 @@ const jsonLd = {
   textarea { resize: vertical; min-height: 7rem; }
   textarea:focus-visible, input:focus-visible { outline: 3px solid var(--gelb); outline-offset: 1px; }
   .btn { justify-self: start; margin-top: 16px; }
-  .note { font-size: 0.9rem; color: var(--stein); margin-top: 6px; }
-  .direct { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px 28px; font-weight: 700; font-size: 1.1rem; }
+  .note { font-size: var(--fs-meta); color: var(--stein); margin-top: 6px; }
+  .direct { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px 28px; font-weight: 700; font-size: var(--fs-lead); }
   .direct a { text-underline-offset: 4px; }
   .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 </style>

@@ -10,7 +10,7 @@ const sponsors = (await getCollection('sponsors')).sort((a, b) => a.data.name.lo
 <Base title="Sponsoren">
   <section class="band">
     <div class="wrap">
-      <div class="sec-h"><h1>Sponsoren</h1></div>
+      <div class="sec-h"><h1 class="page-title">Sponsoren</h1></div>
       <ul>
         {sponsors.map(({ data, filePath }) => (
           <li>
@@ -28,10 +28,10 @@ const sponsors = (await getCollection('sponsors')).sort((a, b) => a.data.name.lo
 </Base>
 
 <style>
-  section { padding-block: 40px 72px; }
+  section { padding-block: var(--space-page-top) var(--space-section); }
   ul { list-style: none; padding: 0; margin: 28px 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 32px; }
   li { display: grid; gap: 12px; align-content: start; }
   li :global(img) { max-height: 90px; width: auto; object-fit: contain; }
-  h2 { font-size: 1.25rem; }
+  h2 { font-size: var(--fs-item); }
   p { color: var(--stein); }
 </style>

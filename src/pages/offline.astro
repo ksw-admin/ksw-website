@@ -11,7 +11,7 @@ const slots = await getSchedule();
 <Base title="Offline" noindex>
   <section class="band">
     <div class="wrap">
-      <div class="sec-h"><h1>Keine Verbindung</h1></div>
+      <div class="sec-h"><h1 class="page-title">Keine Verbindung</h1></div>
       <p class="lead">Diese Seite ist offline nicht gespeichert. Trainingszeiten und Kontakt gehen trotzdem:</p>
       <table>
         <tbody>
@@ -34,8 +34,8 @@ const slots = await getSchedule();
 </Base>
 
 <style>
-  section { padding-block: 40px 72px; }
-  .lead { margin-top: 20px; font-size: 1.15rem; }
+  section { padding-block: var(--space-page-top) var(--space-section); }
+  .lead { margin-top: 20px; font-size: var(--fs-lead); }
   table { margin-top: 20px; border-collapse: collapse; width: 100%; max-width: 44rem; }
   th, td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--linie); }
   .contact { margin-top: 24px; font-size: 1.3rem; font-weight: 700; }

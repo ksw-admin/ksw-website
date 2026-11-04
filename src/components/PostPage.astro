@@ -40,7 +40,7 @@ const paragraphs = post.paragraphs;
           {data.kind && <span>{data.kind}</span>}
           {data.place && <span>{data.place}</span>}
         </p>
-        <h1 class="cond">{post.title}</h1>
+        <h1 class="page-title">{post.title}</h1>
         <Medals medals={data.medals} />
       </header>
       <div class="cols">
@@ -61,16 +61,15 @@ const paragraphs = post.paragraphs;
 </Base>
 
 <style>
-  article { padding-block: 40px 72px; }
+  article { padding-block: var(--space-page-top) var(--space-section); }
   header { border-bottom: 2px solid var(--fg); padding-bottom: 16px; display: grid; gap: 10px; }
   .meta { color: var(--stein); display: flex; gap: 16px; flex-wrap: wrap; font-weight: 600; }
-  h1 { font-size: clamp(2.2rem, 6vw, 4.2rem); line-height: 0.95; font-weight: 900; }
   .cols { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px; margin-top: 32px; align-items: start; }
   /* Short text keeps its line breaks (old CMS texts); the Markdown report below is formatted by Astro. */
   .desc { white-space: pre-line; }
   figure { margin: 0; }
   figure :global(img) { width: 100%; height: auto; border-radius: 4px; display: block; }
-  figcaption { font-size: 0.85rem; color: var(--stein); margin-top: 8px; }
+  figcaption { font-size: var(--fs-meta); color: var(--stein); margin-top: 8px; }
   .back { margin-top: 48px; font-weight: 700; }
   .up { margin-bottom: 18px; font-weight: 700; font-size: 0.95rem; }
   .up a, .back a { display: inline-flex; align-items: center; gap: 6px; text-underline-offset: 4px; }

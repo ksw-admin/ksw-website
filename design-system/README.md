@@ -33,6 +33,8 @@ One family, **Archivo** (variable, self-hosted), in two widths:
 - **Wide and light** (`font-stretch: 125%`, weight 300) for Tai Chi: open and slow.
 - **Normal width** for all running text, at 17px with 1.55 line height and lines under about 68 characters.
 - Two Hangul signs in Nanum Myeongjo 800: **국술원** above the Kuk Sool Won heading, in yellow, and **태극** (taegeuk, the Korean reading of 太極, as on the Korean flag) above the Tai Chi heading, in muted jade (`tc-fg` mixed 42 % into `tc-bg`). Tai Chi itself is Chinese; 태극 links it to the school's Korean visual language without claiming otherwise. The font file holds only these glyphs.
+- **One size per role** (tokens in `global.css`, steps after Tailwind's type scale): page title `--fs-page-title` (4xl to 6xl, fluid), section heading `--fs-section` (3xl to 5xl, fluid), sub-heading `--fs-sub` (2xl), item title `--fs-item` (xl), lead `--fs-lead` (xl), meta `--fs-meta` (sm). Display headlines (home, discipline pages, contact band, the fact numbers) stay individual. Running text in `.prose` follows Tailwind Typography's proportions: 1.25em between paragraphs, h2 = sub-heading, h3 = item title.
+- **Spacing in three steps:** `--space-page-top` (above a page title), `--space-section` (around sections, 48 to 72px fluid), `--space-compact` (coloured header bands). Components use these instead of their own values.
 - Sentence case everywhere. No all-caps labels, no letter-spaced eyebrows, no single highlighted word in a headline.
 - Digits that line up (dates, times, phone numbers, medal counts) use tabular figures.
 

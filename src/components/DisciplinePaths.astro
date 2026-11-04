@@ -57,7 +57,7 @@ const taichiFacts = taichi.map((s) => ({
 
 <style>
   .paths { display: grid; grid-template-columns: 1fr 1fr; }
-  .path { padding-block: 64px 72px; }
+  .path { padding-block: var(--space-section); }
   .inner { max-width: calc(var(--max) / 2); padding-inline: var(--gutter-l) 40px; }
   .k { background: var(--panel); color: var(--panel-fg); }
   .k .inner { margin-left: auto; }
@@ -79,7 +79,7 @@ const taichiFacts = taichi.map((s) => ({
   /* Yellow numbers on dark, black on the light band (yellow text is unreadable there): accent-text. */
   .k .facts b { color: var(--accent-text); }
   .t .facts b { font-weight: 300; font-size: 2rem; }
-  .facts span { font-size: 0.85rem; opacity: 0.85; }
+  .facts span { font-size: var(--fs-meta); opacity: 0.85; }
   .more { display: inline-block; margin-top: 32px; font-weight: 700; text-underline-offset: 5px; text-decoration-thickness: 2px; }
   .k .more { color: var(--accent-text); }
   @media (max-width: 860px) {

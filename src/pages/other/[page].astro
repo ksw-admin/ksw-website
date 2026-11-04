@@ -15,13 +15,13 @@ const { Content } = await render(entry);
 <Base title={entry.data.title}>
   <section class="band">
     <div class="wrap">
-      <div class="sec-h"><h1>{entry.data.title}</h1></div>
+      <div class="sec-h"><h1 class="page-title">{entry.data.title}</h1></div>
       <div class="prose"><Content /></div>
     </div>
   </section>
 </Base>
 
 <style>
-  section { padding-block: 40px 72px; }
+  section { padding-block: var(--space-page-top) var(--space-section); }
   .prose { margin-top: 28px; }
 </style>

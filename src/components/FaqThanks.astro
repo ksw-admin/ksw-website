@@ -11,7 +11,7 @@ const t = useTranslations(lang);
 <Base title={t('faq.thanks.title')} noindex alternate={{ de: '/faq/thanks/', en: '/en/faq/thanks/' }}>
   <section class="band">
     <div class="wrap">
-      <h1 class="cond">{t('faq.thanks.title')}</h1>
+      <h1 class="page-title">{t('faq.thanks.title')}</h1>
       <p>{t('faq.thanks.text')}</p>
       <a class="btn" href={localePath('/faq/', lang)}>{t('faq.thanks.back')}</a>
     </div>
@@ -19,8 +19,7 @@ const t = useTranslations(lang);
 </Base>
 
 <style>
-  section { padding-block: 56px 80px; }
-  h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); line-height: 0.95; font-weight: 900; }
-  p { margin-top: 16px; max-width: 52ch; font-size: 1.1rem; }
+  section { padding-block: var(--space-page-top) var(--space-section); }
+  p { margin-top: 16px; max-width: 52ch; font-size: var(--fs-lead); }
   .btn { margin-top: 24px; }
 </style>
