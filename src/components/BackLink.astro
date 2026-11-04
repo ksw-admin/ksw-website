@@ -1,0 +1,22 @@
+---
+/**
+ * "Alle Beiträge" with a small back chevron, above a post ("up": most visitors arrive from a shared link, so the
+ * way to the other posts comes first) and again at its end ("back").
+ */
+import { localePath, type Lang } from '../i18n/ui';
+
+interface Props { lang: Lang; place: 'up' | 'back' }
+const { lang, place } = Astro.props;
+---
+
+<p class={place}><a href={localePath('/articles/', lang)}><svg class="arrow" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>{lang === 'de' ? 'Alle Beiträge' : 'All posts'}</a></p>
+
+<style>
+  .back { margin-top: 48px; font-weight: 700; }
+  .up { margin-bottom: 18px; font-weight: 700; font-size: 0.95rem; }
+  .up a, .back a { display: inline-flex; align-items: center; gap: 6px; text-underline-offset: 4px; }
+  /* Small back chevron: answers "where does this go" at a glance; nudges left on hover. */
+  .arrow { flex: none; transition: transform 0.15s ease; }
+  .up a:hover .arrow, .back a:hover .arrow { transform: translateX(-2px); }
+  @media (prefers-reduced-motion: reduce) { .arrow { transition: none; } }
+</style>

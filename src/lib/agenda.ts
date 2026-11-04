@@ -69,3 +69,44 @@ export function weekLabel(monday: string, lang: 'de' | 'en', thisYear: number): 
   const start = m1 === m2 ? `${d1}${dot}` : `${d1}${dot} ${M[m1 - 1]}${y1 !== y2 ? ` ${y1}` : ''}`;
   return `${start} ${to} ${d2}${dot} ${M[m2 - 1]}${year}`;
 }
+
+/** One discipline on one day in the all-groups view (calendar page). */
+export type DisciplineLine =
+  /** Only some of its groups are cancelled that day: show the groups singly instead. */
+  | { discipline: FeedSlot['discipline']; singly: true }
+  | {
+      discipline: FeedSlot['discipline'];
+      singly: false;
+      /** First start and last end of the discipline's training that day. */
+      from: string;
+      to: string;
+      /** Groups training that day, and the slot when it is only one. */
+      count: number;
+      only?: FeedSlot;
+      /** All its groups are cancelled. */
+      off: boolean;
+    };
+
+/** All-groups view: one line per discipline that trains on the day, in the order given. */
+export function disciplineLines(day: AgendaDay, disciplines: readonly FeedSlot['discipline'][]): DisciplineLine[] {
+  const out: DisciplineLine[] = [];
+  for (const discipline of disciplines) {
+    const ts = day.training.filter((t) => t.slot.discipline === discipline);
+    if (!ts.length) continue;
+    const off = ts.filter((t) => t.off).length;
+    if (off && off < ts.length) {
+      out.push({ discipline, singly: true });
+      continue;
+    }
+    out.push({
+      discipline,
+      singly: false,
+      from: ts.map((t) => t.slot.from).sort()[0],
+      to: ts.map((t) => t.slot.to).sort().at(-1)!,
+      count: ts.length,
+      only: ts.length === 1 ? ts[0].slot : undefined,
+      off: off === ts.length,
+    });
+  }
+  return out;
+}

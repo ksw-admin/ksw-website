@@ -1,7 +1,7 @@
 // Photo blocks in reports: photo row Markdown round trip, album tile detection and label.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { albumLabelHtml, albumLine, albumOfParagraph, photoRowBlock, photoRowFields } from '../src/lib/blocks.ts';
+import { albumLabelHtml, albumLine, albumOfParagraph, photoRowBlock, photoRowFields, type MdNode } from '../src/lib/blocks.ts';
 
 test('photo row: CMS fields -> Markdown -> CMS fields', () => {
   const images = [{ image: 'images/a.jpg', alt: 'Siegerehrung [Kumdo]' }, { image: 'images/b.jpg', alt: '' }];
@@ -10,8 +10,8 @@ test('photo row: CMS fields -> Markdown -> CMS fields', () => {
   assert.deepEqual(photoRowFields(md), { images: [{ alt: 'Siegerehrung  Kumdo', image: 'images/a.jpg' }, { alt: '', image: 'images/b.jpg' }] });
 });
 
-const img = (alt: string) => ({ type: 'image', url: 'images/c.jpg', alt });
-const link = (url: string, ...children: object[]) => ({ type: 'link', url, children });
+const img = (alt: string): MdNode => ({ type: 'image', url: 'images/c.jpg', alt });
+const link = (url: string, ...children: MdNode[]): MdNode => ({ type: 'link', url, children });
 
 test('album: only a lone linked photo described "Fotoalbum: …"', () => {
   const a = albumOfParagraph([link('https://www.flickr.com/photos/x/albums/1', img('Fotoalbum: Turnier Arnsberg'))]);

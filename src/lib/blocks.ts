@@ -13,8 +13,9 @@
 //   [![Fotoalbum: New Generation Turnier](images/cover.jpg)](https://www.flickr.com/photos/…)
 // The Markdown plugin (src/lib/markdown-blocks.ts) turns it into the tile; without it, it is just a clickable photo.
 
-export type ImageNode = { type: 'image'; url: string; alt?: string | null };
-type Node = { type: string; url?: string; alt?: string | null; value?: string; children?: readonly Node[] };
+/** The part of a Markdown (mdast) node the block detection reads. */
+export type MdNode = { type: string; url?: string; alt?: string | null; value?: string; children?: readonly MdNode[] };
+type Node = MdNode;
 
 const ALBUM = /^\s*Fotoalbum:\s*/i;
 

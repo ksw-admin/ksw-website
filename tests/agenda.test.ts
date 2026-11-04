@@ -1,7 +1,7 @@
 // Calendar page: slots, closures and dates expanded into days (same rules as the calendar feeds).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { buildAgenda, byWeek, mondayOf, weekLabel } from '../src/lib/agenda.ts';
+import { buildAgenda, byWeek, disciplineLines, mondayOf, weekLabel } from '../src/lib/agenda.ts';
 import type { FeedSlot } from '../src/lib/ics.ts';
 
 const kids: FeedSlot = { id: 'ksw-4-6', discipline: 'kuksoolwon', days: ['mo', 'fr'], from: '16:00', to: '17:00', title: 'Kuk Sool Won, 4–6 Jahre' };
@@ -46,4 +46,16 @@ test('week label: one month, two months, other year', () => {
   assert.equal(weekLabel('2026-11-09', 'en', 2026), '9 to 15 November');
   assert.equal(weekLabel('2026-12-28', 'de', 2026), '28. Dezember 2026 bis 3. Januar 2027');
   assert.equal(weekLabel('2027-01-04', 'de', 2026), '4. bis 10. Januar 2027');
+});
+
+test('discipline lines: one per discipline; partly cancelled shows singly; fully cancelled marked', () => {
+  // Monday 2026-11-02 (both Kuk Sool Won groups), with the given groups marked as cancelled.
+  const monday = buildAgenda({ slots, closures: [], events: [], from: '2026-11-02', days: 1 })[0];
+  const day = (offIds: string[]) => ({ ...monday, training: monday.training.map((t) => ({ ...t, off: offIds.includes(t.slot.id) })) });
+  const all = disciplineLines(day([]), ['kuksoolwon', 'taichi']);
+  assert.deepEqual(all, [{ discipline: 'kuksoolwon', singly: false, from: '16:00', to: '21:30', count: 2, only: undefined, off: false }]);
+  assert.deepEqual(disciplineLines(day(['ksw-4-6']), ['kuksoolwon']), [{ discipline: 'kuksoolwon', singly: true }]);
+  assert.equal((disciplineLines(day(['ksw-4-6', 'ksw-15-80']), ['kuksoolwon'])[0] as { off: boolean }).off, true);
+  const tue = buildAgenda({ slots, closures: [], events: [], from: '2026-11-03', days: 1 })[0];
+  assert.equal((disciplineLines(tue, ['kuksoolwon', 'taichi'])[0] as { only?: FeedSlot }).only?.id, 'taichi-di');
 });

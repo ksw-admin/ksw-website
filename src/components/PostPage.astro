@@ -2,9 +2,9 @@
 import { render } from 'astro:content';
 import { Image } from 'astro:assets';
 import VideoEmbeds from './VideoEmbeds.astro';
+import BackLink from './BackLink.astro';
 import Base from '../layouts/Base.astro';
 import Medals from './Medals.astro';
-import { localePath } from '../i18n/ui';
 import type { Post } from '../lib/posts';
 import { articleLd } from '../lib/seo';
 import { capWidth } from '../lib/images';
@@ -34,7 +34,7 @@ const paragraphs = post.paragraphs;
   <article class="band">
     <div class="wrap">
       <!-- Most visitors arrive here from a shared link: the way to the other posts comes first, not only at the end. -->
-      <p class="up"><a href={localePath('/articles/', post.lang)}><svg class="arrow" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>{post.lang === 'de' ? 'Alle Beiträge' : 'All posts'}</a></p>
+      <BackLink lang={post.lang} place="up" />
       <header>
         <p class="meta">
           <time datetime={post.date.toISOString().slice(0, 10)}>{fmt.format(post.date)}</time>
@@ -57,7 +57,7 @@ const paragraphs = post.paragraphs;
           </figure>
         )}
       </div>
-      <p class="back"><a href={localePath('/articles/', post.lang)}><svg class="arrow" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>{post.lang === 'de' ? 'Alle Beiträge' : 'All posts'}</a></p>
+      <BackLink lang={post.lang} place="back" />
     </div>
   </article>
 </Base>
@@ -72,13 +72,6 @@ const paragraphs = post.paragraphs;
   figure { margin: 0; }
   figure :global(img) { width: 100%; height: auto; border-radius: 4px; display: block; }
   figcaption { font-size: var(--fs-meta); color: var(--stein); margin-top: 8px; }
-  .back { margin-top: 48px; font-weight: 700; }
-  .up { margin-bottom: 18px; font-weight: 700; font-size: 0.95rem; }
-  .up a, .back a { display: inline-flex; align-items: center; gap: 6px; text-underline-offset: 4px; }
-  /* Small back chevron: answers "where does this go" at a glance; nudges left on hover. */
-  .arrow { flex: none; transition: transform 0.15s ease; }
-  .up a:hover .arrow, .back a:hover .arrow { transform: translateX(-2px); }
-  @media (prefers-reduced-motion: reduce) { .arrow { transition: none; } }
   /* Phones: the photo right under the title, before the text (like the CMS preview); at the end of a long
      report nobody would see it. Photos placed inside the report stay where they are in the text. */
   @media (max-width: 800px) { .cols { grid-template-columns: 1fr; gap: 24px; } .cols figure { order: -1; } }

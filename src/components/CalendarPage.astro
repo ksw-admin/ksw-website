@@ -21,7 +21,7 @@ import { getSchedule, toFeed, dayShort, disciplineName, groupName as nameOf, typ
 import { googleCalendarUrl, webcalUrl } from '../lib/calendar-links';
 import { getClosures } from '../lib/closures-data';
 import { getEvents, getPastEvents } from '../lib/events-data';
-import { buildAgenda, byWeek, mondayOf, weekLabel } from '../lib/agenda';
+import { buildAgenda, byWeek, disciplineLines, mondayOf, weekLabel } from '../lib/agenda';
 import { addDays, headline, textOf, todayInGermany, type Closure } from '../lib/closures';
 import { kindOf, titleOf, whenOf } from '../lib/events';
 import { site } from '../lib/site';
@@ -63,22 +63,17 @@ const closureGroups = (c: Closure) => c.groups ?? 'alle';
 type Day = (typeof weeks)[number]['days'][number];
 const DISCIPLINES = ['kuksoolwon', 'taichi'] as const;
 const totalOf = (disc: string) => slots.filter((s) => s.discipline === disc).length;
-/** All-groups view: one line per discipline, unless only some of its groups are cancelled that day (then: singly). */
+/** All-groups view: one line per discipline (src/lib/agenda.ts) with its label. Disciplines shown "singly" are left
+ *  out here: their groups render as single lines (mixedOf below). */
 function summaries(d: Day) {
-  return DISCIPLINES.flatMap((disc) => {
-    const ts = d.training.filter((t) => t.slot.discipline === disc);
-    if (!ts.length) return [];
-    const off = ts.filter((t) => t.off).length;
-    if (off && off < ts.length) return [{ disc, mixed: true as const }];
-    const from = ts.map((t) => t.slot.from).sort()[0];
-    const to = ts.map((t) => t.slot.to).sort().at(-1)!;
-    const n = ts.length;
-    const base = disciplineName(disc, lang);
-    const label =
-      n === 1 ? groupName(bySlot.get(ts[0].slot.id)!)
-      : n === totalOf(disc) ? `${base}, ${de ? `alle ${n} Gruppen` : `all ${n} groups`}`
-      : `${base}, ${n} ${de ? 'Gruppen' : 'groups'}`;
-    return [{ disc, mixed: false as const, from, to, label, off: off === n }];
+  return disciplineLines(d, DISCIPLINES).flatMap((l) => {
+    if (l.singly) return [];
+    const base = disciplineName(l.discipline, lang);
+    const label = l.only
+      ? groupName(bySlot.get(l.only.id)!)
+      : l.count === totalOf(l.discipline) ? `${base}, ${de ? `alle ${l.count} Gruppen` : `all ${l.count} groups`}`
+      : `${base}, ${l.count} ${de ? 'Gruppen' : 'groups'}`;
+    return [{ ...l, label }];
   });
 }
 /** Kinds of dates for the "Anzeigen" filter; URL keys without umlauts. Dates without a kind count as "other". */
@@ -91,7 +86,7 @@ const KINDS = [
 ] as const;
 const kindKey = (e: { kind?: string }) => KINDS.find((k) => k.kind === e.kind)?.key ?? 'other';
 const kindsPresent = KINDS.filter((k) => [...past, ...events].some((e) => kindKey(e) === k.key));
-const mixedOf = (d: Day) => new Set(summaries(d).filter((s) => s.mixed).map((s) => s.disc));
+const mixedOf = (d: Day) => new Set(disciplineLines(d, DISCIPLINES).filter((l) => l.singly).map((l) => l.discipline));
 
 const google = (feed: string) => googleCalendarUrl(Astro.site!.host, feed);
 const webcal = (feed: string) => webcalUrl(Astro.site!.host, feed);
@@ -191,8 +186,8 @@ const title = de ? 'Kalender' : 'Calendar';
                         <strong>{headline({ ...c, from: d.date, to: d.date }, lang).replace(/ am .*| on .*/, '')}</strong>: {textOf(c, lang)}
                       </li>
                     ))}
-                    {summaries(d).filter((s) => !s.mixed).map((s) => (
-                      <li class:list={['training', 'sum', { off: s.off }]} data-disc={s.disc}>
+                    {summaries(d).map((s) => (
+                      <li class:list={['training', 'sum', { off: s.off }]} data-disc={s.discipline}>
                         <span class="time num">{s.from}–{s.to}</span>
                         {s.off ? (
                           <span><s>{s.label}</s><span class="visually-hidden">{de ? ' (fällt aus)' : ' (cancelled)'}</span></span>
