@@ -1,6 +1,34 @@
 {
   "items": [
     {
+      "from": "2026-02-14",
+      "title": "Kids Tournament International Championship",
+      "kind": "Turnier"
+    },
+    {
+      "from": "2026-05-09",
+      "title": "New Generation Turnier",
+      "kind": "Turnier",
+      "place": "Arnsberg"
+    },
+    {
+      "from": "2026-05-29",
+      "title": "Gürtelprüfung",
+      "kind": "Prüfung"
+    },
+    {
+      "from": "2026-07-04",
+      "title": "World Martial Arts Championship",
+      "kind": "Turnier",
+      "place": "Arnsberg"
+    },
+    {
+      "from": "2026-10-10",
+      "title": "Best Martial Art Fighter",
+      "kind": "Turnier",
+      "place": "Arnsberg"
+    },
+    {
       "from": "2026-12-05",
       "title": "World Cup - Intercontinental open Championships",
       "kind": "Turnier",
