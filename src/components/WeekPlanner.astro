@@ -65,6 +65,8 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
       <a class="btn" href={localePath('/#contact', lang)}>{t('cta.trial')}</a>
     </div>
 
+    <!-- Timetable and the calendar link below it as one column: the link always sits right under the timetable. -->
+    <div class="week-col">
     <div class="week">
       <div class="week-head">{t('week.title')} <span>{site.hall.street}, {site.hall.note}</span></div>
       <div class="grid" style={`--rows:${rows};--cols:${days.length}`}>
@@ -118,6 +120,7 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
         )}
       </p>
     )}
+    </div>
   </div>
 </header>
 
@@ -170,19 +173,19 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
 </script>
 
 <style>
-  .hero { padding-block: 28px 56px; }
+  /* More room under the header on wide screens (28px on phones, up to 64px). */
+  .hero { padding-block: clamp(28px, 4vw, 64px) 56px; }
   .wrap {
     display: grid; gap: 0 48px; align-items: start;
     grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
-    grid-template-areas: 'head week' 'detail week' 'detail cal';
+    grid-template-areas: 'head week' 'detail week';
   }
   .head { grid-area: head; }
-  .week { grid-area: week; }
+  .week-col { grid-area: week; }
   .detail { grid-area: detail; }
-  .cal { grid-area: cal; }
   .hint { display: none; grid-area: hint; font-weight: 700; }
   @media (max-width: 860px) {
-    .wrap { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'head' 'hint' 'week' 'cal' 'detail'; gap: 24px; }
+    .wrap { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'head' 'hint' 'week' 'detail'; gap: 24px; }
     .hint { display: block; margin-bottom: -8px; }
     .pick { display: none; }
   }
@@ -195,7 +198,7 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
   .detail .more { display: inline-block; margin-top: 10px; font-weight: 700; text-underline-offset: 4px; }
   .detail .btn { margin-top: 18px; }
   /* Phones: the calendar link sits right under the timetable it belongs to; the group panel follows. */
-  @media (max-width: 860px) { .detail { margin-top: 0; min-height: 0; border-top: 0; padding-top: 0; } .cal { margin-top: -6px; } }
+  @media (max-width: 860px) { .detail { margin-top: 0; min-height: 0; border-top: 0; padding-top: 0; } }
 
   .week {
     background: var(--card); border: 2px solid var(--fg); border-radius: 4px; padding: 16px 16px 12px;
