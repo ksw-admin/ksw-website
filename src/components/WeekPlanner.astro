@@ -38,7 +38,7 @@ const google = (id: string) => `https://calendar.google.com/calendar/render?cid=
 const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bis ' : ' to ')].filter(Boolean).join(', ');
 ---
 
-<header class="hero band" id="woche">
+<header class="hero band" id="schedule">
   <div class="wrap">
     <div class="head">
       <slot name="headline" />
@@ -62,7 +62,7 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
           </div>
         ))
       }
-      <a class="btn" href={localePath('/#besuch', lang)}>{t('cta.trial')}</a>
+      <a class="btn" href={localePath('/#contact', lang)}>{t('cta.trial')}</a>
     </div>
 
     <div class="week">

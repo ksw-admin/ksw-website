@@ -47,7 +47,7 @@ const jsonLd = organizationLd(await getSchedule());
 
   {site.video && <VideoFacade lang={lang} {...site.video} heading={home.videoHeading} />}
 
-  <section class="news band" id="aktuelles">
+  <section class="news band" id="news">
     <div class="wrap">
       <div class="sec-h"><h2>{t('news.title')}</h2><a href={localePath('/articles/', lang)}>{t('news.all')}</a></div>
       {placings > 0 && (

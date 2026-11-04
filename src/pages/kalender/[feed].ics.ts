@@ -31,7 +31,7 @@ export const GET: APIRoute = async ({ props, site: base }) => {
     name,
     host: base!.host,
     location: [site.hall.street, site.hall.note, site.hall.city].filter(Boolean).join(', '),
-    url: new URL('/#woche', base).href,
+    url: new URL('/#schedule', base).href,
     slots: slots.map(toFeed),
     closures: await getClosures(),
   });

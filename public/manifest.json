@@ -15,7 +15,7 @@
     { "src": "/images/icons/manifest-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
   "shortcuts": [
-    { "name": "Trainingszeiten", "url": "/#woche" },
+    { "name": "Trainingszeiten", "url": "/#schedule" },
     { "name": "Kontakt", "url": "/other/contact/" }
   ]
 }

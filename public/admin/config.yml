@@ -174,7 +174,7 @@ collections:
     fields:
       - { label: Frage, name: question, widget: string, i18n: true }
       - { label: Reihenfolge, name: order, widget: number, value_type: int, default: 100, required: false, hint: 'Kleine Zahlen stehen oben (10, 20, 30 …; Lücken lassen Platz zum Einsortieren).' }
-      - { label: Antwort, name: body, widget: markdown, i18n: true, buttons: [bold, italic, link, bulleted-list], editor_components: [], hint: 'Kurz und konkret. Links auf andere Seiten der Website sind gut (z.B. /#woche für den Wochenplan).' }
+      - { label: Antwort, name: body, widget: markdown, i18n: true, buttons: [bold, italic, link, bulleted-list], editor_components: [], hint: 'Kurz und konkret. Links auf andere Seiten der Website sind gut (z.B. /#schedule für den Wochenplan).' }
 
   - name: pages
     label: Rechtliches

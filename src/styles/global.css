@@ -76,7 +76,7 @@
 .hangul::before { content: attr(data-sign); }
 
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
-/* Links to a section (/#besuch, /#ksw, /faq/#kalender, /articles/#post) stop below the sticky header.
+/* Links to a section (/#contact, /#ksw, /faq/#kalender, /articles/#post) stop below the sticky header.
    --menu-top is the header's bottom edge, measured by Header.astro. */
 html { scroll-padding-top: calc(var(--menu-top, 72px) + 16px); }
 
