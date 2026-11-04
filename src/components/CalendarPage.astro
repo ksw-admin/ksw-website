@@ -3,8 +3,11 @@
  * Calendar page (/dates/, /en/dates/; CMS switch site.json › calendarPage): training, closures and dates of the next
  * weeks as an agenda, grouped by week. Not a month grid: training repeats every week, the useful part is what
  * differs (no training, tournaments, cancellations). Same data and rules as the calendar feeds (src/lib/agenda.ts).
- * Filter by group (also ?group=<slot id>, linked from the timetable): only that group's training and the closures
- * that affect it; dates stay (they are in every feed). The subscribe links follow the filter.
+ * All groups: one line per discipline and day ("16:00–21:30 Kuk Sool Won, alle 5 Gruppen"), so the weeks stay short
+ * and what differs stands out; a discipline whose groups are only partly cancelled that day shows its groups singly.
+ * Filter by group (also ?group=<slot id>, linked from the timetable): that group's own lines and the closures
+ * that affect it; dates stay (they are in every feed). The subscribe links (only here; under the timetable only when
+ * this page is off) follow the filter. Wide screens: filter and subscribe links in a column that stays in view.
  * Static page: the script hides days that have passed since the last build and marks today. Without JS: everything
  * from the build day on, unfiltered.
  * Not under /calendar/: Netlify serves that folder as text/calendar (public/_headers).
@@ -47,6 +50,29 @@ const option = (s: Slot) => `${groupName(s)} (${s.days.map((d) => dayShort(d, la
 const dayLabel = (d: string) => whenOf({ from: d, title: '' }, lang, thisYear);
 const closureGroups = (c: Closure) => c.groups ?? 'alle';
 
+type Day = (typeof weeks)[number]['days'][number];
+const DISCIPLINES = ['kuksoolwon', 'taichi'] as const;
+const totalOf = (disc: string) => slots.filter((s) => s.discipline === disc).length;
+/** All-groups view: one line per discipline, unless only some of its groups are cancelled that day (then: singly). */
+function summaries(d: Day) {
+  return DISCIPLINES.flatMap((disc) => {
+    const ts = d.training.filter((t) => t.slot.discipline === disc);
+    if (!ts.length) return [];
+    const off = ts.filter((t) => t.off).length;
+    if (off && off < ts.length) return [{ disc, mixed: true as const }];
+    const from = ts.map((t) => t.slot.from).sort()[0];
+    const to = ts.map((t) => t.slot.to).sort().at(-1)!;
+    const n = ts.length;
+    const base = disc === 'taichi' ? (de ? 'Tai Chi und Qi Gong' : 'Tai Chi and Qi Gong') : 'Kuk Sool Won';
+    const label =
+      n === 1 ? groupName(bySlot.get(ts[0].slot.id)!)
+      : n === totalOf(disc) ? `${base}, ${de ? `alle ${n} Gruppen` : `all ${n} groups`}`
+      : `${base}, ${n} ${de ? 'Gruppen' : 'groups'}`;
+    return [{ disc, mixed: false as const, from, to, label, off: off === n }];
+  });
+}
+const mixedOf = (d: Day) => new Set(summaries(d).filter((s) => s.mixed).map((s) => s.disc));
+
 const webcal = (id: string) => `webcal://${Astro.site!.host}/calendar/${id}.ics`;
 const google = (id: string) => `https://calendar.google.com/calendar/render?cid=${encodeURIComponent(webcal(id))}`;
 const title = de ? 'Kalender' : 'Calendar';
@@ -62,21 +88,27 @@ const title = de ? 'Kalender' : 'Calendar';
       <h1 class="page-title">{title}</h1>
       <p class="lead">{de ? 'Training, Ausfälle und Termine der nächsten drei Monate.' : 'Training, closures and dates for the next three months.'}</p>
 
-      <div class="tools">
-        <label for="cal-group">{de ? 'Gruppe' : 'Group'}</label>
-        <select id="cal-group" aria-controls="agenda">
-          <option value="">{de ? 'Alle Gruppen' : 'All groups'}</option>
-          {slots.map((s) => <option value={s.id} data-disc={s.discipline}>{option(s)}</option>)}
-        </select>
+      <div class="layout">
+      <aside class="tools" aria-label={de ? 'Gruppe und Abo' : 'Group and subscription'}>
+        <div class="pick">
+          <label for="cal-group">{de ? 'Gruppe' : 'Group'}</label>
+          <select id="cal-group" aria-controls="agenda">
+            <option value="">{de ? 'Alle Gruppen' : 'All groups'}</option>
+            {slots.map((s) => <option value={s.id} data-disc={s.discipline}>{option(s)}</option>)}
+          </select>
+        </div>
         {site.calendar && (
-          <p class="subscribe" id="cal-sub" data-label-all={t('week.calendar')} data-label-one={t('week.calendar.one')}>
-            <span class="sub-label">{t('week.calendar')}</span>
-            <a data-cal href={google('training')} rel="noopener">{de ? 'Google Kalender' : 'Google Calendar'}</a>
-            <a data-cal href={webcal('training')}>iPhone, Mac, Outlook</a>
-            <a href={localePath('/faq/#kalender', lang)}>{t('week.calendar.howto')}</a>
-          </p>
+          <div class="subscribe" id="cal-sub" data-label-all={t('week.calendar')} data-label-one={t('week.calendar.one')}>
+            <h2>{de ? 'Abonnieren' : 'Subscribe'}</h2>
+            <p class="sub-label">{t('week.calendar')}</p>
+            <p class="sub-links">
+              <a data-cal href={google('training')} rel="noopener">{de ? 'Google Kalender' : 'Google Calendar'}</a>
+              <a data-cal href={webcal('training')}>iPhone, Mac, Outlook</a>
+            </p>
+            <a class="howto" href={localePath('/faq/#kalender', lang)}>{de ? 'So funktioniert das Abo' : 'How subscribing works'}</a>
+          </div>
         )}
-      </div>
+      </aside>
 
       <div id="agenda" aria-live="polite">
         {weeks.map((w) => (
@@ -114,8 +146,18 @@ const title = de ? 'Kalender' : 'Calendar';
                         <strong>{headline({ ...c, from: d.date, to: d.date }, lang).replace(/ am .*| on .*/, '')}</strong>: {textOf(c, lang)}
                       </li>
                     ))}
+                    {summaries(d).filter((s) => !s.mixed).map((s) => (
+                      <li class:list={['training', 'sum', { off: s.off }]} data-disc={s.disc}>
+                        <span class="time num">{s.from}–{s.to}</span>
+                        {s.off ? (
+                          <span><s>{s.label}</s><span class="visually-hidden">{de ? ' (fällt aus)' : ' (cancelled)'}</span></span>
+                        ) : (
+                          <span>{s.label}</span>
+                        )}
+                      </li>
+                    ))}
                     {d.training.map((tr) => (
-                      <li class:list={['training', { off: tr.off }]} data-group={tr.slot.id}>
+                      <li class:list={['training', 'one', { off: tr.off, always: mixedOf(d).has(tr.slot.discipline) }]} data-group={tr.slot.id} hidden={!mixedOf(d).has(tr.slot.discipline)}>
                         <span class="time num">{tr.slot.from}–{tr.slot.to}</span>
                         {tr.off ? (
                           <span><s>{groupName(bySlot.get(tr.slot.id)!)}</s><span class="visually-hidden">{de ? ' (fällt aus)' : ' (cancelled)'}</span></span>
@@ -158,6 +200,7 @@ const title = de ? 'Kalender' : 'Calendar';
         )}
         <p class="empty" hidden>{de ? 'Für diese Gruppe steht in den nächsten Wochen nichts an.' : 'Nothing coming up for this group in the next weeks.'}</p>
       </div>
+      </div>
     </div>
   </section>
 </Base>
@@ -181,7 +224,12 @@ const title = de ? 'Kalender' : 'Calendar';
       var opt = select.querySelector('option[value="' + id + '"]');
       var disc = id && opt ? opt.dataset.disc : null;
       if (id && !opt) id = '';
-      agenda.querySelectorAll('.training').forEach(function (li) { li.hidden = !!id && li.dataset.group !== id; });
+      // All groups: the per-discipline lines (plus single groups where a discipline is only partly cancelled);
+      // one group: its own lines.
+      agenda.querySelectorAll('.training.sum').forEach(function (li) { li.hidden = !!id; });
+      agenda.querySelectorAll('.training.one').forEach(function (li) {
+        li.hidden = id ? li.dataset.group !== id : !li.classList.contains('always');
+      });
       agenda.querySelectorAll('.closure').forEach(function (li) {
         var g = li.dataset.groups;
         li.hidden = !!disc && g !== 'alle' && g !== disc;
@@ -221,18 +269,29 @@ const title = de ? 'Kalender' : 'Calendar';
   .cal-page { padding-block: var(--space-page-top) var(--space-section); }
   .lead { margin-top: 12px; font-size: var(--fs-lead); max-width: 52ch; }
 
-  .tools { margin-top: 28px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
-  .tools label { font-weight: 700; }
+  /* Phones: filter and subscribe links above the list. Wide screens: next to it, staying in view while scrolling. */
+  .layout { margin-top: 28px; display: grid; gap: 28px; grid-template-columns: minmax(0, 1fr); }
+  @media (min-width: 1100px) {
+    .layout { grid-template-columns: minmax(0, 52rem) minmax(16rem, 20rem); gap: 56px; align-items: start; }
+    .tools { grid-column: 2; grid-row: 1; position: sticky; top: calc(var(--menu-top, 72px) + 24px); }
+    #agenda { grid-column: 1; grid-row: 1; }
+  }
+  .tools { display: grid; gap: 24px; align-content: start; }
+  .pick { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+  @media (min-width: 1100px) { .pick { display: grid; gap: 6px; } }
+  .pick label { font-weight: 700; }
   select {
     font: inherit; color: var(--fg); background: var(--bg); border: 2px solid var(--fg); border-radius: 4px;
     padding: 8px 12px; max-width: 100%;
   }
   select:focus-visible { outline: 3px solid var(--gelb); outline-offset: 1px; }
-  .subscribe { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: var(--fs-meta); }
-  .subscribe .sub-label { color: var(--stein); flex-basis: 100%; }
-  .subscribe a { font-weight: 700; text-underline-offset: 3px; }
-
-  #agenda { margin-top: 32px; max-width: 52rem; }
+  .subscribe { border-top: 2px solid var(--fg); padding-top: 14px; }
+  .subscribe h2 { font-size: var(--fs-item); line-height: 1.2; }
+  .sub-label { margin-top: 4px; color: var(--stein); }
+  .sub-links { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px 20px; }
+  .sub-links a { font-weight: 700; text-underline-offset: 4px; }
+  .howto { display: inline-block; margin-top: 8px; font-size: var(--fs-meta); color: var(--stein); text-underline-offset: 3px; }
+  @media (min-width: 1100px) { .sub-links { display: grid; gap: 6px; } }
   .week { border-top: 2px solid var(--fg); padding-top: 14px; }
   .week + .week { margin-top: 34px; }
   .week[hidden], .day[hidden], .items > li[hidden], .later-list > li[hidden] { display: none; }
@@ -245,8 +304,9 @@ const title = de ? 'Kalender' : 'Calendar';
   .today { display: inline-block; margin-left: 8px; padding: 0 6px; border-radius: 3px; background: var(--gelb); color: #000; font-size: var(--fs-meta); }
   .items { display: grid; gap: 6px; }
   .training { display: flex; gap: 14px; }
-  .time { min-width: 6.5rem; font-variant-numeric: tabular-nums; color: var(--stein); }
-  .training.off { color: var(--stein); }
+  /* The time is what people look for: full colour; the name next to it at normal weight. */
+  .time { min-width: 6.5rem; font-variant-numeric: tabular-nums; font-weight: 600; }
+  .training.off, .training.off .time { color: var(--stein); }
   s { text-decoration-thickness: 2px; }
   /* Closures: the one thing that changes plans, so it reads first after the dates; yellow like the banner. */
   .closure { padding-left: 12px; border-left: 4px solid var(--gelb-ink); }
