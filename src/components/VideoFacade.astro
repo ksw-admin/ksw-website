@@ -33,18 +33,8 @@ const watchUrl = `https://www.youtube.com/watch?v=${youtubeId}`;
 </section>
 
 <script>
-  document.querySelectorAll<HTMLElement>('.video .frame[data-yt]').forEach((frame) => {
-    frame.querySelector('button')?.addEventListener('click', () => {
-      const iframe = document.createElement('iframe');
-      iframe.src = `https://www.youtube-nocookie.com/embed/${frame.dataset.yt}?autoplay=1&rel=0`;
-      iframe.title = frame.dataset.title ?? 'YouTube';
-      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
-      iframe.allowFullscreen = true;
-      frame.replaceChildren(iframe);
-      iframe.focus();
-    });
-  });
+  import { initYoutubePlayers } from '../scripts/youtube-player';
+  initYoutubePlayers('.video .frame[data-yt]', 'button', 'content');
 </script>
 
 <style>
