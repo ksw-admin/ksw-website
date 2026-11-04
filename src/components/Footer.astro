@@ -44,7 +44,7 @@ const groups = [
 <footer class="band">
   <div class="wrap top">
     <a class="brand" href={localePath('/', lang)}>
-      <img src="/images/Logo.svg" alt="" width="36" height="48" loading="lazy" />
+      <span class="logo-wrap" aria-hidden="true"><span class="logo"></span></span>
       <span>Kampfkunst Academy<small>Peter Griepentrog</small></span>
     </a>
     {
@@ -98,24 +98,25 @@ const groups = [
 </script>
 
 <style>
-  footer { background: #000; color: #cfd2cb; border-top: 1px solid var(--linie); padding-block: 48px 92px; font-size: 0.95rem; }
+  .logo { flex: none; width: 36px; height: 48px; background: var(--gelb); -webkit-mask: url('/images/Logo.svg') center / contain no-repeat; mask: url('/images/Logo.svg') center / contain no-repeat; }
+  footer { background: var(--panel); color: var(--stein); border-top: 1px solid var(--linie); padding-block: 48px 92px; font-size: 0.95rem; }
   @media (min-width: 701px) { footer { padding-block: 48px 24px; } }
   .top { display: grid; grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr)); gap: 32px; align-items: start; }
-  .brand { display: flex; align-items: center; gap: 12px; color: #fff; text-decoration: none; font-weight: 800; line-height: 1.1; font-size: 1.1rem; }
+  .brand { display: flex; align-items: center; gap: 12px; color: var(--panel-fg); text-decoration: none; font-weight: 800; line-height: 1.1; font-size: 1.1rem; }
   .brand img { width: 36px; height: 48px; }
-  .brand small { display: block; font-weight: 500; font-size: 0.85rem; color: #cfd2cb; }
-  h2 { font-size: 0.95rem; font-weight: 700; color: #fff; margin-bottom: 10px; }
+  .brand small { display: block; font-weight: 500; font-size: 0.85rem; color: var(--stein); }
+  h2 { font-size: 0.95rem; font-weight: 700; color: var(--panel-fg); margin-bottom: 10px; }
   ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
-  a { color: #cfd2cb; text-decoration: none; overflow-wrap: anywhere; }
-  ul a:hover, ul a:focus-visible { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
-  .bottom { display: flex; justify-content: space-between; align-items: baseline; gap: 12px 24px; flex-wrap: wrap; margin-top: 40px; padding-top: 16px; border-top: 1px solid #2a2c27; font-size: 0.85rem; color: #8f938b; }
+  a { color: var(--stein); text-decoration: none; overflow-wrap: anywhere; }
+  ul a:hover, ul a:focus-visible { color: var(--panel-fg); text-decoration: underline; text-underline-offset: 3px; }
+  .bottom { display: flex; justify-content: space-between; align-items: baseline; gap: 12px 24px; flex-wrap: wrap; margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--linie); font-size: 0.85rem; color: var(--stein); }
   /* Same pattern as the language switch in the header: current choice bold with a yellow underline. */
   .credit { color: inherit; }
-  .credit:hover, .credit:focus-visible { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+  .credit:hover, .credit:focus-visible { color: var(--panel-fg); text-decoration: underline; text-underline-offset: 3px; }
   .theme { display: flex; align-items: baseline; gap: 12px; }
-  .theme button { background: none; border: 0; padding: 0; font: inherit; color: #cfd2cb; cursor: pointer; }
-  .theme button:hover { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
-  .theme button[aria-pressed='true'] { color: #fff; font-weight: 700; text-decoration: underline; text-decoration-color: var(--gelb); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+  .theme button { background: none; border: 0; padding: 0; font: inherit; color: var(--stein); cursor: pointer; }
+  .theme button:hover { color: var(--panel-fg); text-decoration: underline; text-underline-offset: 3px; }
+  .theme button[aria-pressed='true'] { color: var(--panel-fg); font-weight: 700; text-decoration: underline; text-decoration-color: var(--gelb); text-decoration-thickness: 2px; text-underline-offset: 4px; }
   @media (max-width: 860px) {
     .top { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .brand { grid-column: 1 / -1; }

@@ -20,10 +20,10 @@ Two audiences, two voices: parents of children (Kuk Sool Won) and adults, often 
 
 - **Yellow (`gelb`) is the accent, never the background, and it always means something.** It marks actions (primary button, phone number, the mobile bar's contact button, the video play icon), selection (the selected group, the current language, theme and menu item), training times (the yellow mat `shadow-mat` on the timetable and on the times box of the discipline pages) and the "Kein Training" banner. It is not used for decoration: structural lines are in the text colour (review 2026-11-04: with yellow on every rule, nothing stood out). Large yellow areas were tried and rejected as "too much in the face".
 - **Black text on yellow, always.** White on yellow fails contrast.
-- **Jade (`jade`, `tc-bg`, `tc-fg`) belongs to Tai Chi** and to calm states (focus ring). Kuk Sool Won is black (`panel`, `slot-k`).
+- **Jade (`jade`, `tc-bg`, `tc-fg`) belongs to Tai Chi** and to calm states (focus ring). Kuk Sool Won owns the band tone (`panel`) and the slot colour (`slot-k`).
 - Neutrals are slightly green-grey (`bg`, `stein`, `linie`), never pure mid-grey.
 - Medal colours (`gold`, `silber`, `bronze`) are data, used only as small dots next to counts.
-- Both themes are designed: light (hall-white `bg`) and dark (near-black `bg`); `panel` stays black in both. Yellow is the same in both.
+- Both themes are designed and **every area follows the theme** (no always-black bands: mixing them read as two themes at once, review 2026-11-04). The bands (`panel`: Kuk Sool Won half, contact, footer, mobile bar) are one flat step away from the page, darker in light, lighter in dark; a tone, never a card with shadow or radius. Bright `gelb` is the same in both; on light backgrounds the 국술원 sign uses `gelb-ink` and accent text (phone number) uses `accent-text` (black). The logo stays bright yellow in both and gets a thin black outline in light mode. Default theme: the visitor's system setting; the footer switch overrides it.
 
 ## Typography
 
@@ -32,7 +32,7 @@ One family, **Archivo** (variable, self-hosted), in two widths:
 - **Condensed and heavy** (`font-stretch: 62%`, weight 900) for Kuk Sool Won, headlines, section headings and the phone number: firm, compact, like a printed timetable.
 - **Wide and light** (`font-stretch: 125%`, weight 300) for Tai Chi: open and slow.
 - **Normal width** for all running text, at 17px with 1.55 line height and lines under about 68 characters.
-- The Hangul name **국술원** (Nanum Myeongjo 800) appears only above the Kuk Sool Won heading, in yellow. Its font file holds exactly these three glyphs.
+- Two Hangul signs in Nanum Myeongjo 800: **국술원** above the Kuk Sool Won heading, in yellow, and **태극** (taegeuk, the Korean reading of 太極, as on the Korean flag) above the Tai Chi heading, in muted jade (`tc-fg` mixed 42 % into `tc-bg`). Tai Chi itself is Chinese; 태극 links it to the school's Korean visual language without claiming otherwise. The font file holds only these glyphs.
 - Sentence case everywhere. No all-caps labels, no letter-spaced eyebrows, no single highlighted word in a headline.
 - Digits that line up (dates, times, phone numbers, medal counts) use tabular figures.
 

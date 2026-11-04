@@ -23,7 +23,9 @@ const languages = (['de', 'en'] as const).map((code) => ({
   href: alternate?.[code] ?? (code === 'de' ? dePath : `/en${dePath}`),
 }));
 const path = reqPath;
+// "Startseite" only in the mobile menu: on desktop the logo and title right next to the links already lead home.
 const links = [
+  { href: '/', label: t('nav.home'), home: true },
   { href: '/category/kuksoolwon/', label: t('nav.ksw') },
   { href: '/category/taichi/', label: t('nav.taichi') },
   { href: '/articles/', label: t('nav.news') },
@@ -35,7 +37,7 @@ const links = [
 <header class="top band">
   <div class="wrap">
     <a class="brand" href={localePath('/', lang)}>
-      <img src="/images/Logo.svg" alt="" width="30" height="40" />
+      <span class="logo-wrap" aria-hidden="true"><span class="logo"></span></span>
       <span>Kampfkunst Academy<small>Peter Griepentrog</small></span>
     </a>
     <nav aria-label={t('nav.main')}>
@@ -47,8 +49,8 @@ const links = [
         <ul>
           {
             links.map((l) => (
-              <li>
-                <a class="link" href={l.href} aria-current={path.startsWith(l.href) ? 'page' : undefined}>{l.label}</a>
+              <li class:list={{ 'mobile-only': 'home' in l }}>
+                <a class="link" href={l.href} aria-current={('home' in l ? path === l.href : path.startsWith(l.href)) ? 'page' : undefined}>{l.label}</a>
               </li>
             ))
           }
@@ -83,6 +85,14 @@ const links = [
   }
 
   const menu = document.getElementById('menu') as HTMLElement & { hidePopover?: () => void };
+  // Where the mobile menu panel starts: the header's bottom edge (the header's height depends on the brand text).
+  const header = document.querySelector<HTMLElement>('header.top');
+  const setMenuTop = () => {
+    if (header) document.documentElement.style.setProperty('--menu-top', `${header.getBoundingClientRect().bottom}px`);
+  };
+  setMenuTop();
+  addEventListener('resize', setMenuTop);
+  menu?.addEventListener('beforetoggle', setMenuTop);
   const burger = document.querySelector<HTMLButtonElement>('.burger');
   if (menu && burger && 'hidePopover' in menu) {
     menu.addEventListener('toggle', (e) => burger.setAttribute('aria-expanded', String((e as ToggleEvent).newState === 'open')));
@@ -106,7 +116,7 @@ const links = [
   }
   .wrap { display: flex; align-items: center; gap: 24px; padding-block: 12px; }
   .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 800; line-height: 1.05; }
-  .brand img { width: 30px; height: 40px; filter: var(--logo-filter); }
+  .logo { flex: none; width: 30px; height: 40px; background: var(--gelb); -webkit-mask: url('/images/Logo.svg') center / contain no-repeat; mask: url('/images/Logo.svg') center / contain no-repeat; }
   .brand small { display: block; font-weight: 500; font-size: 0.8rem; }
   nav { margin-left: auto; font-weight: 600; font-size: 0.95rem; }
   ul { list-style: none; margin: 0; padding: 0; }
@@ -123,6 +133,7 @@ const links = [
   /* Desktop: the popover element is shown inline as a normal row (author display beats the UA "hidden" rule). */
   @media (min-width: 861px) {
     .burger { display: none; }
+    .mobile-only { display: none; }
     #menu { display: block; position: static; inset: auto; margin: 0; padding: 0; border: 0; background: none; color: inherit; overflow: visible; }
     ul { display: flex; gap: 22px; align-items: center; }
     .langs { padding-left: 22px; border-left: 1px solid var(--linie); }
@@ -141,14 +152,17 @@ const links = [
     .burger[aria-expanded='true'] .bars i:nth-child(2) { opacity: 0; }
     .burger[aria-expanded='true'] .bars i:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
 
+    /* The panel hangs right under the header (--menu-top: header's bottom edge, set by the script). The dimming is
+       a shadow that starts at the panel's top edge and only reaches down, so the header stays at the same level as
+       the open panel instead of being dimmed behind it (a ::backdrop would cover the header too). */
     #menu {
-      position: fixed; inset: calc(env(safe-area-inset-top, 0px) + 70px) 0 auto 0; margin: 0; width: auto;
-      max-height: calc(100dvh - 70px - env(safe-area-inset-top, 0px)); overflow: auto;
+      position: fixed; inset: var(--menu-top, calc(env(safe-area-inset-top, 0px) + 70px)) 0 auto 0; margin: 0; width: auto;
+      max-height: calc(100dvh - var(--menu-top, calc(env(safe-area-inset-top, 0px) + 70px))); overflow: auto;
       border: 0; border-bottom: 1px solid var(--linie); background: var(--bg); color: var(--fg);
       padding: 8px var(--gutter-r) 24px var(--gutter-l);
-      box-shadow: 0 24px 48px rgb(0 0 0 / 0.35);
+      box-shadow: 0 100vh 0 100vh rgb(0 0 0 / 0.45);
     }
-    #menu::backdrop { background: rgb(0 0 0 / 0.45); }
+    #menu::backdrop { background: transparent; }
     #menu li { border-bottom: 1px solid var(--linie); }
     #menu a { display: block; padding: 16px 0; font-size: 1.6rem; font-weight: 800; font-stretch: 62%; }
     #menu .link[aria-current='page'] { text-decoration: none; box-shadow: inset 6px 0 0 var(--gelb); padding-left: 16px; }
