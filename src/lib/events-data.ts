@@ -2,8 +2,8 @@
 // A broken entry fails the build with the message below.
 import { z } from 'astro/zod';
 import raw from '../content/events.json';
-import { todayInGermany } from './closures';
-import { isUpcoming, type SiteEvent } from './events';
+import { addDays, FEED_HISTORY_DAYS, todayInGermany } from './closures';
+import { isUpcoming, lastDay, type SiteEvent } from './events';
 
 const date = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Termine: Datum als JJJJ-MM-TT');
 const time = z.string().regex(/^\d{2}:\d{2}$/, 'Termine: Uhrzeit als HH:MM, z.B. 10:00');
@@ -46,5 +46,14 @@ export async function getPastEvents(): Promise<SiteEvent[]> {
   const year = today.slice(0, 4);
   return all
     .filter((e) => !isUpcoming(e, today) && e.from.startsWith(year) && !e.cancelled)
+    .sort((a, b) => a.from.localeCompare(b.from) || (a.time ?? '').localeCompare(b.time ?? ''));
+}
+
+/** For the calendar feeds: upcoming dates plus those of the last year (like closures), so a past tournament
+ *  stays in subscribers' calendars instead of being deleted at the next rebuild. Cancelled ones stay too (marked). */
+export async function getFeedEvents(): Promise<SiteEvent[]> {
+  const from = addDays(todayInGermany(), -FEED_HISTORY_DAYS);
+  return all
+    .filter((e) => lastDay(e) >= from)
     .sort((a, b) => a.from.localeCompare(b.from) || (a.time ?? '').localeCompare(b.time ?? ''));
 }

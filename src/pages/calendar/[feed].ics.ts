@@ -1,9 +1,9 @@
 // Calendar subscriptions: /calendar/training.ics (all groups) and /calendar/<group id>.ics (one group, e.g. for
-// parents). Times from schedule.json, closures from closures.json (current ones plus those of the last year, so past sessions stay cancelled). Calendar apps re-read the file every few hours.
+// parents). Times from schedule.json, closures from closures.json (current ones plus those of the last year, so past sessions stay cancelled); dates likewise (upcoming plus the last year). Calendar apps re-read the file every few hours.
 import type { APIRoute, GetStaticPaths } from 'astro';
 import { getSchedule, toFeed, type Slot } from '../../lib/schedule';
 import { getFeedClosures } from '../../lib/closures-data';
-import { getEvents } from '../../lib/events-data';
+import { getFeedEvents } from '../../lib/events-data';
 import { buildCalendar } from '../../lib/ics';
 import { site } from '../../lib/site';
 
@@ -26,7 +26,7 @@ export const GET: APIRoute = async ({ props, site: base }) => {
     url: new URL('/#schedule', base).href,
     slots: slots.map(toFeed),
     closures: await getFeedClosures(),
-    events: await getEvents(),
+    events: await getFeedEvents(),
   });
   return new Response(body, { headers: { 'Content-Type': 'text/calendar; charset=utf-8' } });
 };

@@ -79,5 +79,7 @@ const paragraphs = post.paragraphs;
   .arrow { flex: none; transition: transform 0.15s ease; }
   .up a:hover .arrow, .back a:hover .arrow { transform: translateX(-2px); }
   @media (prefers-reduced-motion: reduce) { .arrow { transition: none; } }
-  @media (max-width: 800px) { .cols { grid-template-columns: 1fr; } }
+  /* Phones: the photo right under the title, before the text (like the CMS preview); at the end of a long
+     report nobody would see it. Photos placed inside the report stay where they are in the text. */
+  @media (max-width: 800px) { .cols { grid-template-columns: 1fr; gap: 24px; } .cols figure { order: -1; } }
 </style>
