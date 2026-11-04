@@ -41,7 +41,7 @@ answer on the site yet; each one becomes an FAQ entry once answered:
       address there. Submissions stay in the Netlify dashboard until deleted: delete them once answered (the Datenschutz
       text promises that).
 - [ ] **Training closures** (CMS: Einstellungen › Trainingsausfälle): Peter enters holidays and cancellations there.
-      The banner shows from 14 days before. OK, or a different lead time?
+      The banner shows from 14 days before by default; each entry can set its own lead time ("Vorher anzeigen (Tage)").
 
 ## Decisions
 

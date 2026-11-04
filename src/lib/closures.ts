@@ -3,9 +3,10 @@
 // Dates are plain "YYYY-MM-DD" strings in local (German) time: no time zone maths, no off-by-one at midnight UTC.
 
 export type Group = 'alle' | 'kuksoolwon' | 'taichi';
-export type Closure = { from: string; to?: string; text: string; text_en?: string; groups?: Group };
+/** announce: days before "from" the banner appears (CMS: "Vorher anzeigen (Tage)"); missing = ANNOUNCE_DAYS. */
+export type Closure = { from: string; to?: string; text: string; text_en?: string; groups?: Group; announce?: number };
 
-/** The banner appears this many days before a closure starts. */
+/** Default: the banner appears this many days before a closure starts (each entry can set its own). */
 export const ANNOUNCE_DAYS = 14;
 
 const toUtc = (d: string) => {
@@ -29,8 +30,11 @@ export function datesOf(c: Closure): string[] {
   return out;
 }
 
-/** Banner visible on this day: from ANNOUNCE_DAYS before the start until the last day. */
-export const isShown = (c: Closure, today: string) => addDays(c.from, -ANNOUNCE_DAYS) <= today && today <= endOf(c);
+/** First day the banner shows: the entry's own lead time, else ANNOUNCE_DAYS before the start. */
+export const showFrom = (c: Closure) => addDays(c.from, -(c.announce ?? ANNOUNCE_DAYS));
+
+/** Banner visible on this day: from showFrom() until the last day. */
+export const isShown = (c: Closure, today: string) => showFrom(c) <= today && today <= endOf(c);
 
 /** Still relevant (not over yet): only these go into the pages and the calendar. */
 export const isCurrent = (c: Closure, today: string) => endOf(c) >= today;

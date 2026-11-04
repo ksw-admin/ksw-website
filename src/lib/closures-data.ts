@@ -18,6 +18,7 @@ const Closures = z.object({
           text: z.string().min(1),
           text_en: opt(z.string()),
           groups: opt(z.enum(['alle', 'kuksoolwon', 'taichi'])),
+          announce: opt(z.number().int().min(0, 'Vorher anzeigen: mindestens 0 Tage').max(365, 'Vorher anzeigen: höchstens 365 Tage')),
         })
         .refine((c) => !c.to || c.to >= c.from, { message: 'Trainingsausfälle: "bis" muss am oder nach "von" liegen' }),
     )

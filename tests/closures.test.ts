@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { addDays, datesOf, headline, isShown, isCurrent, weekday, todayInGermany, type Closure } from '../src/lib/closures.ts';
+import { addDays, datesOf, headline, isShown, isCurrent, showFrom, weekday, todayInGermany, type Closure } from '../src/lib/closures.ts';
 import { buildCalendar, cancelledDates, esc, fold, type FeedSlot } from '../src/lib/ics.ts';
 
 const ferien: Closure = { from: '2026-10-19', to: '2026-10-25', text: 'Herbstferien' };
@@ -77,4 +77,15 @@ test('closures.json (as edited in the CMS) is valid', () => {
     if (c.to) assert.ok(c.to >= c.from, `${c.from}: "bis" liegt vor "von"`);
     assert.ok(c.text.trim(), `${c.from}: Text fehlt`);
   }
+});
+
+test('banner: each closure can set its own lead time (CMS: Vorher anzeigen)', () => {
+  const sommer: Closure = { from: '2026-07-06', to: '2026-08-18', text: 'Sommerferien', announce: 28 };
+  const heute: Closure = { from: '2026-11-04', text: 'Halle belegt', announce: 0 };
+  assert.equal(showFrom(sommer), '2026-06-08');
+  assert.equal(isShown(sommer, '2026-06-07'), false);
+  assert.equal(isShown(sommer, '2026-06-08'), true);
+  assert.equal(isShown(heute, '2026-11-03'), false);
+  assert.equal(isShown(heute, '2026-11-04'), true);
+  assert.equal(showFrom(ferien), addDays(ferien.from, -14)); // no value = default 14
 });

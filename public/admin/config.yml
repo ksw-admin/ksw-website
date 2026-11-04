@@ -293,20 +293,22 @@ collections:
         file: src/content/closures.json
         format: json
         description: >-
-          Hinweis „Kein Training“ oben auf jeder Seite, ab 14 Tage vorher bis zum letzten Tag. Die Termine fallen auch
+          Hinweis „Kein Training“ oben auf jeder Seite, ab „Vorher anzeigen“ (normal 14 Tage) bis zum letzten Tag. Die Termine fallen auch
           im Kalender-Abo weg. Kurzfristig (heute): „Von“ = heute, „Bis“ leer lassen. Vergangene Ausfälle verschwinden
           von selbst und können gelöscht werden.
         fields:
           - label: Ausfälle
+            label_singular: Ausfall
             name: items
             widget: list
             required: false
             summary: '{{fields.from}} – {{fields.to}}: {{fields.text}}'
             fields:
-              - { label: Von, name: from, widget: datetime, date_format: DD.MM.YYYY, time_format: false, format: YYYY-MM-DD, picker_utc: true }
+              - { label: Von, name: from, widget: datetime, date_format: DD.MM.YYYY, time_format: false, format: YYYY-MM-DD, picker_utc: true, hint: '„UTC“ neben dem Datum nicht beachten: so verschiebt sich der Tag nicht durch die Zeitzone.' }
               - { label: Bis (leer = nur ein Tag), name: to, widget: datetime, date_format: DD.MM.YYYY, time_format: false, format: YYYY-MM-DD, picker_utc: true, required: false }
               - { label: Text, name: text, widget: string, hint: 'z.B. „Herbstferien“ oder „Halle belegt“. Steht nach „Kein Training vom … bis …:“.' }
-              - { label: Text Englisch (optional), name: text_en, widget: string, required: false }
+              - { label: Text Englisch, name: text_en, widget: string, required: false }
+              - { label: Vorher anzeigen (Tage), name: announce, widget: number, value_type: int, min: 0, max: 365, default: 14, required: false, hint: 'So viele Tage vor „Von“ erscheint der Hinweis auf der Website. 0 = erst am Tag selbst; z.B. 28 für die Sommerferien. Leer = 14.' }
               - label: Betrifft
                 name: groups
                 widget: select
