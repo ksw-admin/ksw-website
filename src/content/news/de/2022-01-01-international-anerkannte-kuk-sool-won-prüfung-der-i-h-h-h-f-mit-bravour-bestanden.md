@@ -9,6 +9,7 @@ description: Prüfer waren der Grand Master Salvatore Tiso 7. Dan und Senior
   theoretisch sowie praktisch beste Leistung erbringen in Formen, Bruchtest,
   Hand- und Fußtechniken. Alle Studenten haben die Prüfung bestanden.
 image: images/pruefung2020.jpg
+image_text: "Gruppenfoto nach der Kuk-Sool-Won-Prüfung der IHHHF: die Prüflinge mit ihren Urkunden."
 tags:
   - featured
 ---

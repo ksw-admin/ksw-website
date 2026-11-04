@@ -25,6 +25,7 @@ description: >-
 
   Meister Peter Griepentrog gratuliert allen Teilnehmern.
 image: images/b90c9856-1ed4-4f2f-bc86-576f0eb79601.jpg
+image_text: "Siegerehrung beim „New Generation Tournament“ 2024."
 tags:
   - featured
 ---

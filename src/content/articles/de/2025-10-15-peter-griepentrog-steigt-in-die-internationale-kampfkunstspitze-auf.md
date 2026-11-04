@@ -6,7 +6,7 @@ description: "Nach dem 5. Dan folgt die nächste Auszeichnung: Der Duisburger
   FCR-Meister ist jetzt Teil der internationalen Kommission für höchste
   Dan-Grade."
 image: images/74697538-3a4f-4851-ac64-1c70cd79069b.jpg
-image_text: Kampfkunstmeister
+image_text: "Peter Griepentrog mit seiner Urkunde zur Trainerlizenz A der IHHHF."
 tags:
   - articles
   - featured

@@ -14,6 +14,7 @@ description: |-
   World CUP Intercontinental Open Championships.
   Peter Griepentrog gratulierte seiner Schülerin.
 image: images/whatsapp-image-2025-12-07-at-13.54.28.jpeg
+image_text: "Erster Platz bei der AFSO am 6. Dezember 2025: Siegerehrung mit Pokal und Urkunde."
 tags:
   - featured
 ---

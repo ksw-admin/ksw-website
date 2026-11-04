@@ -16,6 +16,7 @@ description: >-
 
   Zweiter Platz. Steven D., der Meister gratulierte beiden.
 image: images/83fc78ab-3a07-4f7d-b930-261ae11da244.jpg
+image_text: "Mit Meistergürtel zurück in der Trainingshalle: International Open German Championships 2024."
 tags:
   - featured
 ---

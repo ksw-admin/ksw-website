@@ -12,7 +12,7 @@ medals:
   bronze: 0
   other: 0
 image: images/318e9512-06eb-4e87-b377-51e779aaa0cc.jpg
-image_text: ArtFight
+image_text: "Siegerehrung beim „Best Martial Arts Fighter“ 2026 in Arnsberg."
 tags:
   - featured
 ---

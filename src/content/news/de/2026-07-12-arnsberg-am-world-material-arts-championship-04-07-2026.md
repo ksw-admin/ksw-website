@@ -23,7 +23,7 @@ description: >-
 
   den Coach für die Unterstützung.
 image: images/0a695caa-91b6-4e54-a93f-1b64e6ba1b81.jpg
-image_text: Arnsberg_2026
+image_text: "Siegerehrung bei der „World Martial Arts Championship“ 2026 in Arnsberg."
 tags:
   - featured
 ---

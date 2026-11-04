@@ -7,7 +7,7 @@ description: Die I.H.H.H.F.-Budo-Familie und der World Executive Director
   Meister Peter Griepentrog. Wir gratulieren Herrn Peter Griepentrog zu seinem
   bestandenen 4. Dan im IHHHF Kuk Sool Won System.
 image: images/uebergabe.jpeg
-image_text: Urkunden übergabe des 4. Dan
+image_text: "Übergabe der Urkunde „Bangbeob – Der Weg“ im Headquarters der IHHHF."
 tags:
   - featured
 ---

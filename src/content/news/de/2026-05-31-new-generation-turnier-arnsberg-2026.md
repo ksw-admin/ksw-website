@@ -11,7 +11,7 @@ medals:
   bronze: 2
   other: 1
 image: images/020f84f3-6c69-4087-b76a-0e3c50f35492.jpg
-image_text: New Generation Turnier
+image_text: "Siegerehrung beim „New Generation Tournament“ 2026 in Arnsberg."
 tags:
   - featured
 ---

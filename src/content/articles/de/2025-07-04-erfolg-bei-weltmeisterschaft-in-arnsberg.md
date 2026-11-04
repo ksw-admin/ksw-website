@@ -13,7 +13,7 @@ featured: true
 description: Erster Weltmeistertitel in Formen und vier zweite Plätze dazu. Der
   Einsatz hat sich mehr als gelohnt!
 image: images/whatsapp-image-2025-06-23-at-15.34.30.jpeg
-image_text: Weltmeisterschaft Arnsberg
+image_text: "Das Team der Kampfkunst Academy bei der Weltmeisterschaft 2025 in Arnsberg."
 tags:
   - articles
   - featured

@@ -6,7 +6,7 @@ featured: true
 description: Am 04.09.2021 fand in der Kampfkunstakademie Griepentrog das zweite
   Mal ein Kampfrichter-Lehrgang statt.
 image: images/lehrgang.jpeg
-image_text: Gruppenfoto nach dem erfolgreichen abschlusses des Kampfrichterlehrgangs
+image_text: "Gruppenfoto nach dem Kampfrichter-Lehrgang am 4. September 2021 in der Trainingshalle."
 tags:
   - articles
   - featured

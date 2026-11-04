@@ -11,7 +11,7 @@ medals:
 featured: true
 description: Am 14.02.2026 haben wir am Turnier International Championship teilgenommen.
 image: images/ed1828bd-c889-41a2-9e74-ebdd273bc3ea.jpg
-image_text: International Championship
+image_text: "Siegerehrung beim „Evolution Generation Kids Tournament“ im Februar 2026."
 tags:
   - articles
   - featured

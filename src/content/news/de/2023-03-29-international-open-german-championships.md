@@ -20,7 +20,7 @@ description: >
 
   Meister Peter Griepentrog
 image: images/img_8331.jpg
-image_text: International Open German Championships
+image_text: "Die Teilnehmer der International Open German Championships 2023 mit Medaillen und Urkunden."
 tags:
   - featured
 ---

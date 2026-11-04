@@ -16,7 +16,7 @@ description: >-
 
   In Point, Fighting und Light Kontakt haben wir den zweiten und dritten Platz belegt
 image: images/bb26b72a-d229-494c-84ed-11447877050b.jpg
-image_text: Open German Championship Recklinghausen
+image_text: "Siegerehrung bei der Open German Championship 2025 in Recklinghausen."
 tags:
   - featured
 ---

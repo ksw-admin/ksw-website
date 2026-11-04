@@ -19,7 +19,7 @@ description: >-
 
   Meister Peter Griepentrog gratuliert allen Teilnehmern
 image: images/kampfkunst-academy-des-fc-rumeln-kaldenhausen-1955.png
-image_text: ""
+image_text: "Pokale und Meistergürtel der Kampfkunst Academy des FC Rumeln-Kaldenhausen, drei Fotos aus der Trainingshalle."
 tags:
   - featured
 ---
