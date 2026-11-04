@@ -164,15 +164,15 @@ collections:
     files:
       - label: Impressum
         name: impressum
-        file: src/content/pages/de/impressum.md
-        preview_path: other/impressum/
+        file: src/content/pages/de/imprint.md
+        preview_path: other/imprint/
         fields:
           - { label: Titel, name: title, widget: string }
           - { label: Text, name: body, widget: markdown }
       - label: Datenschutz
         name: datenschutz
-        file: src/content/pages/de/datenschutz.md
-        preview_path: other/datenschutz/
+        file: src/content/pages/de/privacy.md
+        preview_path: other/privacy/
         fields:
           - { label: Titel, name: title, widget: string }
           - { label: Text, name: body, widget: markdown }
@@ -181,7 +181,7 @@ collections:
     label: Sponsoren
     label_singular: Sponsor
     folder: src/content/sponsors
-    preview_path: other/sponsoren/
+    preview_path: other/sponsors/
     create: true
     slug: '{{name}}'
     # Uploads go next to the entries (images/ beside the .md file); the site makes small WebP versions at build time.
