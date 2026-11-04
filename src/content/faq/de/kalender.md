@@ -4,11 +4,11 @@ order: 90
 requires: calendar
 ---
 
-<!-- Funktion der Website (src/pages/calendar/). Kennungen der Gruppen: Einstellungen › Trainingszeiten. -->
+<!-- Funktion der Website (src/pages/calendar/, Links auf der Kalender-Seite /dates/). Ist die Kalender-Seite aus, stehen die Links unter dem Wochenplan: dann den Satz zu den Links anpassen. -->
 
 Ja, als Kalender-Abo. Fällt Training aus (zum Beispiel in den Ferien), verschwinden diese Termine im Abo von selbst, und auf jeder Seite der Website steht oben ein Hinweis.
 
-Die Links stehen unter dem [Wochenplan](/#schedule): **Google Kalender** oder **iPhone, Mac, Outlook**. Für nur eine Gruppe vorher die Gruppe im Wochenplan antippen; die Links gelten dann nur für sie.
+Die Links stehen im [Kalender](/dates/): **Google Kalender** oder **iPhone, Mac, Outlook**. Für nur eine Gruppe dort oben die Gruppe auswählen; die Links gelten dann nur für sie.
 
 - **Google Kalender (auch Android):** Der Link öffnet Google Kalender mit der Frage „Kalender hinzufügen?“. Auf dem Handy klappt das am besten im Browser; danach erscheinen die Termine auch in der Kalender-App. Falls nicht: in Google Kalender am Computer neben „Weitere Kalender“ auf „+“ › „Per URL“ und `https://www.kuk-sool-won-griepentrog.de/calendar/training.ics` einfügen.
 - **iPhone, iPad, Mac, Outlook:** Der Link öffnet die Kalender-App mit der Frage, ob der Kalender abonniert werden soll. In Outlook im Web: „Kalender hinzufügen“ › „Aus dem Internet abonnieren“ und dieselbe Adresse einfügen.

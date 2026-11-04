@@ -23,6 +23,7 @@ The FAQ (/faq/, CMS: FAQ) has 9 answers taken from texts already on the site. Th
 answer on the site yet; each one becomes an FAQ entry once answered:
 
 - [ ] What does training cost? Membership fee, contract, notice period (or deliberately "ask in person")?
+      Jonah remembers a choice between training once or twice a week: still the case, and does the price differ?
 - [ ] What to wear and bring to the first lesson? When is a uniform (Dobok) needed, and where does it come from?
 - [ ] Is the trial lesson free? How many trial lessons?
 - [ ] Insurance: are students insured (club/association), or should they have their own accident insurance?

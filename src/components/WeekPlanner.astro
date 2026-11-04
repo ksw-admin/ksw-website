@@ -99,11 +99,16 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
         <span><i style="background:var(--gelb);box-shadow:inset 0 0 0 2px #000"></i>{t('week.yours')}</span>
       </div>
     </div>
-    <!-- Calendar subscription and calendar page: all groups, or the selected group once one is tapped (script below). -->
+    <!-- Calendar page (with the subscribe links there), or without it the subscribe links here; both follow the
+         selected group once one is tapped (script below). -->
     {(site.calendar || site.calendarPage) && (
       <p class="cal" id="cal" data-label-all={t('week.calendar')} data-label-one={t('week.calendar.one')}>
-        {site.calendarPage && <a class="page" data-page href={localePath('/dates/', lang)}>{de ? 'Kalender der nächsten Wochen' : 'Calendar for the coming weeks'}</a>}
-        {site.calendar && (
+        {site.calendarPage && (
+          <a class="page" data-page href={localePath('/dates/', lang)}>
+            {site.calendar ? (de ? 'Kalender und Abo' : 'Calendar and subscription') : de ? 'Kalender der nächsten Wochen' : 'Calendar for the coming weeks'}
+          </a>
+        )}
+        {site.calendar && !site.calendarPage && (
           <>
             <span class="cal-label">{t('week.calendar')}</span>
             <a data-cal="google" href={google('training')} rel="noopener">{de ? 'Google Kalender' : 'Google Calendar'}</a>
@@ -224,7 +229,7 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
   .empty { grid-row: 2 / -1; display: flex; align-items: center; justify-content: center; color: var(--stein); writing-mode: vertical-rl; font-size: 0.75rem; }
   .cal { display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: baseline; margin: 22px 12px 0 0; }
   .cal-label { flex-basis: 100%; font-weight: 700; }
-  .cal .page { flex-basis: 100%; font-weight: 700; text-underline-offset: 4px; margin-bottom: 10px; }
+  .cal .page { font-weight: 700; text-underline-offset: 4px; }
   .cal a[data-cal] { font-weight: 600; text-underline-offset: 4px; }
   .cal .howto { font-size: var(--fs-meta); color: var(--stein); }
   .legend { display: flex; gap: 18px; margin-top: 12px; font-size: var(--fs-meta); flex-wrap: wrap; }
