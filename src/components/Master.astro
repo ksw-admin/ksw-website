@@ -9,9 +9,9 @@ const { master } = site;
 ---
 
 <!-- Own section heading on the yellow rule, like news and video: after the news list it must not read like one more post. -->
-<section class="master band" aria-labelledby="meister">
+<section class="master band" id="meister" aria-labelledby="meister-title">
   <div class="wrap">
-    <div class="sec-h"><h2 id="meister">{heading}</h2></div>
+    <div class="sec-h"><h2 id="meister-title">{heading}</h2></div>
     <div class="cols">
     <figure>
       <Image src={photo} alt={photoAlt} width={Math.min(photo.width, 1000)} quality={75} widths={[400, 700, 1000]} sizes="(max-width: 760px) 100vw, 40vw" loading="lazy" />
