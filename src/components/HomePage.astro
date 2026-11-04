@@ -50,10 +50,11 @@ const jsonLd = organizationLd(await getSchedule());
 
   <section class="news band" id="news">
     <div class="wrap">
-      <div class="sec-h"><h2>{t('news.title')}</h2><a href={localePath('/articles/', lang)}>{t('news.all')}</a></div>
+      <div class="sec-h"><h2>{t('news.title')}</h2></div>
       <UpcomingEvents lang={lang} />
       <!-- Pairs with "Demnächst" above: says where the upcoming dates end and the reports begin. -->
-      <h3 class="recent">{t('news.recent')}</h3>
+      <!-- "Alle Beiträge" leads to the archive of reports, so it sits with "Zuletzt", not with the upcoming dates. -->
+      <div class="recent"><h3>{t('news.recent')}</h3><a href={localePath('/articles/', lang)}>{t('news.all')}</a></div>
       {placings > 0 && (
         <p class="tally">
           <span>{lang === 'de' ? `${year} bisher ${placings} Platzierungen` : `${placings} placings in ${year} so far`}</span>
@@ -80,7 +81,9 @@ const jsonLd = organizationLd(await getSchedule());
   .photo figcaption { background: var(--bg); color: var(--stein); font-size: var(--fs-meta); padding-block: 10px; }
   .news { padding-block: var(--space-section); }
   /* Season total and the key to the medal dots in the list below. */
-  .recent { margin-top: 26px; font-size: var(--fs-sub); font-weight: 800; }
+  .recent { margin-top: 26px; display: flex; align-items: baseline; justify-content: space-between; gap: 8px 16px; flex-wrap: wrap; }
+  .recent h3 { font-size: var(--fs-sub); font-weight: 800; }
+  .recent a { font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
   .tally { margin-top: 14px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 20px; color: var(--stein); font-size: var(--fs-meta); }
   .key i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin: 0 5px 0 10px; vertical-align: 0; }
   .key i:first-child { margin-left: 0; }
