@@ -182,7 +182,7 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
   .cal { grid-area: cal; }
   .hint { display: none; grid-area: hint; font-weight: 700; }
   @media (max-width: 860px) {
-    .wrap { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'head' 'hint' 'week' 'detail' 'cal'; gap: 24px; }
+    .wrap { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'head' 'hint' 'week' 'cal' 'detail'; gap: 24px; }
     .hint { display: block; margin-bottom: -8px; }
     .pick { display: none; }
   }
@@ -194,7 +194,8 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
   .detail p + p { margin-top: 4px; }
   .detail .more { display: inline-block; margin-top: 10px; font-weight: 700; text-underline-offset: 4px; }
   .detail .btn { margin-top: 18px; }
-  @media (max-width: 860px) { .detail { margin-top: 0; min-height: 0; border-top: 0; padding-top: 0; } .cal { margin-top: 0; } }
+  /* Phones: the calendar link sits right under the timetable it belongs to; the group panel follows. */
+  @media (max-width: 860px) { .detail { margin-top: 0; min-height: 0; border-top: 0; padding-top: 0; } .cal { margin-top: -6px; } }
 
   .week {
     background: var(--card); border: 2px solid var(--fg); border-radius: 4px; padding: 16px 16px 12px;
