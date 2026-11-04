@@ -17,7 +17,8 @@
  * Not under /calendar/: Netlify serves that folder as text/calendar (public/_headers).
  */
 import Base from '../layouts/Base.astro';
-import { getSchedule, toFeed, ageLabel, dayShort, type Slot } from '../lib/schedule';
+import { getSchedule, toFeed, dayShort, disciplineName, groupName as nameOf, type Slot } from '../lib/schedule';
+import { googleCalendarUrl, webcalUrl } from '../lib/calendar-links';
 import { getClosures } from '../lib/closures-data';
 import { getEvents, getPastEvents } from '../lib/events-data';
 import { buildAgenda, byWeek, mondayOf, weekLabel } from '../lib/agenda';
@@ -53,8 +54,7 @@ const later = {
   closures: closures.filter((c) => c.from > end),
 };
 
-const groupName = (s: Slot) =>
-  s.discipline === 'taichi' ? (de ? 'Tai Chi und Qi Gong' : 'Tai Chi and Qi Gong') : ['Kuk Sool Won', ageLabel(s, lang)].filter(Boolean).join(', ');
+const groupName = (s: Slot) => nameOf(s, lang);
 const option = (s: Slot) => `${groupName(s)} (${s.days.map((d) => dayShort(d, lang)).join(', ')})`;
 const dayLabel = (d: string) => whenOf({ from: d, title: '' }, lang, thisYear);
 const closureGroups = (c: Closure) => c.groups ?? 'alle';
@@ -72,7 +72,7 @@ function summaries(d: Day) {
     const from = ts.map((t) => t.slot.from).sort()[0];
     const to = ts.map((t) => t.slot.to).sort().at(-1)!;
     const n = ts.length;
-    const base = disc === 'taichi' ? (de ? 'Tai Chi und Qi Gong' : 'Tai Chi and Qi Gong') : 'Kuk Sool Won';
+    const base = disciplineName(disc, lang);
     const label =
       n === 1 ? groupName(bySlot.get(ts[0].slot.id)!)
       : n === totalOf(disc) ? `${base}, ${de ? `alle ${n} Gruppen` : `all ${n} groups`}`
@@ -92,8 +92,8 @@ const kindKey = (e: { kind?: string }) => KINDS.find((k) => k.kind === e.kind)?.
 const kindsPresent = KINDS.filter((k) => [...past, ...events].some((e) => kindKey(e) === k.key));
 const mixedOf = (d: Day) => new Set(summaries(d).filter((s) => s.mixed).map((s) => s.disc));
 
-const webcal = (id: string) => `webcal://${Astro.site!.host}/calendar/${id}.ics`;
-const google = (id: string) => `https://calendar.google.com/calendar/render?cid=${encodeURIComponent(webcal(id))}`;
+const google = (feed: string) => googleCalendarUrl(Astro.site!.host, feed);
+const webcal = (feed: string) => webcalUrl(Astro.site!.host, feed);
 const title = de ? 'Kalender' : 'Calendar';
 ---
 

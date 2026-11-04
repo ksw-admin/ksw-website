@@ -4,7 +4,8 @@
  * in the panel next to the headline (below the week on phones). Without JS the full week still shows.
  * Data: src/content/schedule.json.
  */
-import { getSchedule, minutes, dayShort, dayList, ageLabel, WEEKDAYS, type Weekday, type Slot } from '../lib/schedule';
+import { getSchedule, minutes, dayShort, dayList, disciplineName, groupName, WEEKDAYS, type Weekday, type Slot } from '../lib/schedule';
+import { googleCalendarUrl, webcalUrl } from '../lib/calendar-links';
 import { useTranslations, localePath, type Lang } from '../i18n/ui';
 import { site } from '../lib/site';
 
@@ -25,17 +26,13 @@ const row = (time: string) => (minutes(time) - start) / STEP + 2;
 const hours = Array.from({ length: Math.floor((end - start) / 60) + 1 }, (_, i) => start / 60 + i);
 
 const de = lang === 'de';
-const taichiName = de ? 'Tai Chi und Qi Gong' : 'Tai Chi and Qi Gong';
-const name = (s: Slot) => (s.discipline === 'taichi' ? taichiName : 'Kuk Sool Won');
 const short = (s: Slot) =>
   s.discipline === 'taichi' ? 'Tai Chi' : s.ageMax === undefined ? `${de ? 'ab' : ''} ${s.ageMin}${de ? '' : '+'}`.trim() : `${s.ageMin}–${s.ageMax}`;
 const when = (s: Slot) => `${dayList(s.days, lang)}, ${s.from} ${de ? 'bis' : 'to'} ${s.to}${de ? ' Uhr' : ''}`;
-// Calendar subscription (src/pages/calendar/), if switched on in the CMS (site.json > calendar).
-// webcal:// opens the subscribe dialog of Apple Calendar and Outlook; Google takes the feed as "cid" and shows its
-// own "add calendar" dialog (works in the browser; on Android the calendar then syncs to the phone).
-const webcal = (id: string) => `webcal://${Astro.site!.host}/calendar/${id}.ics`;
-const google = (id: string) => `https://calendar.google.com/calendar/render?cid=${encodeURIComponent(webcal(id))}`;
-const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bis ' : ' to ')].filter(Boolean).join(', ');
+// Calendar subscription (src/lib/calendar-links.ts), if switched on in the CMS (site.json > calendar).
+const webcal = (feed: string) => webcalUrl(Astro.site!.host, feed);
+const google = (feed: string) => googleCalendarUrl(Astro.site!.host, feed);
+const title = (s: Slot) => groupName(s, lang, { spelled: true });
 ---
 
 <header class="hero band" id="schedule">
@@ -104,7 +101,7 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
       </div>
       <div class="legend">
         <span><i style="background:var(--slot-k)"></i>Kuk Sool Won</span>
-        <span><i style="background:var(--jade)"></i>{taichiName}</span>
+        <span><i style="background:var(--jade)"></i>{disciplineName('taichi', lang)}</span>
         <span><i style="background:var(--gelb);box-shadow:inset 0 0 0 2px #000"></i>{t('week.yours')}</span>
       </div>
     </div>

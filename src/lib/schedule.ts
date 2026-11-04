@@ -40,6 +40,21 @@ export function ageLabel(s: Slot, lang: Lang): string | undefined {
   return `${s.ageMin}–${s.ageMax} ${y}`;
 }
 
+/** "Kuk Sool Won" / "Tai Chi und Qi Gong" (English: "Tai Chi and Qi Gong"). */
+export const disciplineName = (d: Slot['discipline'], lang: Lang) =>
+  d === 'taichi' ? (lang === 'de' ? 'Tai Chi und Qi Gong' : 'Tai Chi and Qi Gong') : 'Kuk Sool Won';
+
+/**
+ * A group's name: "Kuk Sool Won, 4–6 Jahre", "Tai Chi und Qi Gong" (Tai Chi groups have no age).
+ * spelled: "4 bis 6 Jahre" instead of the dash (headings, screen-reader labels).
+ */
+export function groupName(s: Slot, lang: Lang, opts: { spelled?: boolean } = {}): string {
+  if (s.discipline === 'taichi') return disciplineName(s.discipline, lang);
+  const age = ageLabel(s, lang);
+  const shown = opts.spelled ? age?.replace('–', lang === 'de' ? ' bis ' : ' to ') : age;
+  return [disciplineName(s.discipline, lang), shown].filter(Boolean).join(', ');
+}
+
 /** A slot as the calendar feeds and the calendar page use it (German title: feeds are German). */
 export const toFeed = (s: Slot): FeedSlot => ({
   id: s.id,
@@ -47,5 +62,5 @@ export const toFeed = (s: Slot): FeedSlot => ({
   days: s.days,
   from: s.from,
   to: s.to,
-  title: s.discipline === 'taichi' ? 'Tai Chi und Qi Gong' : ['Kuk Sool Won', ageLabel(s, 'de')].filter(Boolean).join(', '),
+  title: groupName(s, 'de'),
 });
