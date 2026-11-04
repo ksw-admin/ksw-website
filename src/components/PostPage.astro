@@ -1,6 +1,7 @@
 ---
 import { render } from 'astro:content';
 import { Image } from 'astro:assets';
+import VideoEmbeds from './VideoEmbeds.astro';
 import Base from '../layouts/Base.astro';
 import Medals from './Medals.astro';
 import { localePath } from '../i18n/ui';
@@ -47,6 +48,7 @@ const paragraphs = post.paragraphs;
         <div class="prose">
           {paragraphs.map((p) => <p class="desc" lang={post.descriptionLang !== post.lang ? post.descriptionLang : undefined}>{p}</p>)}
           <div lang={bodyLang}><Content /></div>
+          <VideoEmbeds />
         </div>
         {post.image && (
           <figure>

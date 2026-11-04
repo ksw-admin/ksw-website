@@ -5,6 +5,7 @@
 // The only thing written twice is the layout of the list row and the post page (NewsLedger.astro, PostPage.astro).
 // The exact result is the Netlify deploy preview of a draft ("Vorschau ansehen" in the CMS).
 import { cleanParagraphs, decideHasPage, isVisible, PAGE_MIN_CHARS } from '../lib/text';
+import { videoHtml, videoLine, youtubeId } from '../lib/youtube';
 import siteCss from '../styles/global.css?inline';
 import fontCss from '@fontsource-variable/archivo/wdth.css?inline';
 
@@ -150,6 +151,27 @@ function postPreview(collection: 'news') {
     },
   });
 }
+
+// "Video" block in Markdown texts: stores a plain link line ("[Video: Titel](https://www.youtube.com/watch?v=…)"),
+// which the site turns into the click-to-load player (src/lib/youtube.ts). Any usual YouTube link can be pasted.
+CMS.registerEditorComponent({
+  id: 'youtube',
+  label: 'Video (YouTube)',
+  fields: [
+    { name: 'url', label: 'YouTube-Link', widget: 'string', hint: 'Adresse aus der Browserzeile oder „Teilen“ › „Link kopieren“, z.B. https://youtu.be/…' },
+    { name: 'title', label: 'Titel', widget: 'string', hint: 'Worum geht es? Steht auf dem Video, bis es abgespielt wird, z.B. „Formen bei der Gürtelprüfung“.' },
+  ],
+  pattern: /^\[Video: (.*)\]\((https:\/\/www\.youtube\.com\/watch\?v=[\w-]{11})\)$/m,
+  fromBlock: (m: RegExpMatchArray) => ({ title: m[1], url: m[2] }),
+  toBlock: (d: { url?: string; title?: string }) => {
+    const id = youtubeId(String(d.url ?? '').trim());
+    return id ? videoLine(id, String(d.title ?? '')) : `[Video: ${d.title ?? ''}](${d.url ?? ''})`;
+  },
+  toPreview: (d: { url?: string; title?: string }) => {
+    const id = youtubeId(String(d.url ?? '').trim());
+    return id ? videoHtml(id, String(d.title ?? '') || 'Video') : '<p><strong>Video:</strong> kein gültiger YouTube-Link.</p>';
+  },
+});
 
 CMS.registerPreviewTemplate('news', postPreview('news'));
 

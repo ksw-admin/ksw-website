@@ -1,0 +1,22 @@
+---
+/**
+ * Script for videos inside Markdown texts (src/lib/youtube.ts turns a lone YouTube link into .yt-embed).
+ * Until the click nothing loads from Google; then the player comes from youtube-nocookie.com, like the home video.
+ * Styles: global.css (.yt-embed), because the Markdown output is not part of a component.
+ */
+---
+
+<script>
+  document.querySelectorAll<HTMLElement>('.yt-embed[data-yt]').forEach((box) => {
+    box.querySelector('.yt-play')?.addEventListener('click', (e) => {
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube-nocookie.com/embed/${box.dataset.yt}?autoplay=1&rel=0`;
+      iframe.title = box.dataset.title ?? 'YouTube';
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+      iframe.allowFullscreen = true;
+      (e.currentTarget as HTMLElement).replaceWith(iframe);
+      iframe.focus();
+    });
+  });
+</script>
