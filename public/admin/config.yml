@@ -288,6 +288,36 @@ collections:
               - { label: Alter bis, name: ageMax, widget: number, value_type: int, required: false, hint: 'Leer = „ab … Jahre“ (keine Obergrenze)' }
               - { label: Hinweis, name: note, widget: string, required: false }
 
+      - label: Termine
+        name: events
+        file: src/content/events.json
+        format: json
+        description: >-
+          Turniere, Prüfungen, Seminare, Vereinstermine. Die nächsten drei stehen auf der Startseite unter „Nächste Termine“
+          und im Kalender-Abo. Vorbei = verschwindet von selbst; der Bericht danach kommt wie immer unter „Aktuelles“.
+          Keine kommenden Termine = kein Block auf der Startseite.
+        fields:
+          - label: Termine
+            label_singular: Termin
+            name: items
+            widget: list
+            required: false
+            summary: '{{fields.from}}  {{fields.title}}'
+            fields:
+              - { label: Datum, name: from, widget: datetime, date_format: DD.MM.YYYY, time_format: false, format: YYYY-MM-DD, picker_utc: true, hint: '„UTC“ neben dem Datum nicht beachten: so verschiebt sich der Tag nicht durch die Zeitzone.' }
+              - { label: Bis (mehrtägig), name: to, widget: datetime, date_format: DD.MM.YYYY, time_format: false, format: YYYY-MM-DD, picker_utc: true, required: false }
+              - { label: Uhrzeit, name: time, widget: string, required: false, pattern: ['^(\d{2}:\d{2})?$', 'Format HH:MM, z.B. 10:00'], hint: 'z.B. 10:00. Leer = ganztägig.' }
+              - { label: Uhrzeit bis, name: time_to, widget: string, required: false, pattern: ['^(\d{2}:\d{2})?$', 'Format HH:MM, z.B. 16:00'], hint: 'Leer = im Kalender zwei Stunden.' }
+              - { label: Titel, name: title, widget: string, hint: 'z.B. „New Generation Turnier“' }
+              - { label: Titel Englisch, name: title_en, widget: string, required: false }
+              - label: Art
+                name: kind
+                widget: select
+                required: false
+                options: [Turnier, Prüfung, Seminar, Verein]
+              - { label: Ort, name: place, widget: string, required: false, hint: 'z.B. „Arnsberg, Sporthalle Große Wiese“' }
+              - { label: Link, name: link, widget: string, required: false, pattern: ['^(https?://.+)?$', 'Vollständige Adresse mit https://'], hint: 'Optional: Ausschreibung oder Veranstalter.' }
+
       - label: Trainingsausfälle
         name: closures
         file: src/content/closures.json

@@ -3,6 +3,7 @@
 import type { APIRoute, GetStaticPaths } from 'astro';
 import { getSchedule, ageLabel, type Slot } from '../../lib/schedule';
 import { getClosures } from '../../lib/closures-data';
+import { getEvents } from '../../lib/events-data';
 import { buildCalendar, type FeedSlot } from '../../lib/ics';
 import { site } from '../../lib/site';
 
@@ -34,6 +35,7 @@ export const GET: APIRoute = async ({ props, site: base }) => {
     url: new URL('/#schedule', base).href,
     slots: slots.map(toFeed),
     closures: await getClosures(),
+    events: await getEvents(),
   });
   return new Response(body, { headers: { 'Content-Type': 'text/calendar; charset=utf-8' } });
 };

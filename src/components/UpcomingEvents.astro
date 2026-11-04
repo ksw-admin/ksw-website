@@ -1,0 +1,69 @@
+---
+/**
+ * "Nächste Termine" on the home page: the next three upcoming dates from src/content/events.json (CMS: Einstellungen ›
+ * Termine). Nothing upcoming = no block at all (no empty state). Static site: a tiny script hides dates that have passed
+ * since the last build, and the whole block if none is left.
+ */
+import { getEvents } from '../lib/events-data';
+import { kindOf, lastDay, titleOf, whenOf } from '../lib/events';
+import type { Lang } from '../i18n/ui';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const de = lang === 'de';
+// A few more than shown, so the block still has three after the script hides past ones.
+const events = (await getEvents()).slice(0, 6);
+---
+
+{
+  events.length > 0 && (
+    <section class="events band" id="dates" aria-labelledby="dates-title">
+      <div class="wrap">
+        <div class="sec-h"><h2 id="dates-title">{de ? 'Nächste Termine' : 'Upcoming dates'}</h2></div>
+        <ul>
+          {events.map((e, i) => (
+            <li data-end={lastDay(e)} hidden={i >= 3}>
+              <p class="when num">{whenOf(e, lang)}</p>
+              <div>
+                {(e.kind || e.place) && <p class="meta">{[kindOf(e, lang), e.place].filter(Boolean).join(', ')}</p>}
+                <h3 lang={lang === 'en' && !e.title_en?.trim() ? 'de' : undefined}>
+                  {e.link ? <a href={e.link} rel="noopener">{titleOf(e, lang)}</a> : titleOf(e, lang)}
+                </h3>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}
+
+<script is:inline>
+  (function () {
+    var box = document.getElementById('dates');
+    if (!box) return;
+    var today = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Berlin' });
+    var shown = 0;
+    box.querySelectorAll('li').forEach(function (li) {
+      var on = li.dataset.end >= today && shown < 3;
+      li.hidden = !on;
+      if (on) shown++;
+    });
+    if (!shown) box.hidden = true;
+  })();
+</script>
+
+<style>
+  .events { padding-block: 72px 0; }
+  ul { list-style: none; margin: 8px 0 0; padding: 0; }
+  li { display: grid; grid-template-columns: 15.5rem minmax(0, 1fr); gap: 4px 24px; padding-block: 18px; border-bottom: 1px solid var(--linie); align-items: baseline; }
+  /* display: grid above would otherwise override the hidden attribute (past or fourth date). */
+  li[hidden] { display: none; }
+  .when { font-weight: 700; }
+  .meta { font-size: 0.85rem; font-weight: 600; color: var(--stein); margin-bottom: 2px; }
+  h3 { font-size: 1.25rem; font-weight: 700; line-height: 1.2; }
+  h3 a { text-underline-offset: 4px; }
+  @media (max-width: 760px) {
+    li { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>

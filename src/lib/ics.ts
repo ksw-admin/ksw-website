@@ -1,6 +1,7 @@
 // iCalendar (RFC 5545) feeds for the training times: one weekly repeating event per group, closures removed
 // (EXDATE) and shown as all-day "Kein Training" events. Pure functions; the endpoint is src/pages/calendar/[feed].ics.ts.
 import { affects, addDays, datesOf, endOf, headline, weekday, type Closure } from './closures.ts';
+import { endTime, eventKey, lastDay, type SiteEvent } from './events.ts';
 
 export type FeedSlot = {
   id: string;
@@ -80,6 +81,8 @@ export function buildCalendar(opts: {
   url: string;
   slots: FeedSlot[];
   closures: Closure[];
+  /** Upcoming dates (tournaments, seminars ...), in every feed. */
+  events?: SiteEvent[];
   now?: Date;
 }): string {
   const stamp = (opts.now ?? new Date()).toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z');
@@ -124,6 +127,23 @@ export function buildCalendar(opts: {
       `DTEND;VALUE=DATE:${compact(addDays(endOf(c), 1))}`,
       `SUMMARY:${esc(`${headline(c, 'de').replace(/ (am|vom) .*/, '')}: ${c.text.trim()}`)}`,
       'TRANSP:TRANSPARENT',
+      'END:VEVENT',
+    );
+  }
+  // Upcoming dates: all-day (multi-day or without time) or timed (end: given, else start + 2 hours).
+  for (const e of opts.events ?? []) {
+    const multi = lastDay(e) !== e.from;
+    const timed = !multi && !!e.time;
+    lines.push(
+      'BEGIN:VEVENT',
+      `UID:termin-${eventKey(e)}@${opts.host}`,
+      `DTSTAMP:${stamp}`,
+      ...(timed
+        ? [`DTSTART;TZID=Europe/Berlin:${local(e.from, e.time!)}`, `DTEND;TZID=Europe/Berlin:${local(e.from, endTime(e)!)}`]
+        : [`DTSTART;VALUE=DATE:${compact(e.from)}`, `DTEND;VALUE=DATE:${compact(addDays(lastDay(e), 1))}`]),
+      `SUMMARY:${esc(e.kind ? `${e.kind}: ${e.title.trim()}` : e.title.trim())}`,
+      ...(e.place ? [`LOCATION:${esc(e.place)}`] : []),
+      ...(e.link ? [`URL:${e.link}`] : []),
       'END:VEVENT',
     );
   }

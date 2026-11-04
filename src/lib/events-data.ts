@@ -1,0 +1,39 @@
+// Upcoming dates from the CMS (src/content/events.json), read directly like closures (an empty list is normal).
+// A broken entry fails the build with the message below.
+import { z } from 'astro/zod';
+import raw from '../content/events.json';
+import { todayInGermany } from './closures';
+import { isUpcoming, type SiteEvent } from './events';
+
+const date = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Termine: Datum als JJJJ-MM-TT');
+const time = z.string().regex(/^\d{2}:\d{2}$/, 'Termine: Uhrzeit als HH:MM, z.B. 10:00');
+const opt = <T extends z.ZodType>(s: T) => z.preprocess((v) => (v === '' || v === null ? undefined : v), s.optional());
+const Events = z.object({
+  items: z
+    .array(
+      z
+        .object({
+          from: date,
+          to: opt(date),
+          time: opt(time),
+          time_to: opt(time),
+          title: z.string().min(1, 'Termine: Titel fehlt'),
+          title_en: opt(z.string()),
+          kind: opt(z.enum(['Turnier', 'Prüfung', 'Seminar', 'Verein'])),
+          place: opt(z.string()),
+          link: opt(z.url({ protocol: /^https?$/, message: 'Termine: Link als vollständige Adresse mit https://' })),
+        })
+        .refine((e) => !e.to || e.to >= e.from, { message: 'Termine: "bis" muss am oder nach "von" liegen' }),
+    )
+    .default([]),
+});
+
+const all: SiteEvent[] = Events.parse(raw).items;
+
+/** Not over yet at build time, soonest first. */
+export async function getEvents(): Promise<SiteEvent[]> {
+  const today = todayInGermany();
+  return all
+    .filter((e) => isUpcoming(e, today))
+    .sort((a, b) => a.from.localeCompare(b.from) || (a.time ?? '').localeCompare(b.time ?? ''));
+}

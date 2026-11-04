@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import WeekPlanner from './WeekPlanner.astro';
 import DisciplinePaths from './DisciplinePaths.astro';
 import NewsLedger from './NewsLedger.astro';
+import UpcomingEvents from './UpcomingEvents.astro';
 import Master from './Master.astro';
 import Visit from './Visit.astro';
 import VideoFacade from './VideoFacade.astro';
@@ -46,6 +47,8 @@ const jsonLd = organizationLd(await getSchedule());
   <DisciplinePaths lang={lang} kswText={home.kswText} taichiText={home.taichiText} />
 
   {site.video && <VideoFacade lang={lang} {...site.video} heading={home.videoHeading} />}
+
+  <UpcomingEvents lang={lang} />
 
   <section class="news band" id="news">
     <div class="wrap">
