@@ -20,12 +20,13 @@ const taichiFacts = taichi.map((s) => ({
   days: s.days.map((d) => dayShort(d, lang)).join('/'),
   time: de ? `${s.from} bis ${s.to} Uhr` : `${s.from} to ${s.to}`,
 }));
+import HangulSign from './HangulSign.astro';
 ---
 
 <section class="paths">
   <div class="path k" id="ksw">
     <div class="inner">
-      <div class="hangul" lang="ko" aria-hidden="true" data-sign="국술원"></div>
+      <HangulSign discipline="kuksoolwon" />
       <h2 class="cond">Kuk Sool Won</h2>
       <div class="body">{paragraphsOf(kswText).map((p) => <p>{p}</p>)}</div>
       <ul class="facts">
@@ -44,7 +45,7 @@ const taichiFacts = taichi.map((s) => ({
   <div class="path t" id="taichi">
     <div class="inner">
       <!-- 태극 (taegeuk): Korean reading of 太極, the "Tai" "Chi"; also the symbol on the Korean flag in the hall. -->
-      <div class="hangul tg" lang="ko" aria-hidden="true" data-sign="태극"></div>
+      <HangulSign discipline="taichi" />
       <h2 class="wide">{de ? 'Tai Chi, Qi Gong und Atemschulung' : 'Tai Chi, Qi Gong and breathing training'}</h2>
       <div class="body">{paragraphsOf(taichiText).map((p) => <p>{p}</p>)}</div>
       <ul class="facts">
@@ -63,10 +64,8 @@ const taichiFacts = taichi.map((s) => ({
   .k .inner { margin-left: auto; }
   .t { background: var(--tc-bg); color: var(--tc-fg); }
   .t .inner { padding-inline: 40px var(--gutter-r); }
-  .hangul { font-family: var(--hangul); font-weight: 800; color: var(--gelb-ink); font-size: clamp(3rem, 7vw, 5.5rem); line-height: 1; letter-spacing: 0.06em; }
   .k h2 { font-size: clamp(2.6rem, 5.5vw, 4.4rem); line-height: 0.9; margin-top: 14px; font-weight: 900; }
   .t h2 { font-size: clamp(1.9rem, 3.6vw, 2.9rem); line-height: 1.08; font-weight: 300; margin-top: 14px; }
-  .hangul.tg { color: color-mix(in srgb, var(--tc-fg) 42%, var(--tc-bg)); }
   .body { margin-top: 22px; max-width: 42ch; }
   .t .body { line-height: 1.75; }
   .body p + p { margin-top: 12px; }
