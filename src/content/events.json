@@ -1,3 +1,10 @@
 {
-  "items": []
+  "items": [
+    {
+      "from": "2026-12-05",
+      "title": "World Cup - Intercontinental open Championships",
+      "kind": "Turnier",
+      "place": "Sporthalle Große Wiese, Am Solepark 7, 59759 Arnsberg"
+    }
+  ]
 }
