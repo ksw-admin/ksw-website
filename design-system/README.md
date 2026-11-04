@@ -63,7 +63,7 @@ Only in answer to an action: the selected timetable group changes colour, a gall
 
 | Component | Where | Rule |
 |---|---|---|
-| Button | trial lesson, CMS | Yellow fill, 2px black border, black text. One per section at most. |
+| Button | trial lesson, CMS | Yellow fill, 1px black edge in light mode (none in dark), black text. One per section at most. |
 | SectionHeading | every content section | Condensed heading on the yellow rule; an optional link at the right ("Alle Beiträge"). |
 | TimetableSlot | home page week | A button per group and day; tapping marks the group on all its days and dims the rest with readable labels. |
 | NewsRow | news list | Date, photo, kind and place, title, text, medals. Short posts show completely; long ones show a teaser and "Weiterlesen". |

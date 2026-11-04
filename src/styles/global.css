@@ -19,6 +19,8 @@
   --panel-fg: #000000;
   /* Yellow as ink (the 국술원 sign) and as text (phone number): readable on the page in each theme. */
   --gelb-ink: #d9ae00;
+  /* Button edge: yellow on the light page needs a thin edge; on dark the yellow stands out by itself. */
+  --btn-edge: #000000;
   --accent-text: #000000;
   --tc-bg: #ddeae5;
   --tc-fg: #0f2d28;
@@ -39,14 +41,14 @@
   :root:not([data-theme='light']) {
     --bg: #141513; --fg: #ecede8; --stein: #a3a69f; --linie: #33352f; --card: #1c1e1b;
     --tc-bg: #13302b; --tc-fg: #ddeae5; --slot-k: #ecede8; --slot-k-fg: #000000; --logo-filter: none;
-    --panel: #1f211d; --panel-fg: #ecede8; --gelb-ink: #ffdd00; --accent-text: #ffdd00;
+    --panel: #1f211d; --panel-fg: #ecede8; --gelb-ink: #ffdd00; --accent-text: #ffdd00; --btn-edge: transparent;
     color-scheme: dark;
   }
 }
 :root[data-theme='dark'] {
   --bg: #141513; --fg: #ecede8; --stein: #a3a69f; --linie: #33352f; --card: #1c1e1b;
   --tc-bg: #13302b; --tc-fg: #ddeae5; --slot-k: #ecede8; --slot-k-fg: #000000; --logo-filter: none;
-  --panel: #1f211d; --panel-fg: #ecede8; --gelb-ink: #ffdd00; --accent-text: #ffdd00;
+  --panel: #1f211d; --panel-fg: #ecede8; --gelb-ink: #ffdd00; --accent-text: #ffdd00; --btn-edge: transparent;
   color-scheme: dark;
 }
 
@@ -72,6 +74,8 @@
 /* Hangul signs (국술원, 태극) are decoration: drawn from data-sign as generated content, so they are a graphic,
    not text (screen readers skip them anyway; their colour follows the brand, not text contrast rules). */
 .hangul::before { content: attr(data-sign); }
+
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
 
 /* Smooth cross-fade between pages of this site (Chrome, Edge, Safari 18+; others ignore it). */
 @media (prefers-reduced-motion: no-preference) {
@@ -110,8 +114,8 @@ img { max-width: 100%; height: auto; }
 
 .btn {
   display: inline-flex; align-items: center; gap: 8px;
-  background: var(--gelb); color: #000; border: 2px solid #000; border-radius: 4px;
-  padding: 12px 18px; font: 700 1rem var(--f); text-decoration: none; cursor: pointer;
+  background: var(--gelb); color: #000; border: 1px solid var(--btn-edge); border-radius: 4px;
+  padding: 13px 19px; font: 700 1rem var(--f); text-decoration: none; cursor: pointer;
 }
 .btn:hover { background: var(--gelb-hover); }
 

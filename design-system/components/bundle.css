@@ -21,7 +21,7 @@
 .ksw .num { font-variant-numeric: tabular-nums; }
 
 /* Button */
-.ksw .btn { display: inline-flex; align-items: center; gap: 8px; background: var(--gelb); color: #000; border: 2px solid #000; border-radius: 4px; padding: 12px 18px; font: 700 1rem var(--font-sans); text-decoration: none; cursor: pointer; }
+.ksw .btn { display: inline-flex; align-items: center; gap: 8px; background: var(--gelb); color: #000; border: 1px solid #000; border-radius: 4px; padding: 13px 19px; font: 700 1rem var(--font-sans); text-decoration: none; cursor: pointer; }
 .ksw .btn:hover { background: var(--gelb-hover); }
 
 /* SectionHeading */
