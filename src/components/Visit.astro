@@ -7,6 +7,11 @@ const { lang, heading, intro, level = 2 } = Astro.props;
 const H = level === 1 ? 'h1' : 'h2';
 const de = lang === 'de';
 const others = site.phones.filter((p) => p !== primaryPhone);
+// Directions: open the visitor's navigation app with the hall as destination (plain links, nothing loads before a tap).
+// Google Maps link by default (Android opens the app); Apple devices get Apple Maps (script below).
+const destination = `${site.hall.street}, ${site.hall.city}`;
+const googleRoute = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}`;
+const appleRoute = `https://maps.apple.com/?daddr=${encodeURIComponent(destination)}`;
 ---
 
 <section class="visit band" id="besuch">
@@ -32,7 +37,10 @@ const others = site.phones.filter((p) => p !== primaryPhone);
     </div>
     <div class="side">
       <address><b>{de ? 'Trainingshalle' : 'Training hall'}</b>{site.hall.street}<br />{site.hall.note && <>{site.hall.note}<br /></>}{site.hall.city}</address>
-      <a href={site.hall.osm} rel="noopener">{de ? 'Route in OpenStreetMap öffnen' : 'Directions on OpenStreetMap'}</a>
+      <p class="route">
+        <a class="route-main" href={googleRoute} data-apple={appleRoute} rel="noopener">{de ? 'Route planen' : 'Get directions'}</a>
+        <a class="route-alt" href={site.hall.osm} rel="noopener">{de ? 'oder auf OpenStreetMap' : 'or on OpenStreetMap'}</a>
+      </p>
       {site.social.length > 0 && (
         <p class="social">{site.social.map((s) => <a href={s.url} rel="me noopener">{s.label ?? s.name}</a>)}</p>
       )}
@@ -40,6 +48,13 @@ const others = site.phones.filter((p) => p !== primaryPhone);
     </div>
   </div>
 </section>
+
+<script>
+  // iPhone, iPad and Mac: Apple Maps instead of Google Maps (opens the Maps app there).
+  if (/iPhone|iPad|Macintosh/.test(navigator.userAgent)) {
+    document.querySelectorAll<HTMLAnchorElement>('a.route-main[data-apple]').forEach((a) => (a.href = a.dataset.apple!));
+  }
+</script>
 
 <style>
   .visit { background: var(--panel); color: var(--panel-fg); padding-block: 64px; }
@@ -62,6 +77,8 @@ const others = site.phones.filter((p) => p !== primaryPhone);
   address b { display: block; font-size: 0.95rem; margin-bottom: 4px; }
   .side { display: grid; gap: 24px; align-content: start; border-left: 1px solid var(--linie); padding-left: 24px; }
   .side a { font-weight: 700; }
+  .route { display: grid; gap: 4px; }
+  .side .route-alt { font-weight: 500; font-size: 0.9rem; color: var(--stein); }
   .social { display: flex; flex-wrap: wrap; gap: 8px 20px; }
   @media (max-width: 760px) {
     .wrap { grid-template-columns: 1fr; }

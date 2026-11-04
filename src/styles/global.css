@@ -130,7 +130,7 @@ img { max-width: 100%; height: auto; }
 .prose h2 + *, .prose h3 + * { margin-top: 0.6em; }
 .prose ul, .prose ol { padding-left: 1.3em; margin-bottom: 0; }
 .prose li + li { margin-top: 0.4em; }
-.prose ul li::marker { color: var(--stein); }
+.prose ul li::marker { color: var(--gelb-ink); }
 .prose ol li::marker { font-weight: 700; }
 .prose strong { font-weight: 700; }
 .prose a { text-underline-offset: 3px; }
