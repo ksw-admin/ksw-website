@@ -58,7 +58,7 @@ function toPost(collection: Post['collection'], de: Entry, en: Entry | undefined
   const description = descriptionEntry.data.description!;
   const fromName = DATE_IN_NAME.exec(slug)?.[1];
   const date = de.data.date ?? (fromName ? new Date(fromName + 'T12:00:00') : new Date(0));
-  const base = '/aktuelles/';
+  const base = '/articles/';
   const prefix = lang === 'de' ? '' : `/${lang}`;
   // Page or not is decided on the German post, so both languages have the same pages.
   const hasPage = decideHasPage({ collection, override: de.data.page, description: de.data.description!, body: de.body });

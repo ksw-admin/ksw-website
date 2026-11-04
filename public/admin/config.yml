@@ -59,7 +59,7 @@ collections:
     folder: src/content/news
     i18n: true
     # "Live ansehen": long posts open their page, short ones forward to their entry in the list.
-    preview_path: 'aktuelles/{{slug}}/'
+    preview_path: 'articles/{{slug}}/'
     create: true
     slug: '{{year}}-{{month}}-{{day}}-{{title}}'
     # Uploads go next to the entries (images/ beside the .md file); the site makes small WebP versions at build time.
