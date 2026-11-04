@@ -241,6 +241,7 @@ collections:
           - { label: Text Kuk Sool Won, name: kswText, widget: text, i18n: true, hint: 'Leerzeile = neuer Absatz. Zahlen und Altersgruppen kommen aus den Trainingszeiten.' }
           - { label: Text Tai Chi und Atemschulung, name: taichiText, widget: text, i18n: true, hint: 'Leerzeile = neuer Absatz. Tage und Uhrzeiten kommen aus den Trainingszeiten.' }
           - { label: Überschrift über dem Video, name: videoHeading, widget: string, i18n: true }
+          - { label: Überschrift Meister, name: masterHeading, widget: string, i18n: true, hint: 'Steht über dem Abschnitt mit Foto und Qualifikationen, z.B. „Der Meister“.' }
           - { label: Einleitung Meister, name: masterIntro, widget: text, i18n: true }
           - { label: Foto Meister, name: masterPhoto, widget: image, i18n: duplicate, choose_url: false }
           - { label: Foto Meister – Beschreibung (Screenreader), name: masterPhotoAlt, widget: string, i18n: true }

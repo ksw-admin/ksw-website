@@ -17,6 +17,7 @@ const fields = {
   kswText: z.string(),
   taichiText: z.string(),
   videoHeading: z.string(),
+  masterHeading: z.string(),
   masterIntro: z.string(),
   masterPhoto: z.string(),
   masterPhotoAlt: z.string(),
