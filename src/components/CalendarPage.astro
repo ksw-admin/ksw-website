@@ -24,6 +24,7 @@ import { buildAgenda, byWeek, mondayOf, weekLabel } from '../lib/agenda';
 import { addDays, headline, textOf, todayInGermany, type Closure } from '../lib/closures';
 import { kindOf, titleOf, whenOf } from '../lib/events';
 import { site } from '../lib/site';
+import { getPosts } from '../lib/posts';
 import { localePath, useTranslations, type Lang } from '../i18n/ui';
 
 interface Props { lang: Lang }
@@ -43,6 +44,9 @@ const bySlot = new Map(slots.map((s) => [s.id, s]));
 const closures = await getClosures();
 const events = await getEvents();
 const past = await getPastEvents();
+// Past dates link to their report: the post's own page, else its place in the list of all posts.
+const reports = new Map((await getPosts(lang)).map((p) => [p.slug, p.href ?? `${localePath('/articles/', lang)}#${p.slug}`]));
+const reportOf = (e: { report?: string }) => (e.report ? reports.get(e.report) : undefined);
 const weeks = byWeek(buildAgenda({ slots: slots.map(toFeed), closures, events, from: start, days: WEEKS * 7 }));
 const later = {
   events: events.filter((e) => e.from > end),
@@ -147,7 +151,7 @@ const title = de ? 'Kalender' : 'Calendar';
                   <div>
                     <p class="meta">{[kindOf(e, lang), e.place].filter(Boolean).join(', ')}</p>
                     <p class="ev-title" lang={lang === 'en' && !e.title_en?.trim() ? 'de' : undefined}>
-                      {e.link ? <a href={e.link} rel="noopener">{titleOf(e, lang)}</a> : titleOf(e, lang)}
+                      {reportOf(e) ? <a href={reportOf(e)}>{titleOf(e, lang)}</a> : e.link ? <a href={e.link} rel="noopener">{titleOf(e, lang)}</a> : titleOf(e, lang)}
                     </p>
                   </div>
                 </li>

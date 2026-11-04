@@ -16,6 +16,8 @@ export type SiteEvent = {
   link?: string;
   /** Called off: stays in the list (struck through, "Abgesagt") until its date, STATUS:CANCELLED in the calendar. */
   cancelled?: boolean;
+  /** Slug of the report under "Aktuelles" (CMS: relation field "Bericht"); past dates link to it. */
+  report?: string;
 };
 
 export const lastDay = (e: SiteEvent) => (e.to && e.to >= e.from ? e.to : e.from);

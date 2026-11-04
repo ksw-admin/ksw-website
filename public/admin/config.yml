@@ -317,6 +317,7 @@ collections:
                 options: [Turnier, Prüfung, Seminar, Verein]
               - { label: Ort, name: place, widget: string, required: false, hint: 'z.B. „Arnsberg, Sporthalle Große Wiese“' }
               - { label: Link, name: link, widget: string, required: false, pattern: ['^(https?://.+)?$', 'Vollständige Adresse mit https://'], hint: 'Optional: Ausschreibung oder Veranstalter.' }
+              - { label: Bericht, name: report, widget: relation, collection: news, value_field: '{{slug}}', search_fields: [title], display_fields: [title], required: false, hint: 'Nach dem Termin: den Beitrag unter „Aktuelles“ auswählen. Auf der Kalender-Seite unter „Früher“ führt der Termin dann zum Bericht.' }
               - { label: Abgesagt, name: cancelled, widget: boolean, required: false, default: false, hint: 'Bleibt bis zum Datum durchgestrichen mit „Abgesagt“ stehen und wird im Kalender-Abo als abgesagt markiert. Nicht löschen, sonst merkt es niemand.' }
 
       - label: Trainingsausfälle
