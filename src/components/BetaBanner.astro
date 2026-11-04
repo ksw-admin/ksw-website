@@ -27,41 +27,32 @@ const t = useTranslations(lang);
   </div>
 </aside>
 
-<script is:inline>
-  (function () {
-    var banner = document.getElementById('beta-banner');
-    if (!banner) return;
-    try {
-      if (sessionStorage.getItem('ksw-beta-dismissed') === '1') {
-        banner.hidden = true;
-        return;
-      }
-    } catch (e) {}
+<script>
+  // Rendered only in a beta build (Base.astro). Cookie handling from src/lib/split-test.ts (tested).
+  import { buildResetCookie } from '../lib/split-test';
 
+  const banner = document.getElementById('beta-banner');
+  let dismissed = false;
+  try {
+    dismissed = sessionStorage.getItem('ksw-beta-dismissed') === '1';
+  } catch {}
+  if (banner && !dismissed) {
     banner.hidden = false;
-
-    var dismissBtn = document.getElementById('beta-dismiss-btn');
-    if (dismissBtn) {
-      dismissBtn.addEventListener('click', function () {
-        banner.hidden = true;
-        try {
-          sessionStorage.setItem('ksw-beta-dismissed', '1');
-        } catch (e) {}
-      });
-    }
-
-    var optOutBtn = document.getElementById('beta-optout-btn');
-    if (optOutBtn) {
-      optOutBtn.addEventListener('click', function () {
-        var secure = location.protocol === 'https:' ? '; Secure' : '';
-        document.cookie = 'nf_ab=main; path=/; max-age=31536000; SameSite=Lax' + secure;
-        try {
-          sessionStorage.removeItem('ksw-beta-dismissed');
-        } catch (e) {}
-        window.location.replace('/');
-      });
-    }
-  })();
+    document.getElementById('beta-dismiss-btn')?.addEventListener('click', () => {
+      banner.hidden = true;
+      try {
+        sessionStorage.setItem('ksw-beta-dismissed', '1');
+      } catch {}
+    });
+    document.getElementById('beta-optout-btn')?.addEventListener('click', () => {
+      document.cookie = buildResetCookie(undefined, location.protocol === 'https:');
+      try {
+        sessionStorage.removeItem('ksw-beta-dismissed');
+      } catch {}
+      // The old site has fewer pages (no /faq/ etc.): go to its home page.
+      location.replace('/');
+    });
+  }
 </script>
 
 <style>

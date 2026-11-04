@@ -6,7 +6,9 @@ import Footer from '../components/Footer.astro';
 import MobileBar from '../components/MobileBar.astro';
 import ClosureBanner from '../components/ClosureBanner.astro';
 import BetaBanner from '../components/BetaBanner.astro';
+import BetaSwitch from '../components/BetaSwitch.astro';
 import { site } from '../lib/site';
+import { isBetaBuild } from '../lib/split-test';
 import { getLangFromUrl } from '../i18n/ui';
 
 interface Props {
@@ -41,6 +43,8 @@ const dePath = reqPath.replace(/^\/en(?=\/|$)/, '') || '/';
 const isFallback = lang !== 'de' && alternate?.[lang] !== reqPath;
 const canonical = new URL(isFallback ? dePath : reqPath, Astro.site);
 const ogImage = new URL(encodeURI(image), Astro.site);
+// Private beta parts only in a build of the beta branch (src/lib/split-test.ts); gone after the merge into main.
+const beta = isBetaBuild();
 ---
 
 <!doctype html>
@@ -53,36 +57,6 @@ const ogImage = new URL(encodeURI(image), Astro.site);
         var t = localStorage.getItem('theme');
         if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
       } catch (e) {}
-    </script>
-    <!-- Netlify Split Testing (?beta=1 opt-in, ?beta=0 opt-out). Runs early so cookie is set before paint. -->
-    <script is:inline>
-      (function () {
-        try {
-          var p = new URLSearchParams(window.location.search);
-          var b = p.get('beta');
-          if (b !== null) {
-            var v = b.trim().toLowerCase();
-            var secure = location.protocol === 'https:' ? '; Secure' : '';
-            var hasBeta = /(?:^|;\s*)nf_ab=astro-redesign/.test(document.cookie);
-            var hasMain = /(?:^|;\s*)nf_ab=main/.test(document.cookie);
-            if (v === '1' || v === 'true' || v === 'on' || v === 'astro-redesign') {
-              document.cookie = 'nf_ab=astro-redesign; path=/; max-age=31536000; SameSite=Lax' + secure;
-              p.delete('beta');
-              var q = p.toString();
-              var clean = window.location.pathname + (q ? '?' + q : '') + window.location.hash;
-              if (!hasBeta) window.location.replace(clean);
-              else window.history.replaceState(null, '', clean);
-            } else if (v === '0' || v === 'false' || v === 'off' || v === 'main') {
-              document.cookie = 'nf_ab=main; path=/; max-age=31536000; SameSite=Lax' + secure;
-              p.delete('beta');
-              var q = p.toString();
-              var clean = window.location.pathname + (q ? '?' + q : '') + window.location.hash;
-              if (!hasMain) window.location.replace(clean);
-              else window.history.replaceState(null, '', clean);
-            }
-          }
-        } catch (e) {}
-      })();
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{fullTitle}</title>
@@ -121,7 +95,8 @@ const ogImage = new URL(encodeURI(image), Astro.site);
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
   </head>
   <body>
-    <BetaBanner lang={lang} />
+    {beta && <BetaSwitch />}
+    {beta && <BetaBanner lang={lang} />}
     <Header lang={lang} alternate={alternate} />
     <ClosureBanner lang={lang} />
     {isFallback && (

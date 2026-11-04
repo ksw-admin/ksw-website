@@ -1,5 +1,10 @@
 ---
+// Beta page only in a beta build (src/lib/split-test.ts). Elsewhere (e.g. after the merge into main) it is a
+// redirect to the home page; scripts/netlify-redirects.mjs turns that into a Netlify 302.
 import BetaPage from '../components/BetaPage.astro';
+import { isBetaBuild } from '../lib/split-test';
+
+if (!isBetaBuild()) return Astro.redirect('/');
 ---
 
 <BetaPage lang="de" />

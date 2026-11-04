@@ -10,9 +10,3 @@
 /articles/2023-01-21-turniere-2022   /articles/2022-01-04-turniere-2022/  301
 /articles/2023-01-21-turniere-2022/  /articles/2022-01-04-turniere-2022/  301
 /index.html                          /                   301
-
-# Split Testing / Beta shortcuts
-/vorschau                            /beta/              302
-/vorschau/                           /beta/              302
-/preview                             /en/beta/           302
-/preview/                            /en/beta/           302

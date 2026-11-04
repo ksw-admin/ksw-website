@@ -9,6 +9,7 @@
  */
 import Base from '../layouts/Base.astro';
 import { useTranslations, localePath, type Lang } from '../i18n/ui';
+import { site } from '../lib/site';
 
 interface Props {
   lang: Lang;
@@ -34,7 +35,8 @@ const isDe = lang === 'de';
       <p class="intro">{t('beta.page.lead')}</p>
 
       <!-- Switcher Panel with Signature Yellow Mat Shadow -->
-      <div class="switcher-panel">
+      <!-- Texts for the script below (it runs in the browser and cannot read the build's variables). -->
+      <div class="switcher-panel" id="beta-panel" data-active={t('beta.page.active')} data-inactive={t('beta.page.inactive')}>
         <div class="status-block">
           <p class="status-label">{isDe ? 'Aktive Version:' : 'Active version:'}</p>
           <p class="status-value">
@@ -92,8 +94,8 @@ const isDe = lang === 'de';
         <h2>{t('beta.page.feedback.title')}</h2>
         <p>{t('beta.page.feedback.text')}</p>
         <p class="feedback-links">
-          <a href={localePath('/faq/#frage', lang)} class="link">
-            {isDe ? 'Frageformular' : 'Question form'}
+          <a href={localePath(site.questionForm ? '/faq/#frage' : '/faq/', lang)} class="link">
+            {site.questionForm ? (isDe ? 'Frage stellen' : 'Ask a question') : isDe ? 'Häufige Fragen' : 'FAQ'}
           </a>
           <span class="sep">·</span>
           <a href={localePath('/other/contact/', lang)} class="link">
@@ -105,77 +107,54 @@ const isDe = lang === 'de';
   </section>
 </Base>
 
-<script is:inline>
-  (function () {
-    var hasBetaCookie = /(?:^|;\s*)nf_ab=astro-redesign/.test(document.cookie);
-    var hasMainCookie = /(?:^|;\s*)nf_ab=main/.test(document.cookie);
+<script>
+  // Cookie handling from src/lib/split-test.ts (tested); texts from the data- attributes on #beta-panel.
+  import { getSplitCookie, buildSplitCookie, buildResetCookie, PROD_BRANCH } from '../lib/split-test';
 
-    var statusDot = document.getElementById('status-dot');
-    var statusText = document.getElementById('status-text');
-    var cookieLabel = document.getElementById('cookie-label');
-    var btnJoin = document.getElementById('btn-join-beta');
-    var btnLeave = document.getElementById('btn-leave-beta');
+  const panel = document.getElementById('beta-panel')!;
+  const secure = location.protocol === 'https:';
+  // On this page the visitor sees the beta, unless the cookie says main (e.g. the branch deploy URL).
+  const onMain = getSplitCookie(document.cookie) === PROD_BRANCH;
+  const statusText = document.getElementById('status-text');
+  const cookieLabel = document.getElementById('cookie-label');
+  const btnJoin = document.getElementById('btn-join-beta');
+  const btnLeave = document.getElementById('btn-leave-beta');
 
-    function updateUI() {
-      if (hasMainCookie && !hasBetaCookie) {
-        if (statusDot) statusDot.classList.add('inactive');
-        if (statusText) statusText.textContent = isDe ? 'Bisherige Website aktiv' : 'Classic site active';
-        if (cookieLabel) cookieLabel.textContent = 'nf_ab=main';
-        if (btnJoin) btnJoin.hidden = false;
-        if (btnLeave) btnLeave.hidden = true;
-      } else {
-        if (statusDot) statusDot.classList.remove('inactive');
-        if (statusText) statusText.textContent = isDe ? 'Vorschau aktiv (Neues Design)' : 'Preview active (New design)';
-        if (cookieLabel) cookieLabel.textContent = 'nf_ab=astro-redesign';
-        if (btnJoin) btnJoin.hidden = true;
-        if (btnLeave) btnLeave.hidden = false;
-      }
+  document.getElementById('status-dot')?.classList.toggle('inactive', onMain);
+  if (statusText) statusText.textContent = onMain ? panel.dataset.inactive! : panel.dataset.active!;
+  if (cookieLabel) cookieLabel.textContent = onMain ? buildResetCookie().split(';')[0] : buildSplitCookie().split(';')[0];
+  if (btnJoin) btnJoin.hidden = !onMain;
+  if (btnLeave) btnLeave.hidden = onMain;
+
+  btnLeave?.addEventListener('click', () => {
+    document.cookie = buildResetCookie(undefined, secure);
+    try {
+      sessionStorage.removeItem('ksw-beta-dismissed');
+    } catch {}
+    location.replace('/');
+  });
+  btnJoin?.addEventListener('click', () => {
+    document.cookie = buildSplitCookie(undefined, secure);
+    location.replace('/');
+  });
+
+  // Share link: opt-in address on this site's origin (works on the live site through the injected snippet).
+  const shareInput = document.getElementById('share-link-input') as HTMLInputElement | null;
+  const copyConf = document.getElementById('copy-confirmation');
+  if (shareInput) shareInput.value = `${location.origin}/?beta=1`;
+  document.getElementById('btn-copy-link')?.addEventListener('click', async () => {
+    if (!shareInput) return;
+    try {
+      await navigator.clipboard.writeText(shareInput.value);
+    } catch {
+      shareInput.select(); // no clipboard access (http, old browser): select the text for manual copying
+      return;
     }
-
-    updateUI();
-
-    if (btnLeave) {
-      btnLeave.addEventListener('click', function () {
-        var secure = location.protocol === 'https:' ? '; Secure' : '';
-        document.cookie = 'nf_ab=main; path=/; max-age=31536000; SameSite=Lax' + secure;
-        try {
-          sessionStorage.removeItem('ksw-beta-dismissed');
-        } catch (e) {}
-        window.location.replace('/');
-      });
+    if (copyConf) {
+      copyConf.hidden = false;
+      setTimeout(() => (copyConf.hidden = true), 3000);
     }
-
-    if (btnJoin) {
-      btnJoin.addEventListener('click', function () {
-        var secure = location.protocol === 'https:' ? '; Secure' : '';
-        document.cookie = 'nf_ab=astro-redesign; path=/; max-age=31536000; SameSite=Lax' + secure;
-        window.location.replace('/');
-      });
-    }
-
-    // Share link
-    var btnCopy = document.getElementById('btn-copy-link');
-    var shareInput = document.getElementById('share-link-input');
-    var copyConf = document.getElementById('copy-confirmation');
-    if (shareInput && location.origin) {
-      shareInput.value = location.origin + '/?beta=1';
-    }
-
-    if (btnCopy && shareInput) {
-      btnCopy.addEventListener('click', function () {
-        if (navigator.clipboard) {
-          navigator.clipboard.writeText(shareInput.value).then(function () {
-            if (copyConf) {
-              copyConf.hidden = false;
-              setTimeout(function () {
-                copyConf.hidden = true;
-              }, 3000);
-            }
-          });
-        }
-      });
-    }
-  })();
+  });
 </script>
 
 <style>

@@ -75,3 +75,9 @@ the claude.ai Design System artifact is its published view: https://claude.ai/ar
 - Untranslated English URLs redirect to the German page (`i18n.fallback`); the sitemap lists only real pages.
 - The service worker keeps the old URL `/service-worker.js`, so phones with the old site's worker update to the new one.
 - YouTube loads only after a click (privacy); fonts are self-hosted.
+- **Private beta (until the merge):** Netlify split test with 0 % to `astro-redesign`; testers opt in with
+  `https://www.kuk-sool-won-griepentrog.de/?beta=1` (snippet injected on the live site in Netlify) and opt out with the
+  banner or `/beta/`. Banner, `/beta/` and the `?beta=` switch are only built for the `astro-redesign` branch
+  (`src/lib/split-test.ts`; locally `PUBLIC_BETA_PREVIEW=1`). While the test runs, Netlify sets a cookie (`nf_ab`) on
+  every visitor. **At the merge:** end the split test (Netlify › Split testing) and remove the injected snippet, then the
+  Datenschutz sentence "Diese Website setzt keine Cookies" is true again.
