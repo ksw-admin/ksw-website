@@ -43,6 +43,14 @@ answer on the site yet; each one becomes an FAQ entry once answered:
 - [ ] **Training closures** (CMS: Einstellungen › Trainingsausfälle): Peter enters holidays and cancellations there.
       The banner shows from 14 days before by default; each entry can set its own lead time ("Vorher anzeigen (Tage)").
 
+## CMS: known limitation (2026-11-04)
+
+- [ ] **Existing photos show a grey placeholder in the CMS editor** (old posts, Kuk Sool Won gallery, sponsors). The website
+      is not affected, and saving keeps the photo; just don't click "Entferne Bild". New posts with a freshly uploaded
+      photo work normally. Reusing an existing photo via "Wähle ein Bild" is not possible ("Keine Medien gefunden"):
+      upload it again. Cause: Decap does not resolve the photos next to the entries; not fixed on purpose. Fallback if it
+      ever gets in the way: copy the original photos to `/admin/images/` at build time (~22 MB more per deploy).
+
 ## Decisions
 
 - [ ] **Form of address:** du, Sie or ihr? Today mixed: home page "Komm zum Probetraining" (du), contact page
