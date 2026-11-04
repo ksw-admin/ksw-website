@@ -3,7 +3,8 @@
 // collection on every page. The build still fails on a broken entry, with the message below.
 import { z } from 'astro/zod';
 import raw from '../content/closures.json';
-import { inFeed, isCurrent, todayInGermany, type Closure } from './closures';
+import { inFeed, isCurrent, type Closure } from './closures';
+import { todayInGermany } from './dates';
 
 const date = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Datum als JJJJ-MM-TT');
 // Decap writes "" or null for empty optional fields.

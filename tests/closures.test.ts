@@ -2,7 +2,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { addDays, datesOf, headline, inFeed, isShown, isCurrent, showFrom, weekday, todayInGermany, type Closure } from '../src/lib/closures.ts';
+import { datesOf, headline, inFeed, isShown, isCurrent, showFrom, type Closure } from '../src/lib/closures.ts';
+import { addDays, todayInGermany, weekday } from '../src/lib/dates.ts';
 import { buildCalendar, cancelledDates, esc, fold, type FeedSlot } from '../src/lib/ics.ts';
 
 const ferien: Closure = { from: '2026-10-19', to: '2026-10-25', text: 'Herbstferien' };

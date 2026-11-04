@@ -2,7 +2,8 @@
 // A broken entry fails the build with the message below.
 import { z } from 'astro/zod';
 import raw from '../content/events.json';
-import { addDays, FEED_HISTORY_DAYS, todayInGermany } from './closures';
+import { FEED_HISTORY_DAYS } from './closures';
+import { addDays, todayInGermany } from './dates';
 import { isUpcoming, lastDay, type SiteEvent } from './events';
 
 const date = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Termine: Datum als JJJJ-MM-TT');

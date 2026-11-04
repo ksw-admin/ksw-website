@@ -1,6 +1,7 @@
 // Training closures ("Trainingsausfälle", CMS: Einstellungen). Pure functions, no Astro imports: used by the banner
 // (Base.astro), the calendar feeds (src/pages/calendar/) and the tests.
-// Dates are plain "YYYY-MM-DD" strings in local (German) time: no time zone maths, no off-by-one at midnight UTC.
+// Dates are plain "YYYY-MM-DD" strings in German local time (helpers: src/lib/dates.ts).
+import { addDays, MONTHS_SHORT_EN } from './dates.ts';
 
 export type Group = 'alle' | 'kuksoolwon' | 'taichi';
 /** announce: days before "from" the banner appears (CMS: "Vorher anzeigen (Tage)"); missing = ANNOUNCE_DAYS. */
@@ -9,19 +10,7 @@ export type Closure = { from: string; to?: string; text: string; text_en?: strin
 /** Default: the banner appears this many days before a closure starts (each entry can set its own). */
 export const ANNOUNCE_DAYS = 14;
 
-const toUtc = (d: string) => {
-  const [y, m, day] = d.split('-').map(Number);
-  return Date.UTC(y, m - 1, day);
-};
-const fromUtc = (t: number) => new Date(t).toISOString().slice(0, 10);
-
-export const addDays = (d: string, n: number) => fromUtc(toUtc(d) + n * 86_400_000);
 export const endOf = (c: Closure) => (c.to && c.to >= c.from ? c.to : c.from);
-
-/** Weekday as in schedule.json: mo..so. */
-export function weekday(d: string): 'mo' | 'di' | 'mi' | 'do' | 'fr' | 'sa' | 'so' {
-  return (['so', 'mo', 'di', 'mi', 'do', 'fr', 'sa'] as const)[new Date(toUtc(d)).getUTCDay()];
-}
 
 /** Every date of the closure, first to last. */
 export function datesOf(c: Closure): string[] {
@@ -47,12 +36,9 @@ export const inFeed = (c: Closure, today: string) => endOf(c) >= addDays(today, 
 
 export const affects = (c: Closure, discipline: 'kuksoolwon' | 'taichi') => !c.groups || c.groups === 'alle' || c.groups === discipline;
 
-/** Today in Germany as YYYY-MM-DD (sv-SE formats dates as ISO). */
-export const todayInGermany = (now = new Date()) => now.toLocaleDateString('sv-SE', { timeZone: 'Europe/Berlin' });
-
 const dm = (d: string, lang: 'de' | 'en') => {
   const [, m, day] = d.split('-').map(Number);
-  return lang === 'de' ? `${day}.${m}.` : `${day} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][m - 1]}`;
+  return lang === 'de' ? `${day}.${m}.` : `${day} ${MONTHS_SHORT_EN[m - 1]}`;
 };
 
 /** "Kein Training vom 20.10. bis 26.10." / "Kein Tai Chi am 3.11." (English likewise). */

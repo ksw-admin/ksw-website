@@ -6,7 +6,8 @@
  * on time without a new deploy. Without JS the build-time state shows.
  */
 import { getClosures } from '../lib/closures-data';
-import { endOf, headline, isShown, showFrom, textOf, todayInGermany } from '../lib/closures';
+import { endOf, headline, isShown, showFrom, textOf } from '../lib/closures';
+import { todayInGermany } from '../lib/dates';
 import type { Lang } from '../i18n/ui';
 
 interface Props { lang: Lang }

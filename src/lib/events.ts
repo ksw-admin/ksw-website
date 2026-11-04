@@ -1,7 +1,7 @@
 // Upcoming dates ("Termine", CMS: Einstellungen › Termine): tournaments, gradings, seminars, club events.
 // Pure functions (no Astro imports): used by the home page block, the calendar feeds and the tests.
 // Dates are "YYYY-MM-DD" strings in German local time, times "HH:MM", like closures.
-import { addDays, todayInGermany } from './closures.ts';
+import { MONTHS_SHORT_EN, todayInGermany, WEEKDAYS_SHORT } from './dates.ts';
 
 export type EventKind = 'Turnier' | 'Prüfung' | 'Seminar' | 'Verein';
 export type SiteEvent = {
@@ -30,18 +30,16 @@ export const titleOf = (e: SiteEvent, lang: 'de' | 'en') => (lang === 'en' && e.
 const KIND_EN: Record<EventKind, string> = { Turnier: 'Tournament', Prüfung: 'Grading', Seminar: 'Seminar', Verein: 'Club' };
 export const kindOf = (e: SiteEvent, lang: 'de' | 'en') => (e.kind ? (lang === 'de' ? e.kind : KIND_EN[e.kind]) : undefined);
 
-const WD = { de: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'], en: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] };
-const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const parts = (d: string) => d.split('-').map(Number) as [number, number, number];
 const wd = (d: string, lang: 'de' | 'en') => {
   const [y, m, day] = parts(d);
-  return WD[lang][new Date(Date.UTC(y, m - 1, day)).getUTCDay()];
+  return WEEKDAYS_SHORT[lang][new Date(Date.UTC(y, m - 1, day)).getUTCDay()];
 };
 /** "9.5." / "9 May"; with the year when it is not the current one ("16.1.2027" / "16 Jan 2027"). */
 const short = (d: string, lang: 'de' | 'en', thisYear: number) => {
   const [y, m, day] = parts(d);
   const year = y !== thisYear ? (lang === 'de' ? String(y) : ` ${y}`) : '';
-  return lang === 'de' ? `${day}.${m}.${year}` : `${day} ${MON[m - 1]}${year}`;
+  return lang === 'de' ? `${day}.${m}.${year}` : `${day} ${MONTHS_SHORT_EN[m - 1]}${year}`;
 };
 
 /** "Sa 9.5., 10:00 Uhr" / "Sa 9.5. bis So 10.5." (English: "Sat 9 May, 10:00" / "Sat 9 May to Sun 10 May").
@@ -68,4 +66,3 @@ export function endTime(e: SiteEvent): string | undefined {
 export const eventKey = (e: SiteEvent) =>
   `${e.from}-${e.title.toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40)}`;
 
-export { addDays };

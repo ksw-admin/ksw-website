@@ -2,7 +2,8 @@
 // imports: used by the page and the tests. Same inputs and rules as the calendar feeds (src/lib/ics.ts), so the page
 // and the subscriptions never disagree: a closure cancels the training of the groups it affects on those days,
 // dates (tournaments ...) are in every view.
-import { addDays, affects, datesOf, weekday, type Closure } from './closures.ts';
+import { affects, datesOf, type Closure } from './closures.ts';
+import { addDays, MONTHS, weekday } from './dates.ts';
 import { lastDay, type SiteEvent } from './events.ts';
 import type { FeedSlot } from './ics.ts';
 
@@ -53,10 +54,6 @@ export function byWeek(days: AgendaDay[]): { monday: string; days: AgendaDay[] }
   return weeks;
 }
 
-const MONTHS = {
-  de: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
-  en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-};
 /** "9. bis 15. November" / "30. November bis 6. Dezember" (English "9 to 15 November"); the year when not thisYear. */
 export function weekLabel(monday: string, lang: 'de' | 'en', thisYear: number): string {
   const sunday = addDays(monday, 6);

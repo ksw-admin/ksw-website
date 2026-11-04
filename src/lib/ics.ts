@@ -1,6 +1,7 @@
 // iCalendar (RFC 5545) feeds for the training times: one weekly repeating event per group, closures removed
 // (EXDATE) and shown as all-day "Kein Training" events. Pure functions; the endpoint is src/pages/calendar/[feed].ics.ts.
-import { affects, addDays, datesOf, endOf, headline, weekday, type Closure } from './closures.ts';
+import { affects, datesOf, endOf, headline, type Closure } from './closures.ts';
+import { addDays, weekday } from './dates.ts';
 import { endTime, eventKey, lastDay, type SiteEvent } from './events.ts';
 
 export type FeedSlot = {
