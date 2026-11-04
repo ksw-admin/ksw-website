@@ -326,7 +326,8 @@ collections:
         description: >-
           Hinweis „Kein Training“ oben auf jeder Seite, ab „Vorher anzeigen“ (normal 14 Tage) bis zum letzten Tag. Die Termine fallen auch
           im Kalender-Abo weg. Kurzfristig (heute): „Von“ = heute, „Bis“ leer lassen. Vergangene Ausfälle verschwinden
-          von selbst und können gelöscht werden.
+          von der Website von selbst. Bitte erst nach einem Jahr löschen: so lange bleiben sie im Kalender-Abo, damit dort
+          die ausgefallenen Trainings auch rückblickend fehlen.
         fields:
           - label: Ausfälle
             label_singular: Ausfall

@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { addDays, datesOf, headline, isShown, isCurrent, showFrom, weekday, todayInGermany, type Closure } from '../src/lib/closures.ts';
+import { addDays, datesOf, headline, inFeed, isShown, isCurrent, showFrom, weekday, todayInGermany, type Closure } from '../src/lib/closures.ts';
 import { buildCalendar, cancelledDates, esc, fold, type FeedSlot } from '../src/lib/ics.ts';
 
 const ferien: Closure = { from: '2026-10-19', to: '2026-10-25', text: 'Herbstferien' };
@@ -88,4 +88,10 @@ test('banner: each closure can set its own lead time (CMS: Vorher anzeigen)', ()
   assert.equal(isShown(heute, '2026-11-03'), false);
   assert.equal(isShown(heute, '2026-11-04'), true);
   assert.equal(showFrom(ferien), addDays(ferien.from, -14)); // no value = default 14
+});
+
+test('feeds keep past closures for a year (past sessions stay cancelled)', () => {
+  assert.equal(inFeed(ferien, '2026-12-01'), true);
+  assert.equal(inFeed(ferien, '2027-10-25'), true);
+  assert.equal(inFeed(ferien, '2027-10-26'), false);
 });

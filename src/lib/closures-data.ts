@@ -3,7 +3,7 @@
 // collection on every page. The build still fails on a broken entry, with the message below.
 import { z } from 'astro/zod';
 import raw from '../content/closures.json';
-import { isCurrent, todayInGermany, type Closure } from './closures';
+import { inFeed, isCurrent, todayInGermany, type Closure } from './closures';
 
 const date = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Datum als JJJJ-MM-TT');
 // Decap writes "" or null for empty optional fields.
@@ -30,4 +30,10 @@ const all: Closure[] = Closures.parse(raw).items;
 export async function getClosures(): Promise<Closure[]> {
   const today = todayInGermany();
   return all.filter((c) => isCurrent(c, today)).sort((a, b) => a.from.localeCompare(b.from));
+}
+
+/** For the calendar feeds: also the closures of the last year, so past cancelled sessions stay cancelled. */
+export async function getFeedClosures(): Promise<Closure[]> {
+  const today = todayInGermany();
+  return all.filter((c) => inFeed(c, today)).sort((a, b) => a.from.localeCompare(b.from));
 }

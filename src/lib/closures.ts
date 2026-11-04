@@ -39,6 +39,12 @@ export const isShown = (c: Closure, today: string) => showFrom(c) <= today && to
 /** Still relevant (not over yet): only these go into the pages and the calendar. */
 export const isCurrent = (c: Closure, today: string) => endOf(c) >= today;
 
+/** How long past closures stay in the calendar feeds. */
+export const FEED_HISTORY_DAYS = 365;
+/** For the calendar feeds: current closures plus those of the last year. Without them, subscribed calendars would
+ *  show training again on past holidays (the EXDATEs would be gone). */
+export const inFeed = (c: Closure, today: string) => endOf(c) >= addDays(today, -FEED_HISTORY_DAYS);
+
 export const affects = (c: Closure, discipline: 'kuksoolwon' | 'taichi') => !c.groups || c.groups === 'alle' || c.groups === discipline;
 
 /** Today in Germany as YYYY-MM-DD (sv-SE formats dates as ISO). */
