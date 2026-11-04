@@ -30,10 +30,10 @@ const name = (s: Slot) => (s.discipline === 'taichi' ? taichiName : 'Kuk Sool Wo
 const short = (s: Slot) =>
   s.discipline === 'taichi' ? 'Tai Chi' : s.ageMax === undefined ? `${de ? 'ab' : ''} ${s.ageMin}${de ? '' : '+'}`.trim() : `${s.ageMin}–${s.ageMax}`;
 const when = (s: Slot) => `${dayList(s.days, lang)}, ${s.from} ${de ? 'bis' : 'to'} ${s.to}${de ? ' Uhr' : ''}`;
-// Calendar subscription (src/pages/kalender/), if switched on in the CMS (site.json > calendar).
+// Calendar subscription (src/pages/calendar/), if switched on in the CMS (site.json > calendar).
 // webcal:// opens the subscribe dialog of Apple Calendar and Outlook; Google takes the feed as "cid" and shows its
 // own "add calendar" dialog (works in the browser; on Android the calendar then syncs to the phone).
-const webcal = (id: string) => `webcal://${Astro.site!.host}/kalender/${id}.ics`;
+const webcal = (id: string) => `webcal://${Astro.site!.host}/calendar/${id}.ics`;
 const google = (id: string) => `https://calendar.google.com/calendar/render?cid=${encodeURIComponent(webcal(id))}`;
 const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bis ' : ' to ')].filter(Boolean).join(', ');
 ---

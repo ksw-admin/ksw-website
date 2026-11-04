@@ -27,7 +27,7 @@ const Site = z.object({
     .default({ text: 'Website: Jonah L.', url: '' }),
   // Contact form on the contact page (Netlify Forms "kontakt"). Off: phone and email only.
   contactForm: z.boolean().default(false),
-  // Calendar subscriptions (/kalender/*.ics, links under the timetable, FAQ answer). Off: none of it is built.
+  // Calendar subscriptions (/calendar/*.ics, links under the timetable, FAQ answer). Off: none of it is built.
   calendar: z.boolean().default(true),
   // FAQ question form (Netlify Forms). Off: the FAQ points to phone and email instead.
   questionForm: z.boolean().default(false),

@@ -1,4 +1,4 @@
-// Calendar subscriptions: /kalender/training.ics (all groups) and /kalender/<group id>.ics (one group, e.g. for
+// Calendar subscriptions: /calendar/training.ics (all groups) and /calendar/<group id>.ics (one group, e.g. for
 // parents). Times from schedule.json, closures from closures.json. Calendar apps re-read the file every few hours.
 import type { APIRoute, GetStaticPaths } from 'astro';
 import { getSchedule, ageLabel, type Slot } from '../../lib/schedule';

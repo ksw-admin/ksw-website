@@ -53,7 +53,7 @@ const jsonLd = {
       {site.questionForm ? (
       <>
       <p class="intro">{t('faq.ask.intro')}</p>
-      <form name="frage" method="POST" action={localePath('/faq/danke/', lang)} data-netlify="true" netlify-honeypot="bot-field">
+      <form name="frage" method="POST" action={localePath('/faq/thanks/', lang)} data-netlify="true" netlify-honeypot="bot-field">
         <input type="hidden" name="form-name" value="frage" />
         <input type="hidden" name="sprache" value={lang} />
         <p class="hp" aria-hidden="true"><label>Nicht ausfüllen <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>

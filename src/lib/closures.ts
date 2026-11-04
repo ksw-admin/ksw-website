@@ -1,5 +1,5 @@
 // Training closures ("Trainingsausfälle", CMS: Einstellungen). Pure functions, no Astro imports: used by the banner
-// (Base.astro), the calendar feeds (src/pages/kalender/) and the tests.
+// (Base.astro), the calendar feeds (src/pages/calendar/) and the tests.
 // Dates are plain "YYYY-MM-DD" strings in local (German) time: no time zone maths, no off-by-one at midnight UTC.
 
 export type Group = 'alle' | 'kuksoolwon' | 'taichi';
