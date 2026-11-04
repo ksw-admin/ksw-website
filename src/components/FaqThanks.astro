@@ -1,6 +1,6 @@
 ---
-/** Shown after the question form was sent (Netlify redirects the POST here). Not for search engines. */
-import Base from '../layouts/Base.astro';
+/** Shown after the FAQ question form was sent (German and English routes). */
+import ThanksPage from './ThanksPage.astro';
 import { useTranslations, localePath, type Lang } from '../i18n/ui';
 
 interface Props { lang: Lang }
@@ -8,18 +8,10 @@ const { lang } = Astro.props;
 const t = useTranslations(lang);
 ---
 
-<Base title={t('faq.thanks.title')} noindex alternate={{ de: '/faq/thanks/', en: '/en/faq/thanks/' }}>
-  <section class="band">
-    <div class="wrap">
-      <h1 class="page-title">{t('faq.thanks.title')}</h1>
-      <p>{t('faq.thanks.text')}</p>
-      <a class="btn" href={localePath('/faq/', lang)}>{t('faq.thanks.back')}</a>
-    </div>
-  </section>
-</Base>
-
-<style>
-  section { padding-block: var(--space-page-top) var(--space-section); }
-  p { margin-top: 16px; max-width: 52ch; font-size: var(--fs-lead); }
-  .btn { margin-top: 24px; }
-</style>
+<ThanksPage
+  title={t('faq.thanks.title')}
+  heading={t('faq.thanks.title')}
+  text={t('faq.thanks.text')}
+  back={{ href: localePath('/faq/', lang), label: t('faq.thanks.back') }}
+  alternate={{ de: '/faq/thanks/', en: '/en/faq/thanks/' }}
+/>
