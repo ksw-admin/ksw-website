@@ -38,3 +38,12 @@ export async function getEvents(): Promise<SiteEvent[]> {
     .filter((e) => isUpcoming(e, today))
     .sort((a, b) => a.from.localeCompare(b.from) || (a.time ?? '').localeCompare(b.time ?? ''));
 }
+
+/** Over already, this calendar year, not cancelled: "Früher in <Jahr>" on the calendar page. Oldest first. */
+export async function getPastEvents(): Promise<SiteEvent[]> {
+  const today = todayInGermany();
+  const year = today.slice(0, 4);
+  return all
+    .filter((e) => !isUpcoming(e, today) && e.from.startsWith(year) && !e.cancelled)
+    .sort((a, b) => a.from.localeCompare(b.from) || (a.time ?? '').localeCompare(b.time ?? ''));
+}

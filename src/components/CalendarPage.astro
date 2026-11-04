@@ -10,6 +10,8 @@
  * this page is off) follow the filter. Wide screens: filter and subscribe links in a column that stays in view.
  * "Anzeigen": training (with its closures) and each kind of date that occurs can be switched off, e.g. to see only
  * the tournaments (also ?show=turnier,pruefung; missing = everything).
+ * The agenda is one timeline: "Später" continues it below the 13 weeks, "Früher in <Jahr>" above (past dates of this
+ * year, collapsed; same rows, same filter).
  * Static page: the script hides days that have passed since the last build and marks today. Without JS: everything
  * from the build day on, unfiltered.
  * Not under /calendar/: Netlify serves that folder as text/calendar (public/_headers).
@@ -17,7 +19,7 @@
 import Base from '../layouts/Base.astro';
 import { getSchedule, toFeed, ageLabel, dayShort, type Slot } from '../lib/schedule';
 import { getClosures } from '../lib/closures-data';
-import { getEvents } from '../lib/events-data';
+import { getEvents, getPastEvents } from '../lib/events-data';
 import { buildAgenda, byWeek, mondayOf, weekLabel } from '../lib/agenda';
 import { addDays, headline, textOf, todayInGermany, type Closure } from '../lib/closures';
 import { kindOf, titleOf, whenOf } from '../lib/events';
@@ -40,6 +42,7 @@ const slots = await getSchedule();
 const bySlot = new Map(slots.map((s) => [s.id, s]));
 const closures = await getClosures();
 const events = await getEvents();
+const past = await getPastEvents();
 const weeks = byWeek(buildAgenda({ slots: slots.map(toFeed), closures, events, from: start, days: WEEKS * 7 }));
 const later = {
   events: events.filter((e) => e.from > end),
@@ -82,7 +85,7 @@ const KINDS = [
   { key: 'other', kind: undefined, de: 'Sonstige Termine', en: 'Other dates' },
 ] as const;
 const kindKey = (e: { kind?: string }) => KINDS.find((k) => k.kind === e.kind)?.key ?? 'other';
-const kindsPresent = KINDS.filter((k) => events.some((e) => kindKey(e) === k.key));
+const kindsPresent = KINDS.filter((k) => [...past, ...events].some((e) => kindKey(e) === k.key));
 const mixedOf = (d: Day) => new Set(summaries(d).filter((s) => s.mixed).map((s) => s.disc));
 
 const webcal = (id: string) => `webcal://${Astro.site!.host}/calendar/${id}.ics`;
@@ -132,6 +135,26 @@ const title = de ? 'Kalender' : 'Calendar';
       </aside>
 
       <div id="agenda" aria-live="polite">
+        {past.length > 0 && (
+          <details class="week later earlier" id="earlier">
+            <summary>
+              <h2>{de ? `Früher in ${thisYear}` : `Earlier in ${thisYear}`} <span class="count">({past.length})</span></h2>
+            </summary>
+            <ul class="later-list">
+              {past.map((e) => (
+                <li class="event" data-kind={kindKey(e)}>
+                  <p class="date num">{whenOf({ ...e, time: undefined }, lang, thisYear)}</p>
+                  <div>
+                    <p class="meta">{[kindOf(e, lang), e.place].filter(Boolean).join(', ')}</p>
+                    <p class="ev-title" lang={lang === 'en' && !e.title_en?.trim() ? 'de' : undefined}>
+                      {e.link ? <a href={e.link} rel="noopener">{titleOf(e, lang)}</a> : titleOf(e, lang)}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </details>
+        )}
         {weeks.map((w) => (
           <section class="week" data-week={w.monday} aria-labelledby={`w-${w.monday}`}>
             <h2 id={`w-${w.monday}`}>{weekLabel(w.monday, lang, thisYear)}</h2>
@@ -279,6 +302,9 @@ const title = de ? 'Kalender' : 'Calendar';
         any = any || visible;
       });
       agenda.querySelector('.empty').hidden = any;
+      // "Früher in …": the count follows the filter.
+      var earlier = document.getElementById('earlier');
+      if (earlier) earlier.querySelector('.count').textContent = '(' + earlier.querySelectorAll('.later-list > li:not([hidden])').length + ')';
       if (sub) {
         subLinks.forEach(function (a) { a.href = id ? a.dataset.all.replace('training.ics', id + '.ics') : a.dataset.all; });
         sub.querySelector('.sub-label').textContent = id ? sub.dataset.labelOne : sub.dataset.labelAll;
@@ -354,6 +380,16 @@ const title = de ? 'Kalender' : 'Calendar';
   ol, ul { list-style: none; margin: 0; padding: 0; }
   .day, .later-list > li { display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: 2px 24px; padding-block: 12px; border-bottom: 1px solid var(--linie); align-items: baseline; }
   .later-list > li.closure { display: block; }
+  /* "Früher in …": collapsed, opens like the FAQ (+ / –); past dates a step quieter than the coming ones. */
+  .earlier summary { cursor: pointer; list-style: none; position: relative; padding-right: 40px; }
+  .earlier summary::-webkit-details-marker { display: none; }
+  .earlier summary::after { content: '+'; position: absolute; right: 6px; top: -4px; font-size: 1.6rem; font-weight: 500; }
+  .earlier[open] summary::after { content: '–'; }
+  .earlier summary:hover h2 { text-decoration: underline; text-underline-offset: 4px; }
+  .earlier summary:focus-visible { outline: 3px solid var(--gelb); outline-offset: 4px; }
+  .earlier .count { font-weight: 500; color: var(--stein); }
+  .earlier .later-list { margin-top: 6px; }
+  .earlier .date, .earlier .ev-title { color: var(--stein); }
   .date { font-weight: 700; }
   .today[hidden] { display: none; }
   .today { display: inline-block; margin-left: 8px; padding: 0 6px; border-radius: 3px; background: var(--gelb); color: #000; font-size: var(--fs-meta); }

@@ -294,7 +294,7 @@ collections:
         format: json
         description: >-
           Turniere, Prüfungen, Seminare, Vereinstermine. Die nächsten drei stehen auf der Startseite unter „Demnächst“
-          und im Kalender-Abo. Fällt ein Termin aus: „Abgesagt“ anhaken statt löschen. Vorbei = verschwindet von selbst; der Bericht danach kommt wie immer unter „Aktuelles“.
+          und im Kalender-Abo. Fällt ein Termin aus: „Abgesagt“ anhaken statt löschen. Vorbei: steht auf der Kalender-Seite unter „Früher in <Jahr>“; bis Jahresende stehen lassen, danach löschen. Den Bericht danach wie immer unter „Aktuelles“ schreiben.
           Keine kommenden Termine: dort steht „Gerade sind keine Turniere oder Prüfungen angekündigt“.
         fields:
           - label: Termine
