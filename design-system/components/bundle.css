@@ -25,7 +25,7 @@
 .ksw .btn:hover { background: var(--gelb-hover); }
 
 /* SectionHeading */
-.ksw .sec-h { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-bottom: 6px solid var(--gelb); padding-bottom: 10px; }
+.ksw .sec-h { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-bottom: 2px solid var(--fg); padding-bottom: 10px; }
 .ksw .sec-h h2 { font-size: 51px; line-height: 1; font-weight: 900; font-stretch: 62%; }
 .ksw .sec-h a { font-weight: 700; }
 

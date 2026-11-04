@@ -97,7 +97,7 @@ img { max-width: 100%; height: auto; }
 
 .sec-h {
   display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap;
-  border-bottom: 6px solid var(--gelb); padding-bottom: 10px;
+  border-bottom: 2px solid var(--fg); padding-bottom: 10px;
 }
 .sec-h h1, .sec-h h2 { font-size: clamp(2rem, 4.5vw, 3.2rem); line-height: 1; font-weight: 900; font-stretch: 62%; }
 .sec-h a { font-weight: 700; }
@@ -110,7 +110,7 @@ img { max-width: 100%; height: auto; }
 .prose h2 + *, .prose h3 + * { margin-top: 0.6em; }
 .prose ul, .prose ol { padding-left: 1.3em; margin-bottom: 0; }
 .prose li + li { margin-top: 0.4em; }
-.prose ul li::marker { color: var(--gelb); }
+.prose ul li::marker { color: var(--stein); }
 .prose ol li::marker { font-weight: 700; }
 .prose strong { font-weight: 700; }
 .prose a { text-underline-offset: 3px; }

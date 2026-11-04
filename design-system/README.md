@@ -18,7 +18,7 @@ Two audiences, two voices: parents of children (Kuk Sool Won) and adults, often 
 
 ## Colour
 
-- **Yellow (`gelb`) is the accent, never the background.** It marks: the header and footer lines, section rules, the timetable mat (`shadow-mat`), the selected group, the primary button and the phone number. Large yellow areas were tried and rejected as "too much in the face".
+- **Yellow (`gelb`) is the accent, never the background, and it always means something.** It marks actions (primary button, phone number, the mobile bar's contact button, the video play icon), selection (the selected group, the current language, theme and menu item), training times (the yellow mat `shadow-mat` on the timetable and on the times box of the discipline pages) and the "Kein Training" banner. It is not used for decoration: structural lines are in the text colour (review 2026-11-04: with yellow on every rule, nothing stood out). Large yellow areas were tried and rejected as "too much in the face".
 - **Black text on yellow, always.** White on yellow fails contrast.
 - **Jade (`jade`, `tc-bg`, `tc-fg`) belongs to Tai Chi** and to calm states (focus ring). Kuk Sool Won is black (`panel`, `slot-k`).
 - Neutrals are slightly green-grey (`bg`, `stein`, `linie`), never pure mid-grey.
@@ -40,7 +40,7 @@ One family, **Archivo** (variable, self-hosted), in two widths:
 
 - Full-width **bands** with content up to `max-width` (1440px) and a fluid side gutter (`gutter-min` to `gutter-max`). Running text keeps its own width limit, so wide screens get more air, not longer lines.
 - **Left-aligned** throughout. Nothing centred except icons.
-- The **yellow rule** (`rule-accent`, 6px) is the main structural device: it sits under the header, above the footer and under each section heading. Hairlines (`linie`) divide list rows.
+- The **section rule** (`rule-accent`, 2px in `fg`) sits under each section heading and post title. Hairlines (`linie`) divide list rows and separate header and footer from the page.
 - Nearly square: `radius-sm` (3px) on timetable slots, `radius-md` (4px) on buttons, photos and panels. No pills, no large radii, no cards with soft grey shadows. The only shadow is the solid yellow mat.
 - Sections in this order on the home page: training week, group photo, the two disciplines side by side (black and jade), video, results, the master, contact band.
 

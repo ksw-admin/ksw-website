@@ -50,8 +50,13 @@ const jsonLd = organizationLd(await getSchedule());
   <section class="news band" id="aktuelles">
     <div class="wrap">
       <div class="sec-h"><h2>{t('news.title')}</h2><a href={localePath('/articles/', lang)}>{t('news.all')}</a></div>
+      {placings > 0 && (
+        <p class="tally">
+          <span>{lang === 'de' ? `${year} bisher ${placings} Platzierungen` : `${placings} placings in ${year} so far`}</span>
+          <span class="key"><i class="g"></i>Gold <i class="s"></i>{lang === 'de' ? 'Silber' : 'Silver'} <i class="b"></i>Bronze</span>
+        </p>
+      )}
       <NewsLedger posts={latest} lang={lang} />
-      {placings > 0 && <p class="tally">{year}: {placings} {t('news.placings')}.</p>}
     </div>
   </section>
 
@@ -66,8 +71,13 @@ const jsonLd = organizationLd(await getSchedule());
   .lead { font-size: clamp(1.25rem, 1.1vw + 0.6rem, 1.5rem); max-width: 34ch; margin-top: 22px; font-weight: 500; }
   h1 { font-size: clamp(3.2rem, 7.5vw, 8.6rem); line-height: 0.86; letter-spacing: -0.01em; font-weight: 900; margin-top: 18px; }
   .photo { margin: 0; background: #000; }
+  @media (max-width: 760px) { .photo { display: none; } }
   .photo :global(img) { display: block; width: 100%; height: clamp(240px, 42vw, 560px); object-fit: cover; object-position: center 40%; }
   .photo figcaption { color: #cfd2cb; font-size: 0.85rem; padding-block: 10px; }
   .news { padding-block: 72px; }
-  .tally { margin-top: 22px; color: var(--stein); }
+  /* Season total and the key to the medal dots in the list below. */
+  .tally { margin-top: 14px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 20px; color: var(--stein); font-size: 0.9rem; }
+  .key i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin: 0 5px 0 10px; vertical-align: 0; }
+  .key i:first-child { margin-left: 0; }
+  .key .g { background: var(--gold); } .key .s { background: var(--silber); } .key .b { background: var(--bronze); }
 </style>

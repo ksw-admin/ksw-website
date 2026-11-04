@@ -4,7 +4,7 @@
  * Texts come from home.json (CMS: Startseite); every number and time comes from schedule.json (Trainingszeiten).
  */
 import { localePath, type Lang } from '../i18n/ui';
-import { getSchedule, dayShort } from '../lib/schedule';
+import { getSchedule, dayList, type Weekday } from '../lib/schedule';
 import { paragraphsOf } from '../lib/home';
 
 interface Props { lang: Lang; kswText: string; taichiText: string }
@@ -13,11 +13,16 @@ const de = lang === 'de';
 
 const ksw = await getSchedule('kuksoolwon');
 const taichi = await getSchedule('taichi');
+// One plain sentence per discipline, built from the training times (no trivia numbers).
 const youngest = Math.min(...ksw.map((s) => s.ageMin ?? Infinity));
-const taichiFacts = taichi.map((s) => ({
-  days: s.days.map((d) => dayShort(d, lang)).join('/'),
-  time: de ? `${s.from} bis ${s.to} Uhr` : `${s.from} to ${s.to}`,
-}));
+const adults = ksw.find((s) => s.ageMax === undefined)?.ageMin;
+const kswDays = dayList([...new Set(ksw.flatMap((s) => s.days))] as Weekday[], lang);
+const kswKids = ksw.filter((s) => s.ageMax !== undefined).length;
+const kswFact = de
+  ? `${kswDays}. Kinder ab ${youngest} Jahren in ${kswKids} Altersgruppen${adults ? `, Erwachsene ab ${adults}` : ''}.`
+  : `${kswDays}. Children from ${youngest} in ${kswKids} age groups${adults ? `, adults from ${adults}` : ''}.`;
+const taichiTimes = taichi.map((s) => `${dayList(s.days, lang)} ${s.from}`).join(de ? ' und ' : ' and ');
+const taichiFact = de ? `${taichiTimes} Uhr. In jedem Alter, ohne Leistungsdruck.` : `${taichiTimes}. Any age, not competitive.`;
 ---
 
 <section class="paths">
@@ -26,16 +31,7 @@ const taichiFacts = taichi.map((s) => ({
       <div class="hangul" lang="ko" aria-hidden="true">국술원</div>
       <h2 class="cond">Kuk Sool Won</h2>
       <div class="body">{paragraphsOf(kswText).map((p) => <p>{p}</p>)}</div>
-      <ul class="facts">
-        <li><b class="cond num">2608</b><span>{de ? 'Techniken (Soo)' : 'techniques (Soo)'}</span></li>
-        <li><b class="cond num">270</b><span>{de ? 'Zielpunkte (Ki)' : 'target points (Ki)'}</span></li>
-        {Number.isFinite(youngest) && (
-          <li>
-            <b class="cond num">{de ? `ab ${youngest}` : `${youngest}+`}</b>
-            <span>{de ? `Jahren, ${ksw.length} Altersgruppen` : `years, ${ksw.length} age groups`}</span>
-          </li>
-        )}
-      </ul>
+      <p class="fact">{kswFact}</p>
       <a class="more" href={localePath('/category/kuksoolwon/', lang)}>{de ? 'Mehr über Kuk Sool Won' : 'More about Kuk Sool Won'}</a>
     </div>
   </div>
@@ -43,10 +39,7 @@ const taichiFacts = taichi.map((s) => ({
     <div class="inner">
       <h2 class="wide">{de ? 'Tai Chi, Qi Gong und Atemschulung' : 'Tai Chi, Qi Gong and breathing training'}</h2>
       <div class="body">{paragraphsOf(taichiText).map((p) => <p>{p}</p>)}</div>
-      <ul class="facts">
-        {taichiFacts.map((f) => <li><b class="wide">{f.days}</b><span class="num">{f.time}</span></li>)}
-        <li><b class="wide">{de ? 'jedes' : 'any'}</b><span>{de ? 'Alter, kein Leistungssport' : 'age, not competitive'}</span></li>
-      </ul>
+      <p class="fact">{taichiFact}</p>
       <a class="more" href={localePath('/category/taichi/', lang)}>{de ? 'Mehr über Tai Chi und Atemschulung' : 'More about Tai Chi and breathing training'}</a>
     </div>
   </div>
@@ -66,11 +59,10 @@ const taichiFacts = taichi.map((s) => ({
   .body { margin-top: 22px; max-width: 42ch; }
   .t .body { line-height: 1.75; }
   .body p + p { margin-top: 12px; }
-  .facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin: 30px 0 0; padding: 0; list-style: none; }
-  .facts b { display: block; font-size: 2.4rem; line-height: 1; font-weight: 900; }
-  .k .facts b { color: var(--gelb); }
-  .t .facts b { font-weight: 300; font-size: 2rem; }
-  .facts span { font-size: 0.85rem; opacity: 0.85; }
+  /* Training days and ages in each discipline's own voice (condensed vs wide). */
+  .fact { margin-top: 26px; max-width: 34ch; font-size: 1.25rem; line-height: 1.3; }
+  .k .fact { font-weight: 800; font-stretch: 62%; font-size: 1.45rem; }
+  .t .fact { font-weight: 400; font-stretch: 125%; }
   .more { display: inline-block; margin-top: 32px; font-weight: 700; text-underline-offset: 5px; text-decoration-thickness: 2px; }
   .k .more { color: var(--gelb); }
   @media (max-width: 860px) {
