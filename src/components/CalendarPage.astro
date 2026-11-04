@@ -26,6 +26,7 @@ import { addDays, headline, textOf, todayInGermany, type Closure } from '../lib/
 import { kindOf, titleOf, whenOf } from '../lib/events';
 import { site } from '../lib/site';
 import { getPosts } from '../lib/posts';
+import EventMeta from './EventMeta.astro';
 import { localePath, useTranslations, type Lang } from '../i18n/ui';
 
 interface Props { lang: Lang }
@@ -172,11 +173,7 @@ const title = de ? 'Kalender' : 'Calendar';
                   <ul class="items">
                     {d.events.map((e) => (
                       <li class:list={['event', { cancelled: e.cancelled }]} data-kind={kindKey(e)}>
-                        <p class="meta">
-                          {e.cancelled && <strong>{de ? 'Abgesagt' : 'Cancelled'}</strong>}
-                          {e.cancelled && (e.kind || e.place) && ', '}
-                          {[kindOf(e, lang), e.place].filter(Boolean).join(', ')}
-                        </p>
+                        <p class="meta"><EventMeta event={e} lang={lang} /></p>
                         <p class="ev-title" lang={lang === 'en' && !e.title_en?.trim() ? 'de' : undefined}>
                           {e.cancelled ? (
                             <s>{e.time && d.date === e.from && <span class="num">{e.time} </span>}{titleOf(e, lang)}</s>
@@ -229,11 +226,7 @@ const title = de ? 'Kalender' : 'Calendar';
                 <li class:list={['event', { cancelled: e.cancelled }]} data-kind={kindKey(e)}>
                   <p class="date num">{e.cancelled ? <s>{whenOf(e, lang, thisYear)}</s> : whenOf(e, lang, thisYear)}</p>
                   <div>
-                    <p class="meta">
-                      {e.cancelled && <strong>{de ? 'Abgesagt' : 'Cancelled'}</strong>}
-                      {e.cancelled && (e.kind || e.place) && ', '}
-                      {[kindOf(e, lang), e.place].filter(Boolean).join(', ')}
-                    </p>
+                    <p class="meta"><EventMeta event={e} lang={lang} /></p>
                     <p class="ev-title">{e.cancelled ? <s>{titleOf(e, lang)}</s> : titleOf(e, lang)}</p>
                   </div>
                 </li>
@@ -409,7 +402,6 @@ const title = de ? 'Kalender' : 'Calendar';
   .event + .training, .event + .closure, .closure + .training { margin-top: 4px; }
   .meta { font-size: var(--fs-meta); font-weight: 600; color: var(--stein); }
   .meta:empty { display: none; }
-  .meta strong { color: var(--fg); font-weight: 800; }
   .ev-title { font-size: var(--fs-item); font-weight: 700; line-height: 1.2; }
   .ev-title a { text-underline-offset: 4px; }
   .event.cancelled .ev-title, .event.cancelled .date { color: var(--stein); }

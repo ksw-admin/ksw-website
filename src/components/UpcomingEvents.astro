@@ -11,6 +11,7 @@
 import { getEvents } from '../lib/events-data';
 import { kindOf, lastDay, titleOf, whenOf } from '../lib/events';
 import { localePath, type Lang } from '../i18n/ui';
+import EventMeta from './EventMeta.astro';
 import { site } from '../lib/site';
 
 interface Props { lang: Lang }
@@ -39,11 +40,7 @@ const SHOWN = 3;
             <p class="when num">{e.cancelled ? <s>{whenOf(e, lang)}</s> : whenOf(e, lang)}</p>
             <div>
               {(e.cancelled || e.kind || e.place) && (
-                <p class="meta">
-                  {e.cancelled && <strong>{de ? 'Abgesagt' : 'Cancelled'}</strong>}
-                  {e.cancelled && (e.kind || e.place) && ', '}
-                  {[kindOf(e, lang), e.place].filter(Boolean).join(', ')}
-                </p>
+                <p class="meta"><EventMeta event={e} lang={lang} /></p>
               )}
               <h4 lang={lang === 'en' && !e.title_en?.trim() ? 'de' : undefined}>
                 {e.cancelled ? (
@@ -124,7 +121,6 @@ const SHOWN = 3;
   /* Cancelled: kept in place so nobody misses it; muted and struck through, the word in full colour. */
   .cancelled .when, .cancelled h4 { color: var(--stein); }
   .cancelled s { text-decoration-thickness: 2px; }
-  .cancelled .meta strong { color: var(--fg); font-weight: 800; }
   /* Plain text button in the link style: shows more of the same list, not a call to action. */
   .more-dates {
     margin-top: 12px; padding: 4px 0; background: none; border: 0; cursor: pointer;
