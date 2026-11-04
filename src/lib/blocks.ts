@@ -51,3 +51,7 @@ export function photoRowFields(inner: string): { images: { image: string; alt: s
 /** The Markdown the CMS writes for an album tile. */
 export const albumLine = (title: string, image: string, url: string) =>
   `[![Fotoalbum: ${title.replace(/[[\]\n]/g, ' ').trim()}](${image})](${url.trim()})`;
+
+/** Display sizes for the browser to pick a photo version (global.css: .photo-row, .album-card). */
+export const PHOTO_ROW_SIZES = '(max-width: 600px) 50vw, 260px';
+export const ALBUM_SIZES = '144px';

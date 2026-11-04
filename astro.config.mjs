@@ -2,13 +2,16 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import { satteri } from '@astrojs/markdown-satteri';
-import { markdownBlocks } from './src/lib/markdown-blocks.ts';
+import { blockImageSizes, markdownBlocks } from './src/lib/markdown-blocks.ts';
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://www.kuk-sool-won-griepentrog.de',
+  // Photos inside Markdown texts (report blocks, images in reports) get several sizes and a srcset like the
+  // components; components that set their own widths/sizes keep them.
+  image: { layout: 'constrained' },
   // Astro's default Markdown processor, plus the report blocks: video player, album tile (src/lib/markdown-blocks.ts).
-  markdown: { processor: satteri({ mdastPlugins: [markdownBlocks] }) },
+  markdown: { processor: satteri({ mdastPlugins: [markdownBlocks], hastPlugins: [blockImageSizes] }) },
   integrations: [
     sitemap({
       // Untranslated English pages (noindex) and redirect pages are removed after the build
