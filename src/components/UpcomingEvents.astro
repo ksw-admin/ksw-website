@@ -11,6 +11,7 @@
 import { getEvents } from '../lib/events-data';
 import { kindOf, lastDay, titleOf, whenOf } from '../lib/events';
 import { localePath, type Lang } from '../i18n/ui';
+import { site } from '../lib/site';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -21,7 +22,10 @@ const SHOWN = 3;
 ---
 
 <div class="upcoming" id="dates" data-shown={SHOWN}>
-  <h3 class="sub">{de ? 'Demnächst' : 'Coming up'}</h3>
+  <div class="sub-row">
+    <h3 class="sub">{de ? 'Demnächst' : 'Coming up'}</h3>
+    {site.calendarPage && <a href={localePath('/dates/', lang)}>{de ? 'Ganzer Kalender' : 'Full calendar'}</a>}
+  </div>
   <!-- Empty state: always true, however long the list stays empty, and points somewhere useful. -->
   <p class="empty" hidden={events.length > 0}>
     {de ? 'Gerade sind keine Turniere oder Prüfungen angekündigt. Das Training läuft wie im ' : 'No tournaments or gradings announced right now. Training runs as in the '}<a href={localePath('/#schedule', lang)}>{de ? 'Wochenplan' : 'timetable'}</a>.
@@ -103,6 +107,9 @@ const SHOWN = 3;
 
 <style>
   .upcoming { margin-top: 26px; margin-bottom: 40px; }
+  /* Same row as "Zuletzt" / "Alle Beiträge" below. */
+  .sub-row { display: flex; align-items: baseline; justify-content: space-between; gap: 8px 16px; flex-wrap: wrap; }
+  .sub-row a { font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
   .sub { font-size: var(--fs-sub); font-weight: 800; }
   .empty { margin-top: 10px; color: var(--stein); max-width: 62ch; }
   .empty a { color: var(--fg); font-weight: 700; text-underline-offset: 3px; }

@@ -1,0 +1,266 @@
+---
+/**
+ * Calendar page (/dates/, /en/dates/; CMS switch site.json › calendarPage): training, closures and dates of the next
+ * weeks as an agenda, grouped by week. Not a month grid: training repeats every week, the useful part is what
+ * differs (no training, tournaments, cancellations). Same data and rules as the calendar feeds (src/lib/agenda.ts).
+ * Filter by group (also ?group=<slot id>, linked from the timetable): only that group's training and the closures
+ * that affect it; dates stay (they are in every feed). The subscribe links follow the filter.
+ * Static page: the script hides days that have passed since the last build and marks today. Without JS: everything
+ * from the build day on, unfiltered.
+ * Not under /calendar/: Netlify serves that folder as text/calendar (public/_headers).
+ */
+import Base from '../layouts/Base.astro';
+import { getSchedule, toFeed, ageLabel, dayShort, type Slot } from '../lib/schedule';
+import { getClosures } from '../lib/closures-data';
+import { getEvents } from '../lib/events-data';
+import { buildAgenda, byWeek, mondayOf, weekLabel } from '../lib/agenda';
+import { addDays, headline, textOf, todayInGermany, type Closure } from '../lib/closures';
+import { kindOf, titleOf, whenOf } from '../lib/events';
+import { site } from '../lib/site';
+import { localePath, useTranslations, type Lang } from '../i18n/ui';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const de = lang === 'de';
+const t = useTranslations(lang);
+
+/** How far ahead the page lays out days; dates and closures after that are listed under "Später". */
+const WEEKS = 13;
+const today = todayInGermany();
+const thisYear = Number(today.slice(0, 4));
+const start = mondayOf(today);
+const end = addDays(start, WEEKS * 7 - 1);
+
+const slots = await getSchedule();
+const bySlot = new Map(slots.map((s) => [s.id, s]));
+const closures = await getClosures();
+const events = await getEvents();
+const weeks = byWeek(buildAgenda({ slots: slots.map(toFeed), closures, events, from: start, days: WEEKS * 7 }));
+const later = {
+  events: events.filter((e) => e.from > end),
+  closures: closures.filter((c) => c.from > end),
+};
+
+const groupName = (s: Slot) =>
+  s.discipline === 'taichi' ? (de ? 'Tai Chi und Qi Gong' : 'Tai Chi and Qi Gong') : ['Kuk Sool Won', ageLabel(s, lang)].filter(Boolean).join(', ');
+const option = (s: Slot) => `${groupName(s)} (${s.days.map((d) => dayShort(d, lang)).join(', ')})`;
+const dayLabel = (d: string) => whenOf({ from: d, title: '' }, lang, thisYear);
+const closureGroups = (c: Closure) => c.groups ?? 'alle';
+
+const webcal = (id: string) => `webcal://${Astro.site!.host}/calendar/${id}.ics`;
+const google = (id: string) => `https://calendar.google.com/calendar/render?cid=${encodeURIComponent(webcal(id))}`;
+const title = de ? 'Kalender' : 'Calendar';
+---
+
+<Base
+  title={title}
+  description={de ? 'Trainingszeiten, Trainingsausfälle, Turniere und Prüfungen der nächsten Wochen, nach Gruppe.' : 'Training times, closures, tournaments and gradings for the coming weeks, by group.'}
+  alternate={{ de: '/dates/', en: '/en/dates/' }}
+>
+  <section class="band cal-page">
+    <div class="wrap">
+      <h1 class="page-title">{title}</h1>
+      <p class="lead">{de ? 'Training, Ausfälle und Termine der nächsten drei Monate.' : 'Training, closures and dates for the next three months.'}</p>
+
+      <div class="tools">
+        <label for="cal-group">{de ? 'Gruppe' : 'Group'}</label>
+        <select id="cal-group" aria-controls="agenda">
+          <option value="">{de ? 'Alle Gruppen' : 'All groups'}</option>
+          {slots.map((s) => <option value={s.id} data-disc={s.discipline}>{option(s)}</option>)}
+        </select>
+        {site.calendar && (
+          <p class="subscribe" id="cal-sub" data-label-all={t('week.calendar')} data-label-one={t('week.calendar.one')}>
+            <span class="sub-label">{t('week.calendar')}</span>
+            <a data-cal href={google('training')} rel="noopener">{de ? 'Google Kalender' : 'Google Calendar'}</a>
+            <a data-cal href={webcal('training')}>iPhone, Mac, Outlook</a>
+            <a href={localePath('/faq/#kalender', lang)}>{t('week.calendar.howto')}</a>
+          </p>
+        )}
+      </div>
+
+      <div id="agenda" aria-live="polite">
+        {weeks.map((w) => (
+          <section class="week" data-week={w.monday} aria-labelledby={`w-${w.monday}`}>
+            <h2 id={`w-${w.monday}`}>{weekLabel(w.monday, lang, thisYear)}</h2>
+            <ol class="days">
+              {w.days.map((d) => (
+                <li class="day" data-date={d.date}>
+                  <p class="date num">
+                    {dayLabel(d.date)}
+                    <span class="today" hidden>{de ? 'Heute' : 'Today'}</span>
+                  </p>
+                  <ul class="items">
+                    {d.events.map((e) => (
+                      <li class:list={['event', { cancelled: e.cancelled }]}>
+                        <p class="meta">
+                          {e.cancelled && <strong>{de ? 'Abgesagt' : 'Cancelled'}</strong>}
+                          {e.cancelled && (e.kind || e.place) && ', '}
+                          {[kindOf(e, lang), e.place].filter(Boolean).join(', ')}
+                        </p>
+                        <p class="ev-title" lang={lang === 'en' && !e.title_en?.trim() ? 'de' : undefined}>
+                          {e.cancelled ? (
+                            <s>{e.time && d.date === e.from && <span class="num">{e.time} </span>}{titleOf(e, lang)}</s>
+                          ) : (
+                            <>
+                              {e.time && d.date === e.from && <span class="num">{e.time} </span>}
+                              {e.link ? <a href={e.link} rel="noopener">{titleOf(e, lang)}</a> : titleOf(e, lang)}
+                            </>
+                          )}
+                        </p>
+                      </li>
+                    ))}
+                    {d.closures.map((c) => (
+                      <li class="closure" data-groups={closureGroups(c)}>
+                        <strong>{headline({ ...c, from: d.date, to: d.date }, lang).replace(/ am .*| on .*/, '')}</strong>: {textOf(c, lang)}
+                      </li>
+                    ))}
+                    {d.training.map((tr) => (
+                      <li class:list={['training', { off: tr.off }]} data-group={tr.slot.id}>
+                        <span class="time num">{tr.slot.from}–{tr.slot.to}</span>
+                        {tr.off ? (
+                          <span><s>{groupName(bySlot.get(tr.slot.id)!)}</s><span class="visually-hidden">{de ? ' (fällt aus)' : ' (cancelled)'}</span></span>
+                        ) : (
+                          <span>{groupName(bySlot.get(tr.slot.id)!)}</span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ol>
+          </section>
+        ))}
+
+        {(later.events.length > 0 || later.closures.length > 0) && (
+          <section class="week later" aria-labelledby="w-later">
+            <h2 id="w-later">{de ? 'Später' : 'Later'}</h2>
+            <ul class="later-list">
+              {later.events.map((e) => (
+                <li class:list={['event', { cancelled: e.cancelled }]}>
+                  <p class="date num">{e.cancelled ? <s>{whenOf(e, lang, thisYear)}</s> : whenOf(e, lang, thisYear)}</p>
+                  <div>
+                    <p class="meta">
+                      {e.cancelled && <strong>{de ? 'Abgesagt' : 'Cancelled'}</strong>}
+                      {e.cancelled && (e.kind || e.place) && ', '}
+                      {[kindOf(e, lang), e.place].filter(Boolean).join(', ')}
+                    </p>
+                    <p class="ev-title">{e.cancelled ? <s>{titleOf(e, lang)}</s> : titleOf(e, lang)}</p>
+                  </div>
+                </li>
+              ))}
+              {later.closures.map((c) => (
+                <li class="closure" data-groups={closureGroups(c)}>
+                  <strong>{headline(c, lang)}</strong>: {textOf(c, lang)}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+        <p class="empty" hidden>{de ? 'Für diese Gruppe steht in den nächsten Wochen nichts an.' : 'Nothing coming up for this group in the next weeks.'}</p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script is:inline>
+  (function () {
+    var agenda = document.getElementById('agenda');
+    var select = document.getElementById('cal-group');
+    if (!agenda || !select) return;
+    var today = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Berlin' });
+    // Days already over since the last build go; today gets its label.
+    agenda.querySelectorAll('.day').forEach(function (d) {
+      if (d.dataset.date < today) d.remove();
+      else if (d.dataset.date === today) { d.classList.add('is-today'); d.querySelector('.today').hidden = false; }
+    });
+    var sub = document.getElementById('cal-sub');
+    var subLinks = sub ? [].slice.call(sub.querySelectorAll('a[data-cal]')) : [];
+    subLinks.forEach(function (a) { a.dataset.all = a.href; });
+
+    function apply(id) {
+      var opt = select.querySelector('option[value="' + id + '"]');
+      var disc = id && opt ? opt.dataset.disc : null;
+      if (id && !opt) id = '';
+      agenda.querySelectorAll('.training').forEach(function (li) { li.hidden = !!id && li.dataset.group !== id; });
+      agenda.querySelectorAll('.closure').forEach(function (li) {
+        var g = li.dataset.groups;
+        li.hidden = !!disc && g !== 'alle' && g !== disc;
+      });
+      // A closure line stays only when the group's own training is cancelled that day.
+      agenda.querySelectorAll('.day').forEach(function (d) {
+        if (id) d.querySelectorAll('.closure').forEach(function (c) { if (!d.querySelector('.training.off[data-group="' + id + '"]')) c.hidden = true; });
+        d.hidden = !d.querySelector('.items > li:not([hidden])');
+      });
+      var any = false;
+      agenda.querySelectorAll('.week').forEach(function (w) {
+        var visible = !!w.querySelector('.day:not([hidden]), .later-list > li:not([hidden])');
+        w.hidden = !visible;
+        any = any || visible;
+      });
+      agenda.querySelector('.empty').hidden = any;
+      if (sub) {
+        subLinks.forEach(function (a) { a.href = id ? a.dataset.all.replace('training.ics', id + '.ics') : a.dataset.all; });
+        sub.querySelector('.sub-label').textContent = id ? sub.dataset.labelOne : sub.dataset.labelAll;
+      }
+    }
+
+    var param = new URLSearchParams(location.search).get('group') || '';
+    select.value = select.querySelector('option[value="' + param + '"]') ? param : '';
+    apply(select.value);
+    select.addEventListener('change', function () {
+      apply(select.value);
+      var url = new URL(location.href);
+      if (select.value) url.searchParams.set('group', select.value);
+      else url.searchParams.delete('group');
+      history.replaceState(null, '', url);
+    });
+  })();
+</script>
+
+<style>
+  .cal-page { padding-block: var(--space-page-top) var(--space-section); }
+  .lead { margin-top: 12px; font-size: var(--fs-lead); max-width: 52ch; }
+
+  .tools { margin-top: 28px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+  .tools label { font-weight: 700; }
+  select {
+    font: inherit; color: var(--fg); background: var(--bg); border: 2px solid var(--fg); border-radius: 4px;
+    padding: 8px 12px; max-width: 100%;
+  }
+  select:focus-visible { outline: 3px solid var(--gelb); outline-offset: 1px; }
+  .subscribe { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: var(--fs-meta); }
+  .subscribe .sub-label { color: var(--stein); flex-basis: 100%; }
+  .subscribe a { font-weight: 700; text-underline-offset: 3px; }
+
+  #agenda { margin-top: 32px; max-width: 52rem; }
+  .week { border-top: 2px solid var(--fg); padding-top: 14px; }
+  .week + .week { margin-top: 34px; }
+  .week[hidden], .day[hidden], .items > li[hidden], .later-list > li[hidden] { display: none; }
+  .week h2 { font-size: var(--fs-sub); line-height: 1.15; }
+  ol, ul { list-style: none; margin: 0; padding: 0; }
+  .day, .later-list > li { display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: 2px 24px; padding-block: 12px; border-bottom: 1px solid var(--linie); align-items: baseline; }
+  .later-list > li.closure { display: block; }
+  .date { font-weight: 700; }
+  .today[hidden] { display: none; }
+  .today { display: inline-block; margin-left: 8px; padding: 0 6px; border-radius: 3px; background: var(--gelb); color: #000; font-size: var(--fs-meta); }
+  .items { display: grid; gap: 6px; }
+  .training { display: flex; gap: 14px; }
+  .time { min-width: 6.5rem; font-variant-numeric: tabular-nums; color: var(--stein); }
+  .training.off { color: var(--stein); }
+  s { text-decoration-thickness: 2px; }
+  /* Closures: the one thing that changes plans, so it reads first after the dates; yellow like the banner. */
+  .closure { padding-left: 12px; border-left: 4px solid var(--gelb-ink); }
+  .closure strong { font-weight: 800; }
+  .event + .training, .event + .closure, .closure + .training { margin-top: 4px; }
+  .meta { font-size: var(--fs-meta); font-weight: 600; color: var(--stein); }
+  .meta:empty { display: none; }
+  .meta strong { color: var(--fg); font-weight: 800; }
+  .ev-title { font-size: var(--fs-item); font-weight: 700; line-height: 1.2; }
+  .ev-title a { text-underline-offset: 4px; }
+  .event.cancelled .ev-title, .event.cancelled .date { color: var(--stein); }
+  .empty { margin-top: 20px; color: var(--stein); }
+  @media (max-width: 640px) {
+    .day, .later-list > li { grid-template-columns: minmax(0, 1fr); }
+    .time { min-width: 5.8rem; }
+  }
+</style>

@@ -1,20 +1,11 @@
 // Calendar subscriptions: /calendar/training.ics (all groups) and /calendar/<group id>.ics (one group, e.g. for
 // parents). Times from schedule.json, closures from closures.json. Calendar apps re-read the file every few hours.
 import type { APIRoute, GetStaticPaths } from 'astro';
-import { getSchedule, ageLabel, type Slot } from '../../lib/schedule';
+import { getSchedule, toFeed, type Slot } from '../../lib/schedule';
 import { getClosures } from '../../lib/closures-data';
 import { getEvents } from '../../lib/events-data';
-import { buildCalendar, type FeedSlot } from '../../lib/ics';
+import { buildCalendar } from '../../lib/ics';
 import { site } from '../../lib/site';
-
-const toFeed = (s: Slot): FeedSlot => ({
-  id: s.id,
-  discipline: s.discipline,
-  days: s.days,
-  from: s.from,
-  to: s.to,
-  title: s.discipline === 'taichi' ? 'Tai Chi und Qi Gong' : ['Kuk Sool Won', ageLabel(s, 'de')].filter(Boolean).join(', '),
-});
 
 export const getStaticPaths = (async () => {
   // Switched off in the CMS: no feeds at all.

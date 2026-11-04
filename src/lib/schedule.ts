@@ -1,5 +1,6 @@
 import { getCollection } from 'astro:content';
 import type { Lang } from '../i18n/ui';
+import type { FeedSlot } from './ics';
 
 export const WEEKDAYS = ['mo', 'di', 'mi', 'do', 'fr', 'sa', 'so'] as const;
 export type Weekday = (typeof WEEKDAYS)[number];
@@ -38,3 +39,13 @@ export function ageLabel(s: Slot, lang: Lang): string | undefined {
   if (s.ageMax === undefined || s.ageMax >= 80) return lang === 'de' ? `ab ${s.ageMin} ${y}` : `${s.ageMin}+ ${y}`;
   return `${s.ageMin}–${s.ageMax} ${y}`;
 }
+
+/** A slot as the calendar feeds and the calendar page use it (German title: feeds are German). */
+export const toFeed = (s: Slot): FeedSlot => ({
+  id: s.id,
+  discipline: s.discipline,
+  days: s.days,
+  from: s.from,
+  to: s.to,
+  title: s.discipline === 'taichi' ? 'Tai Chi und Qi Gong' : ['Kuk Sool Won', ageLabel(s, 'de')].filter(Boolean).join(', '),
+});

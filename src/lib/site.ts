@@ -29,6 +29,8 @@ const Site = z.object({
   contactForm: z.boolean().default(false),
   // Calendar subscriptions (/calendar/*.ics, links under the timetable, FAQ answer). Off: none of it is built.
   calendar: z.boolean().default(true),
+  // Calendar page /dates/ (training, closures and dates by week; links from the timetable and "Demnächst"). Off: not built.
+  calendarPage: z.boolean().default(false),
   // FAQ question form (Netlify Forms). Off: the FAQ points to phone and email instead.
   questionForm: z.boolean().default(false),
   // Cloudflare Web Analytics (cookieless, no consent banner needed). Empty token = no analytics.

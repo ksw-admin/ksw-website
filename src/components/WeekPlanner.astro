@@ -99,13 +99,18 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
         <span><i style="background:var(--gelb);box-shadow:inset 0 0 0 2px #000"></i>{t('week.yours')}</span>
       </div>
     </div>
-    <!-- Calendar subscription: all groups, or the selected group once one is tapped (script below). -->
-    {site.calendar && (
+    <!-- Calendar subscription and calendar page: all groups, or the selected group once one is tapped (script below). -->
+    {(site.calendar || site.calendarPage) && (
       <p class="cal" id="cal" data-label-all={t('week.calendar')} data-label-one={t('week.calendar.one')}>
-        <span class="cal-label">{t('week.calendar')}</span>
-        <a data-cal="google" href={google('training')} rel="noopener">{de ? 'Google Kalender' : 'Google Calendar'}</a>
-        <a data-cal="webcal" href={webcal('training')}>iPhone, Mac, Outlook</a>
-        <a class="howto" href={localePath('/faq/#kalender', lang)}>{t('week.calendar.howto')}</a>
+        {site.calendarPage && <a class="page" data-page href={localePath('/dates/', lang)}>{de ? 'Kalender der nächsten Wochen' : 'Calendar for the coming weeks'}</a>}
+        {site.calendar && (
+          <>
+            <span class="cal-label">{t('week.calendar')}</span>
+            <a data-cal="google" href={google('training')} rel="noopener">{de ? 'Google Kalender' : 'Google Calendar'}</a>
+            <a data-cal="webcal" href={webcal('training')}>iPhone, Mac, Outlook</a>
+            <a class="howto" href={localePath('/faq/#kalender', lang)}>{t('week.calendar.howto')}</a>
+          </>
+        )}
       </p>
     )}
   </div>
@@ -120,6 +125,8 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
   const cal = document.getElementById('cal');
   const calLinks = cal ? [...cal.querySelectorAll<HTMLAnchorElement>('a[data-cal]')] : [];
   for (const a of calLinks) a.dataset.all = a.href;
+  const pageLink = cal?.querySelector<HTMLAnchorElement>('a[data-page]');
+  if (pageLink) pageLink.dataset.all = pageLink.href;
   let current: string | null = null;
 
   function select(id: string | null) {
@@ -135,7 +142,10 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
     if (cal) {
       // The feed name is in both links (Google: URL-encoded inside cid); swap it for the group id.
       for (const a of calLinks) a.href = id ? a.dataset.all!.replace('training.ics', `${id}.ics`) : a.dataset.all!;
-      cal.querySelector('.cal-label')!.textContent = id ? cal.dataset.labelOne! : cal.dataset.labelAll!;
+      const label = cal.querySelector('.cal-label');
+      if (label) label.textContent = id ? cal.dataset.labelOne! : cal.dataset.labelAll!;
+      // The calendar page opens filtered to the selected group.
+      if (pageLink) pageLink.href = id ? `${pageLink.dataset.all}?group=${id}` : pageLink.dataset.all!;
     }
   }
 
@@ -214,6 +224,7 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
   .empty { grid-row: 2 / -1; display: flex; align-items: center; justify-content: center; color: var(--stein); writing-mode: vertical-rl; font-size: 0.75rem; }
   .cal { display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: baseline; margin: 22px 12px 0 0; }
   .cal-label { flex-basis: 100%; font-weight: 700; }
+  .cal .page { flex-basis: 100%; font-weight: 700; text-underline-offset: 4px; margin-bottom: 10px; }
   .cal a[data-cal] { font-weight: 600; text-underline-offset: 4px; }
   .cal .howto { font-size: var(--fs-meta); color: var(--stein); }
   .legend { display: flex; gap: 18px; margin-top: 12px; font-size: var(--fs-meta); flex-wrap: wrap; }

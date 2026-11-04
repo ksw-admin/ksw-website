@@ -35,6 +35,7 @@
   "questionForm": false,
   "contactForm": false,
   "calendar": true,
+  "calendarPage": true,
   "analytics": {
     "cloudflareToken": "5f7f1ea0441c4966ad1e864554f85b6a"
   },
