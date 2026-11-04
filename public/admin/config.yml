@@ -110,7 +110,7 @@ collections:
           - { label: 'Automatisch (eigene Seite nur bei langem Text)', value: auto }
           - { label: 'Ja, immer eigene Seite', value: ja }
           - { label: 'Nein, nur in der Liste', value: nein }
-      - { label: Bericht (optional), name: body, widget: markdown, required: false, i18n: true, buttons: [bold, italic, link, heading-two, bulleted-list, numbered-list], editor_components: [image, youtube], hint: 'Ausführlicher Bericht mit Überschriften und Listen (z.B. Ergebnisse). Videos: „+“ › „Video (YouTube)“. Ein Beitrag mit Bericht bekommt automatisch eine eigene Seite.' }
+      - { label: Bericht (optional), name: body, widget: markdown, required: false, i18n: true, buttons: [bold, italic, link, heading-two, bulleted-list, numbered-list], editor_components: [image, photo-row, album, youtube], hint: 'Ausführlicher Bericht mit Überschriften und Listen (z.B. Ergebnisse). Über „+“: Bild, Fotoreihe (2 bis 4 Fotos nebeneinander), Fotoalbum (Link mit Vorschaubild), Video (YouTube). Ein Beitrag mit Bericht bekommt automatisch eine eigene Seite.' }
 
   # ---------------------------------------------------------------- Seiten
   - name: disciplines

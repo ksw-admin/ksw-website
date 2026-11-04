@@ -6,6 +6,7 @@
 // The exact result is the Netlify deploy preview of a draft ("Vorschau ansehen" in the CMS).
 import { cleanParagraphs, decideHasPage, isVisible, PAGE_MIN_CHARS } from '../lib/text';
 import { videoHtml, videoLine, youtubeId } from '../lib/youtube';
+import { albumLabelHtml, albumLine, photoRowBlock, photoRowFields } from '../lib/blocks';
 import siteCss from '../styles/global.css?inline';
 import fontCss from '@fontsource-variable/archivo/wdth.css?inline';
 
@@ -170,6 +171,48 @@ CMS.registerEditorComponent({
   toPreview: (d: { url?: string; title?: string }) => {
     const id = youtubeId(String(d.url ?? '').trim());
     return id ? videoHtml(id, String(d.title ?? '') || 'Video') : '<p><strong>Video:</strong> kein gültiger YouTube-Link.</p>';
+  },
+});
+
+// "Fotoreihe": 2 to 4 photos side by side (stored as Markdown images inside <div class="photo-row">, src/lib/blocks.ts).
+// The preview shows the photos at their path; the site optimizes them at build time.
+CMS.registerEditorComponent({
+  id: 'photo-row',
+  label: 'Fotoreihe (2 bis 4 Fotos)',
+  fields: [
+    {
+      name: 'images', label: 'Fotos', label_singular: 'Foto', widget: 'list', min: 2, max: 4,
+      summary: '{{fields.alt}}',
+      fields: [
+        { name: 'image', label: 'Foto', widget: 'image', choose_url: false },
+        { name: 'alt', label: 'Was ist zu sehen? (für Screenreader)', widget: 'string', required: false },
+      ],
+    },
+  ],
+  pattern: /^<div class="photo-row">\n\n([\s\S]*?)\n\n<\/div>$/m,
+  fromBlock: (m: RegExpMatchArray) => photoRowFields(m[1]),
+  toBlock: (d: { images?: { image?: string; alt?: string }[] }) => photoRowBlock(d.images ?? []),
+  toPreview: (d: { images?: { image?: string; alt?: string }[] }) =>
+    `<div class="photo-row"><p>${(d.images ?? []).filter((i) => i.image).map((i) => `<img src="${i.image}" alt="">`).join('')}</p></div>`,
+});
+
+// "Fotoalbum": tile with a cover photo linking to an album (Flickr or elsewhere), like the gallery on the
+// discipline pages. Stored as a linked photo "[![Fotoalbum: Titel](images/…)](https://…)".
+CMS.registerEditorComponent({
+  id: 'album',
+  label: 'Fotoalbum (Link)',
+  fields: [
+    { name: 'title', label: 'Titel', widget: 'string', hint: 'z.B. „New Generation Turnier 2026“' },
+    { name: 'image', label: 'Vorschaubild', widget: 'image', choose_url: false },
+    { name: 'url', label: 'Link zum Album', widget: 'string', hint: 'Vollständige Adresse, z.B. https://www.flickr.com/photos/…' },
+  ],
+  pattern: /^\[!\[Fotoalbum: ([^\]\n]*)\]\(([^)\s]+)\)\]\((https?:\/\/[^)\s]+)\)$/m,
+  fromBlock: (m: RegExpMatchArray) => ({ title: m[1], image: m[2], url: m[3] }),
+  toBlock: (d: { title?: string; image?: string; url?: string }) => albumLine(d.title ?? '', d.image ?? '', d.url ?? ''),
+  toPreview: (d: { title?: string; image?: string; url?: string }) => {
+    let label = '';
+    try { label = albumLabelHtml(d.title || 'Fotoalbum', d.url ?? ''); } catch { label = '<span class="album-text"><strong>Fotoalbum</strong><span>Link fehlt</span></span>'; }
+    return `<div class="album-card"><a href="#">${d.image ? `<img src="${d.image}" alt="">` : '<span></span>'}${label}</a></div>`;
   },
 });
 

@@ -2,13 +2,13 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import { satteri } from '@astrojs/markdown-satteri';
-import { youtubeVideos } from './src/lib/youtube-plugin.ts';
+import { markdownBlocks } from './src/lib/markdown-blocks.ts';
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://www.kuk-sool-won-griepentrog.de',
-  // Astro's default Markdown processor, plus: a lone YouTube link becomes the click-to-load player (src/lib/youtube.ts).
-  markdown: { processor: satteri({ mdastPlugins: [youtubeVideos] }) },
+  // Astro's default Markdown processor, plus the report blocks: video player, album tile (src/lib/markdown-blocks.ts).
+  markdown: { processor: satteri({ mdastPlugins: [markdownBlocks] }) },
   integrations: [
     sitemap({
       // Untranslated English pages (noindex) and redirect pages are removed after the build

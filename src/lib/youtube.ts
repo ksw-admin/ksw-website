@@ -1,7 +1,7 @@
 // Videos in Markdown texts (posts, discipline pages). Stored as a plain link on its own line:
 //   [Video: Gürtelprüfung 2026](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
 // so the text stays readable anywhere (GitHub, an old build: just a link). The Markdown plugin turns such a
-// paragraph (src/lib/youtube-plugin.ts) into the click-to-load player of the home page (no request to Google before the click; script and
+// paragraph (src/lib/markdown-blocks.ts) into the click-to-load player of the home page (no request to Google before the click; script and
 // styles: PostPage.astro / global.css .yt-embed). CMS: editor component "Video" in src/admin/preview.ts.
 // Pure functions, no dependencies (also bundled into the CMS preview).
 
@@ -38,7 +38,7 @@ const textOf = (n: Node): string => (n.value ?? '') + (n.children ?? []).map(tex
 /**
  * A paragraph that is only a YouTube link (whitespace around it allowed) is a video: its id and title
  * (the link text without a leading "Video: "). Anything else: null. Used by the Markdown plugin
- * (src/lib/youtube-plugin.ts) and the tests.
+ * (src/lib/markdown-blocks.ts) and the tests.
  */
 export function videoOfParagraph(children: readonly Node[]): { id: string; title: string } | null {
   const parts = children.filter((c) => !(c.type === 'text' && !c.value?.trim()));
