@@ -70,7 +70,11 @@ const taichiFacts = taichi.map((s) => ({
   .body { margin-top: 22px; max-width: 42ch; }
   .t .body { line-height: 1.75; }
   .body p + p { margin-top: 12px; }
-  .facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin: 30px 0 0; padding: 0; list-style: none; }
+  /* Desktop: both halves are equally tall; fact row and link sit at the bottom of each, so they line up even
+     though the Tai Chi heading and text run longer (two-line heading, looser line height). */
+  .inner { display: flex; flex-direction: column; height: 100%; }
+  .inner > .more { align-self: flex-start; }
+  .facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin: auto 0 0; padding: 30px 0 0; list-style: none; }
   .facts b { display: block; font-size: 2.4rem; line-height: 1; font-weight: 900; }
   /* Yellow numbers on dark, black on the light band (yellow text is unreadable there): accent-text. */
   .k .facts b { color: var(--accent-text); }
