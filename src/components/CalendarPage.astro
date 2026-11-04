@@ -8,6 +8,8 @@
  * Filter by group (also ?group=<slot id>, linked from the timetable): that group's own lines and the closures
  * that affect it; dates stay (they are in every feed). The subscribe links (only here; under the timetable only when
  * this page is off) follow the filter. Wide screens: filter and subscribe links in a column that stays in view.
+ * "Anzeigen": training (with its closures) and each kind of date that occurs can be switched off, e.g. to see only
+ * the tournaments (also ?show=turnier,pruefung; missing = everything).
  * Static page: the script hides days that have passed since the last build and marks today. Without JS: everything
  * from the build day on, unfiltered.
  * Not under /calendar/: Netlify serves that folder as text/calendar (public/_headers).
@@ -71,6 +73,16 @@ function summaries(d: Day) {
     return [{ disc, mixed: false as const, from, to, label, off: off === n }];
   });
 }
+/** Kinds of dates for the "Anzeigen" filter; URL keys without umlauts. Dates without a kind count as "other". */
+const KINDS = [
+  { key: 'turnier', kind: 'Turnier', de: 'Turniere', en: 'Tournaments' },
+  { key: 'pruefung', kind: 'Prüfung', de: 'Prüfungen', en: 'Gradings' },
+  { key: 'seminar', kind: 'Seminar', de: 'Seminare', en: 'Seminars' },
+  { key: 'verein', kind: 'Verein', de: 'Vereinstermine', en: 'Club events' },
+  { key: 'other', kind: undefined, de: 'Sonstige Termine', en: 'Other dates' },
+] as const;
+const kindKey = (e: { kind?: string }) => KINDS.find((k) => k.kind === e.kind)?.key ?? 'other';
+const kindsPresent = KINDS.filter((k) => events.some((e) => kindKey(e) === k.key));
 const mixedOf = (d: Day) => new Set(summaries(d).filter((s) => s.mixed).map((s) => s.disc));
 
 const webcal = (id: string) => `webcal://${Astro.site!.host}/calendar/${id}.ics`;
@@ -97,6 +109,15 @@ const title = de ? 'Kalender' : 'Calendar';
             {slots.map((s) => <option value={s.id} data-disc={s.discipline}>{option(s)}</option>)}
           </select>
         </div>
+        {kindsPresent.length > 0 && (
+          <fieldset class="show" id="cal-show">
+            <legend>{de ? 'Anzeigen' : 'Show'}</legend>
+            <label class="chip"><input type="checkbox" value="training" checked /> {de ? 'Training und Ausfälle' : 'Training and closures'}</label>
+            {kindsPresent.map((k) => (
+              <label class="chip"><input type="checkbox" value={k.key} checked /> {de ? k.de : k.en}</label>
+            ))}
+          </fieldset>
+        )}
         {site.calendar && (
           <div class="subscribe" id="cal-sub" data-label-all={t('week.calendar')} data-label-one={t('week.calendar.one')}>
             <h2>{de ? 'Abonnieren' : 'Subscribe'}</h2>
@@ -123,7 +144,7 @@ const title = de ? 'Kalender' : 'Calendar';
                   </p>
                   <ul class="items">
                     {d.events.map((e) => (
-                      <li class:list={['event', { cancelled: e.cancelled }]}>
+                      <li class:list={['event', { cancelled: e.cancelled }]} data-kind={kindKey(e)}>
                         <p class="meta">
                           {e.cancelled && <strong>{de ? 'Abgesagt' : 'Cancelled'}</strong>}
                           {e.cancelled && (e.kind || e.place) && ', '}
@@ -178,7 +199,7 @@ const title = de ? 'Kalender' : 'Calendar';
             <h2 id="w-later">{de ? 'Später' : 'Later'}</h2>
             <ul class="later-list">
               {later.events.map((e) => (
-                <li class:list={['event', { cancelled: e.cancelled }]}>
+                <li class:list={['event', { cancelled: e.cancelled }]} data-kind={kindKey(e)}>
                   <p class="date num">{e.cancelled ? <s>{whenOf(e, lang, thisYear)}</s> : whenOf(e, lang, thisYear)}</p>
                   <div>
                     <p class="meta">
@@ -198,7 +219,7 @@ const title = de ? 'Kalender' : 'Calendar';
             </ul>
           </section>
         )}
-        <p class="empty" hidden>{de ? 'Für diese Gruppe steht in den nächsten Wochen nichts an.' : 'Nothing coming up for this group in the next weeks.'}</p>
+        <p class="empty" hidden>{de ? 'Für diese Auswahl steht in den nächsten Wochen nichts an.' : 'Nothing coming up for this selection in the next weeks.'}</p>
       </div>
       </div>
     </div>
@@ -220,7 +241,16 @@ const title = de ? 'Kalender' : 'Calendar';
     var subLinks = sub ? [].slice.call(sub.querySelectorAll('a[data-cal]')) : [];
     subLinks.forEach(function (a) { a.dataset.all = a.href; });
 
+    var show = document.getElementById('cal-show');
+    var boxes = show ? [].slice.call(show.querySelectorAll('input')) : [];
+    var shown = function () {
+      var on = {};
+      boxes.forEach(function (b) { on[b.value] = b.checked; });
+      return on;
+    };
+
     function apply(id) {
+      var on = shown();
       var opt = select.querySelector('option[value="' + id + '"]');
       var disc = id && opt ? opt.dataset.disc : null;
       if (id && !opt) id = '';
@@ -234,6 +264,9 @@ const title = de ? 'Kalender' : 'Calendar';
         var g = li.dataset.groups;
         li.hidden = !!disc && g !== 'alle' && g !== disc;
       });
+      // "Anzeigen": training off hides its closures too; each kind of date on its own.
+      if (on.training === false) agenda.querySelectorAll('.training, .closure').forEach(function (li) { li.hidden = true; });
+      agenda.querySelectorAll('.event').forEach(function (li) { li.hidden = on[li.dataset.kind] === false; });
       // A closure line stays only when the group's own training is cancelled that day.
       agenda.querySelectorAll('.day').forEach(function (d) {
         if (id) d.querySelectorAll('.closure').forEach(function (c) { if (!d.querySelector('.training.off[data-group="' + id + '"]')) c.hidden = true; });
@@ -252,16 +285,27 @@ const title = de ? 'Kalender' : 'Calendar';
       }
     }
 
-    var param = new URLSearchParams(location.search).get('group') || '';
+    var params = new URLSearchParams(location.search);
+    var param = params.get('group') || '';
     select.value = select.querySelector('option[value="' + param + '"]') ? param : '';
+    if (params.has('show')) {
+      var keys = params.get('show').split(',');
+      boxes.forEach(function (b) { b.checked = keys.indexOf(b.value) !== -1; });
+    }
     apply(select.value);
-    select.addEventListener('change', function () {
+    // The choice goes into the address (shareable, survives reload); defaults leave it out.
+    function update() {
       apply(select.value);
       var url = new URL(location.href);
       if (select.value) url.searchParams.set('group', select.value);
       else url.searchParams.delete('group');
+      var off = boxes.filter(function (b) { return !b.checked; });
+      if (off.length) url.searchParams.set('show', boxes.filter(function (b) { return b.checked; }).map(function (b) { return b.value; }).join(','));
+      else url.searchParams.delete('show');
       history.replaceState(null, '', url);
-    });
+    }
+    select.addEventListener('change', update);
+    boxes.forEach(function (b) { b.addEventListener('change', update); });
   })();
 </script>
 
@@ -280,6 +324,17 @@ const title = de ? 'Kalender' : 'Calendar';
   .pick { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
   @media (min-width: 1100px) { .pick { display: grid; gap: 6px; } }
   .pick label { font-weight: 700; }
+  .show { border: 0; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; min-width: 0; }
+  .show legend { font-weight: 700; margin-bottom: 6px; padding: 0; }
+  /* Toggle chips: native checkbox inside, yellow when on (yellow = selection). */
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; cursor: pointer;
+    border: 2px solid var(--fg); border-radius: 4px; font-weight: 600; font-size: var(--fs-meta);
+  }
+  .chip:has(input:checked) { background: var(--gelb); border-color: var(--gelb); color: #000; }
+  .chip input { margin: 0; accent-color: #000; }
+  .chip:has(input:focus-visible) { outline: 3px solid var(--gelb); outline-offset: 2px; }
+  .chip:has(input:checked:focus-visible) { outline-color: var(--fg); }
   select {
     font: inherit; color: var(--fg); background: var(--bg); border: 2px solid var(--fg); border-radius: 4px;
     padding: 8px 12px; max-width: 100%;
