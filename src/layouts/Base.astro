@@ -118,7 +118,8 @@ const beta = isBetaBuild();
         var s = JSON.parse(sessionStorage.getItem('lang-switch-scroll') || 'null');
         sessionStorage.removeItem('lang-switch-scroll');
         if (s && s.to === location.pathname && !location.hash && s.share > 0) {
-          window.scrollTo(0, s.share * (document.documentElement.scrollHeight - window.innerHeight));
+          // instant: html has scroll-behavior: smooth for in-page links; here the page must not visibly scroll.
+          window.scrollTo({ top: s.share * (document.documentElement.scrollHeight - window.innerHeight), behavior: 'instant' });
         }
       } catch (e) {}
     </script>
