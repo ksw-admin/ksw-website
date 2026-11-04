@@ -15,10 +15,6 @@ From the content pass on 2026-11-03 (old site vs. redesign). Answer here or tell
 - [ ] **Names:** students' last names are now shortened to an initial (Elif E., Steven D., Daniel D., Helena und Lars C.).
       Adults in a role keep their full name (Andreas Weiherer, Melanie Döring, Salvatore Tiso, Daniel Stöpke). OK?
       Note: "Melanie Döring" next to "Steven D." may still reveal Steven's surname.
-- [ ] **Past dates 2026** (calendar page, "Früher in 2026"): backfilled from the reports where the text names the date
-      (14.2., 9.5., 29.5., 4.7., 10.10.). Missing, because the report gives no date: the grading of the 78-year-old
-      student (report from 29.3.) and the International Open German Championships in Arnsberg (report from 9.4.).
-      When were they? Place of the Kids Tournament on 14.2.?
 - [ ] **Impressum:** VAT ID (USt-IdNr.), if any. Legal drafts (Datenschutz, Impressum) are marked ENTWURF in the source.
 
 ## FAQ: questions only Peter can answer
