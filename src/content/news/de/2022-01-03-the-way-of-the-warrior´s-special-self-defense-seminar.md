@@ -4,6 +4,8 @@ date: 2022-01-03
 kind: Seminar
 place: Arnsberg
 featured: true
+# Was an "Artikel" with its own page under /articles/ (moved 2026-11-04; old URL redirects).
+page: ja
 description: Am 02.10.2021 veranstaltete der I.H.H.H.F. in Arnsberg einen
   interdisziplinären Lehrgang, in dem über 40 (Groß)Meister in stündlichen
   Intervallen einen Einblick und ein kurzes Training in ihren Kampfstil gaben.

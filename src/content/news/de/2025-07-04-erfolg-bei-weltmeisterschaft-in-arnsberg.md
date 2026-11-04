@@ -10,6 +10,8 @@ medals:
   bronze: 0
   other: 0
 featured: true
+# Was an "Artikel" with its own page under /articles/ (moved 2026-11-04; old URL redirects).
+page: ja
 description: Erster Weltmeistertitel in Formen und vier zweite Plätze dazu. Der
   Einsatz hat sich mehr als gelohnt!
 image: images/whatsapp-image-2025-06-23-at-15.34.30.jpeg

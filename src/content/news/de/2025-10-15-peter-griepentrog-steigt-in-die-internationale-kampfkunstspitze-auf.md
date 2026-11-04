@@ -2,6 +2,8 @@
 title: Peter Griepentrog steigt in die internationale Kampfkunstspitze auf
 date: 2025-10-15
 featured: true
+# Was an "Artikel" with its own page under /articles/ (moved 2026-11-04; old URL redirects).
+page: ja
 description: "Nach dem 5. Dan folgt die nächste Auszeichnung: Der Duisburger
   FCR-Meister ist jetzt Teil der internationalen Kommission für höchste
   Dan-Grade."

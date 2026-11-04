@@ -74,7 +74,7 @@ const fmt = (v: unknown, long = false) => {
 };
 const teaser = (s: string) => (s.length > 220 ? s.slice(0, 217).replace(/\s+\S*$/, '') + ' …' : s);
 
-function postPreview(collection: 'news' | 'articles') {
+function postPreview(collection: 'news') {
   return createClass({
     render() {
       const data: Imm = this.props.entry.get('data');
@@ -152,7 +152,6 @@ function postPreview(collection: 'news' | 'articles') {
 }
 
 CMS.registerPreviewTemplate('news', postPreview('news'));
-CMS.registerPreviewTemplate('articles', postPreview('articles'));
 
 // config.yml is loaded and merged with this. Local mode (`npm run cms` on localhost) has no drafts: save directly there.
 const isLocal = ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname);

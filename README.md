@@ -21,7 +21,7 @@ Netlify does the deploys.
 
 | What | Where |
 |---|---|
-| News, old articles | `src/content/news/de/`, `src/content/articles/de/` (photos in `images/` next to them) |
+| News (all posts; the old "Artikel" moved in 2026-11-04, old `/articles/<slug>/` URLs 301 to `/aktuelles/<slug>/` in `public/_redirects`) | `src/content/news/de/` (photos in `images/` next to them) |
 | Kuk Sool Won / Tai Chi pages | `src/content/disciplines/de/` |
 | Training times | `src/content/schedule.json` (week planner, age finder, discipline pages, offline page) |
 | Contact, credentials, social links, video | `src/content/site.json` |

@@ -112,23 +112,6 @@ collections:
           - { label: 'Nein, nur in der Liste', value: nein }
       - { label: Bericht (optional), name: body, widget: markdown, required: false, i18n: true, buttons: [bold, italic, link, heading-two, bulleted-list, numbered-list], editor_components: [image], hint: 'Ausführlicher Bericht mit Überschriften und Listen (z.B. Ergebnisse). Ein Beitrag mit Bericht bekommt automatisch eine eigene Seite.' }
 
-  - name: articles
-    label: Artikel (alt)
-    label_singular: Artikel
-    description: Ältere Artikel mit eigener Seite unter /articles/. Neue Beiträge bitte unter „Aktuelles“ anlegen.
-    folder: src/content/articles
-    i18n: true
-    preview_path: 'articles/{{slug}}/'
-    create: false
-    slug: '{{year}}-{{month}}-{{day}}-{{title}}'
-    # Uploads go next to the entries (images/ beside the .md file); the site makes small WebP versions at build time.
-    media_folder: images
-    public_folder: images
-    summary: '{{date | date("DD.MM.YYYY")}}  {{title}}'
-    # Decap 3.17 has no default sort order: click "Datum" in the list to sort newest first.
-    sortable_fields: [date, title]
-    fields: *postFields
-
   # ---------------------------------------------------------------- Seiten
   - name: disciplines
     label: Kampfkunst-Seiten

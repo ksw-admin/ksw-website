@@ -9,6 +9,8 @@ medals:
   bronze: 1
   other: 0
 featured: true
+# Was an "Artikel" with its own page under /articles/ (moved 2026-11-04; old URL redirects).
+page: ja
 description: Am 14.02.2026 haben wir am Turnier International Championship teilgenommen.
 image: images/ed1828bd-c889-41a2-9e74-ebdd273bc3ea.jpg
 image_text: "Siegerehrung beim „Evolution Generation Kids Tournament“ im Februar 2026."

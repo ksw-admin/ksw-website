@@ -70,13 +70,9 @@ test('own page: long description or a body gives a page', () => {
   assert.equal(decideHasPage({ collection: 'news', description: 'kurz', body: 'Langer Bericht.' }), true);
 });
 
-test('own page: old articles always keep their page (existing URLs)', () => {
-  assert.equal(decideHasPage({ collection: 'articles', description: 'kurz' }), true);
-});
-
 test('own page: the CMS choice wins in both directions', () => {
   assert.equal(decideHasPage({ collection: 'news', override: true, description: 'kurz' }), true);
-  assert.equal(decideHasPage({ collection: 'articles', override: false, description: 'x'.repeat(900) }), false);
+  assert.equal(decideHasPage({ collection: 'news', override: false, description: 'x'.repeat(900) }), false);
 });
 
 test('visibility: the CMS switch wins, otherwise the old "featured" tag decides', async () => {

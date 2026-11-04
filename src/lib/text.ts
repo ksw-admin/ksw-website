@@ -39,16 +39,14 @@ export const hasRealBody = (body: string | undefined) => (body ?? '').replace(/<
 /**
  * Does a post get its own detail page?
  * - "page" set in the CMS (ja/nein -> true/false) always wins;
- * - old articles always keep their page (their /articles/ URLs exist since the old site);
  * - otherwise only posts with a long text (Markdown body, or a description over PAGE_MIN_CHARS).
  */
 export function decideHasPage(post: {
-  collection: 'news' | 'articles';
+  collection: 'news';
   override?: boolean;
   description: string;
   body?: string;
 }): boolean {
   if (post.override !== undefined) return post.override;
-  if (post.collection === 'articles') return true;
   return hasRealBody(post.body) || post.description.length > PAGE_MIN_CHARS;
 }

@@ -50,11 +50,6 @@ const news = defineCollection({
   schema: post,
 });
 
-const articles = defineCollection({
-  loader: glob({ base: './src/content/articles', pattern: '**/*.md', generateId: keepName }),
-  schema: post,
-});
-
 const disciplines = defineCollection({
   loader: glob({ base: './src/content/disciplines', pattern: '**/*.md', generateId: keepName }),
   schema: z.object({
@@ -117,4 +112,4 @@ const faq = defineCollection({
   }),
 });
 
-export const collections = { news, articles, disciplines, pages, sponsors, schedule, faq };
+export const collections = { news, disciplines, pages, sponsors, schedule, faq };

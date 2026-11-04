@@ -3,6 +3,8 @@ title: Kuk Sool Won Kampfrichter-Lehrgang
 date: 2022-01-02
 kind: Seminar
 featured: true
+# Was an "Artikel" with its own page under /articles/ (moved 2026-11-04; old URL redirects).
+page: ja
 description: Am 04.09.2021 fand in der Kampfkunstakademie Griepentrog das zweite
   Mal ein Kampfrichter-Lehrgang statt.
 image: images/lehrgang.jpeg

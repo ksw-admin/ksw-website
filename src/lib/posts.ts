@@ -3,10 +3,10 @@ import type { Lang } from '../i18n/ui';
 import { resolveImage, type ContentImage } from './images';
 import { cleanParagraphs, decideHasPage, isVisible } from './text';
 
-type Entry = CollectionEntry<'news'> | CollectionEntry<'articles'>;
+type Entry = CollectionEntry<'news'>;
 
 export type Post = {
-  collection: 'news' | 'articles';
+  collection: 'news';
   /** The German entry: date, type, place, medals, photo and visibility always come from here. */
   entry: Entry;
   /** The entry whose text is shown: the English one when the post is translated and shown in English. */
@@ -58,7 +58,7 @@ function toPost(collection: Post['collection'], de: Entry, en: Entry | undefined
   const description = descriptionEntry.data.description!;
   const fromName = DATE_IN_NAME.exec(slug)?.[1];
   const date = de.data.date ?? (fromName ? new Date(fromName + 'T12:00:00') : new Date(0));
-  const base = collection === 'news' ? '/aktuelles/' : '/articles/';
+  const base = '/aktuelles/';
   const prefix = lang === 'de' ? '' : `/${lang}`;
   // Page or not is decided on the German post, so both languages have the same pages.
   const hasPage = decideHasPage({ collection, override: de.data.page, description: de.data.description!, body: de.body });
@@ -85,12 +85,12 @@ function toPost(collection: Post['collection'], de: Entry, en: Entry | undefined
 }
 
 /**
- * News and articles, newest first, for a page in `lang`. German entries are the source; on English pages a
+ * All posts (Aktuelles; the old "Artikel" were moved in on 2026-11-04), newest first, for a page in `lang`. German entries are the source; on English pages a
  * post shows its English text if translated, else its German text. Hidden posts are left out everywhere.
  */
 export async function getPosts(lang: Lang = 'de'): Promise<Post[]> {
   const out: Post[] = [];
-  for (const collection of ['news', 'articles'] as const) {
+  for (const collection of ['news'] as const) {
     const entries = (await getCollection(collection)) as Entry[];
     const english = new Map(entries.filter((e) => e.id.startsWith('en/')).map((e) => [splitId(e.id).slug, e]));
     for (const de of entries.filter((e) => e.id.startsWith('de/'))) {
