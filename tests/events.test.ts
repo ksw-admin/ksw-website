@@ -9,12 +9,15 @@ const turnier: SiteEvent = { from: '2026-05-09', time: '10:00', title: 'New Gene
 const seminar: SiteEvent = { from: '2026-06-13', to: '2026-06-14', title: 'Way of the Warrior', title_en: 'Way of the Warrior seminar', kind: 'Seminar' };
 const feier: SiteEvent = { from: '2026-12-18', title: 'Weihnachtsfeier' };
 
-test('date wording: weekday, range, time', () => {
-  assert.equal(whenOf(turnier, 'de'), 'Sa 9.5., 10:00 Uhr');
-  assert.equal(whenOf(turnier, 'en'), 'Sat 9 May, 10:00');
-  assert.equal(whenOf(seminar, 'de'), 'Sa 13.6. bis So 14.6.');
-  assert.equal(whenOf(feier, 'de'), 'Fr 18.12.');
-  assert.equal(whenOf({ ...turnier, time_to: '16:00' }, 'de'), 'Sa 9.5., 10:00–16:00 Uhr');
+test('date wording: weekday, range, time; year only when not the current one', () => {
+  assert.equal(whenOf(turnier, 'de', 2026), 'Sa 9.5., 10:00 Uhr');
+  assert.equal(whenOf(turnier, 'en', 2026), 'Sat 9 May, 10:00');
+  assert.equal(whenOf(seminar, 'de', 2026), 'Sa 13.6. bis So 14.6.');
+  assert.equal(whenOf(feier, 'de', 2026), 'Fr 18.12.');
+  assert.equal(whenOf({ ...turnier, time_to: '16:00' }, 'de', 2026), 'Sa 9.5., 10:00–16:00 Uhr');
+  assert.equal(whenOf({ from: '2027-01-16', title: 'Neujahr' }, 'de', 2026), 'Sa 16.1.2027');
+  assert.equal(whenOf({ from: '2027-01-16', title: 'Neujahr' }, 'en', 2026), 'Sat 16 Jan 2027');
+  assert.equal(whenOf({ from: '2026-12-30', to: '2027-01-02', title: 'Camp' }, 'de', 2026), 'Mi 30.12. bis Sa 2.1.2027');
 });
 
 test('end time: given, else two hours, never past midnight', () => {

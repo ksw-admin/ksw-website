@@ -1,7 +1,7 @@
 // Upcoming dates ("Termine", CMS: Einstellungen › Termine): tournaments, gradings, seminars, club events.
 // Pure functions (no Astro imports): used by the home page block, the calendar feeds and the tests.
 // Dates are "YYYY-MM-DD" strings in German local time, times "HH:MM", like closures.
-import { addDays } from './closures.ts';
+import { addDays, todayInGermany } from './closures.ts';
 
 export type EventKind = 'Turnier' | 'Prüfung' | 'Seminar' | 'Verein';
 export type SiteEvent = {
@@ -33,16 +33,19 @@ const wd = (d: string, lang: 'de' | 'en') => {
   const [y, m, day] = parts(d);
   return WD[lang][new Date(Date.UTC(y, m - 1, day)).getUTCDay()];
 };
-const short = (d: string, lang: 'de' | 'en') => {
-  const [, m, day] = parts(d);
-  return lang === 'de' ? `${day}.${m}.` : `${day} ${MON[m - 1]}`;
+/** "9.5." / "9 May"; with the year when it is not the current one ("16.1.2027" / "16 Jan 2027"). */
+const short = (d: string, lang: 'de' | 'en', thisYear: number) => {
+  const [y, m, day] = parts(d);
+  const year = y !== thisYear ? (lang === 'de' ? String(y) : ` ${y}`) : '';
+  return lang === 'de' ? `${day}.${m}.${year}` : `${day} ${MON[m - 1]}${year}`;
 };
 
-/** "Sa 9.5., 10:00 Uhr" / "Sa 9.5. bis So 10.5." (English: "Sat 9 May, 10:00" / "Sat 9 May to Sun 10 May"). */
-export function whenOf(e: SiteEvent, lang: 'de' | 'en'): string {
-  const start = `${wd(e.from, lang)} ${short(e.from, lang)}`;
+/** "Sa 9.5., 10:00 Uhr" / "Sa 9.5. bis So 10.5." (English: "Sat 9 May, 10:00" / "Sat 9 May to Sun 10 May").
+ *  thisYear: dates in other years get the year (default: the current year in Germany). */
+export function whenOf(e: SiteEvent, lang: 'de' | 'en', thisYear = Number(todayInGermany().slice(0, 4))): string {
+  const start = `${wd(e.from, lang)} ${short(e.from, lang, thisYear)}`;
   const end = lastDay(e);
-  if (end !== e.from) return `${start} ${lang === 'de' ? 'bis' : 'to'} ${wd(end, lang)} ${short(end, lang)}`;
+  if (end !== e.from) return `${start} ${lang === 'de' ? 'bis' : 'to'} ${wd(end, lang)} ${short(end, lang, thisYear)}`;
   if (!e.time) return start;
   const range = e.time_to ? `${e.time}–${e.time_to}` : e.time;
   return lang === 'de' ? `${start}, ${range} Uhr` : `${start}, ${range}`;
