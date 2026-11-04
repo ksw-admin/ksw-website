@@ -39,6 +39,9 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
 ---
 
 <header class="hero band" id="schedule">
+  <!-- 도장 (dojang): the training hall, which is what the hero shows. Vertical like a hall banner, outline only,
+       cut off at the right edge; a graphic (drawn from data-sign), not text. -->
+  <div class="hangul hero-sign" lang="ko" aria-hidden="true" data-sign="도장"></div>
   <div class="wrap">
     <div class="head">
       <slot name="headline" />
@@ -48,6 +51,9 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
     <p class="hint" aria-hidden="true">{t('week.hint')}</p>
 
     <div class="detail" id="slot-detail" aria-live="polite">
+      <!-- All texts in one grid cell, only the chosen one visible: the panel is always as tall as the longest
+           text, so the button below does not jump when another group is chosen. -->
+      <div class="variants">
       <p class="pick">{t('week.pick')}</p>
       {
         slots.map((s) => (
@@ -62,6 +68,7 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
           </div>
         ))
       }
+      </div>
       <a class="btn" href={localePath('/#contact', lang)}>{t('cta.trial')}</a>
     </div>
 
@@ -129,6 +136,7 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
   const panel = document.getElementById('slot-detail')!;
   const details = [...panel.querySelectorAll<HTMLElement>('[data-detail]')];
   const pick = panel.querySelector<HTMLElement>('.pick')!;
+  const variants = panel.querySelector<HTMLElement>('.variants')!;
   // Calendar links follow the selection: all groups, or the selected group's feed.
   const cal = document.getElementById('cal');
   const calLinks = cal ? [...cal.querySelectorAll<HTMLAnchorElement>('a[data-cal]')] : [];
@@ -147,6 +155,7 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
     }
     for (const d of details) d.hidden = d.dataset.detail !== id;
     pick.hidden = id !== null;
+    variants.classList.toggle('picked', id !== null);
     if (cal) {
       // The feed name is in both links (Google: URL-encoded inside cid); swap it for the group id.
       for (const a of calLinks) a.href = id ? a.dataset.all!.replace('training.ics', `${id}.ics`) : a.dataset.all!;
@@ -174,7 +183,20 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
 
 <style>
   /* More room under the header on wide screens (28px on phones, up to 64px). */
-  .hero { padding-block: clamp(28px, 4vw, 64px) 56px; }
+  .hero { padding-block: clamp(28px, 4vw, 64px) 56px; position: relative; overflow-x: clip; }
+  .hero > .wrap { position: relative; z-index: 1; }
+  .hero-sign {
+    /* Left edge: behind the headline and the page margin (on the right the opaque timetable would cover it). */
+    position: absolute; z-index: 0; left: -0.14em; top: 50%; transform: translateY(-50%);
+    writing-mode: vertical-rl; text-orientation: upright; white-space: nowrap; font-family: var(--hangul); font-weight: 800; line-height: 1;
+    font-size: clamp(9rem, 21vw, 24rem); pointer-events: none; user-select: none;
+    /* Engraved into the surface: filled just off the background, a dark edge above and a light edge below
+       (like letters cut into a wooden board). Works on the dark and the light background. */
+    color: color-mix(in srgb, var(--fg) 6%, var(--bg));
+    text-shadow: 0 -2px 1px color-mix(in srgb, #000 45%, transparent), 0 2px 1px color-mix(in srgb, var(--fg) 10%, transparent);
+  }
+  /* Phones: large and centred behind the headline. */
+  @media (max-width: 860px) { .hero-sign { top: 8px; left: 50%; transform: translateX(-50%); font-size: 62vw; } }
   .wrap {
     display: grid; gap: 0 48px; align-items: start;
     grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
@@ -192,6 +214,12 @@ const title = (s: Slot) => [name(s), ageLabel(s, lang)?.replace('–', de ? ' bi
 
   .detail { margin-top: 34px; border-top: 2px solid var(--fg); padding-top: 18px; max-width: 30rem; min-height: 11rem; scroll-margin-bottom: 96px; }
   .pick { font-weight: 700; font-size: 1.15rem; }
+  .variants { display: grid; }
+  .variants > * { grid-area: 1 / 1; }
+  /* Hidden texts keep their space (invisible, and not read out), so the tallest one sets the height. */
+  .variants > [hidden] { display: block; visibility: hidden; }
+  /* Phones: nothing chosen yet = no empty space under the timetable (the instruction is above it there). */
+  @media (max-width: 860px) { .variants:not(.picked) { display: none; } .variants > .pick { display: none; } }
   .detail h2 { font-size: var(--fs-sub); line-height: 1.15; }
   .detail .when { font-size: 1.15rem; font-weight: 600; margin-top: 4px; }
   .detail p + p { margin-top: 4px; }

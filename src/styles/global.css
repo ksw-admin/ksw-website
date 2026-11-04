@@ -68,17 +68,9 @@
   color-scheme: dark;
 }
 
-/* Nanum Myeongjo (OFL, src/assets/fonts/NanumMyeongjo-OFL.txt), subset for the two signs 국술원 (Kuk Sool Won) and
-   태극 (taegeuk, Tai Chi): 17 KB instead of 700 KB, self-hosted (no request to Google from visitors).
-   Regenerate: download the woff2 named in
-   https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@800&text=국술원태극 (with a browser user agent). */
-@font-face {
-  font-family: 'Nanum Myeongjo';
-  font-weight: 800;
-  font-display: swap;
-  src: url('../assets/fonts/nanum-myeongjo-800-hangul.woff2') format('woff2');
-  unicode-range: U+AD6D, U+C220, U+C6D0, U+D0DC, U+ADF9;
-}
+/* Nanum Myeongjo 800 (OFL) for the Hangul signs: the whole font from @fontsource/nanum-myeongjo, imported in
+   Base.astro. Split into ~90 parts by unicode-range; browsers load only the parts with characters on the page
+   (self-hosted, no request to Google). To prune later: back to a subset of the signs actually used. */
 
 /* Logo: always the bright brand yellow. In light mode a thin black outline keeps it readable on light backgrounds
    (drop-shadow on a wrapper: the logo itself is a mask, which would cut a filter on the same element away). */
