@@ -16,22 +16,22 @@ tags:
   - articles
   - featured
 ---
-12 Schülerinen und Schüler  haben am 14.02.2026 am Turnier teilgenommen.
-D﻿er Meister gratuliert zum Erfolg
+12 Schülerinnen und Schüler haben am 14.02.2026 am Turnier teilgenommen.
+Der Meister gratuliert zum Erfolg!
 Sie erzielten folgende Platzierungen:
 
 **Kumdo** 
-- 2x 1.Platz 
+- 2x 1. Platz 
 - 2x 2. Platz 
 
 **In Front Fall** 
-- 1 x 1. Platz
+- 1x 1. Platz
 
 **Soft Style Forms**
-- 1 x 1. Platz
-- 1 x 2. Platz
+- 1x 1. Platz
+- 1x 2. Platz
 
 **Pointfight**
-- 2 x 1. Platz
-- 2 x 2. Platz  
-- 1 x 3. Platz
+- 2x 1. Platz
+- 2x 2. Platz  
+- 1x 3. Platz
