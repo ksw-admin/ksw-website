@@ -18,7 +18,7 @@ const watchUrl = `https://www.youtube.com/watch?v=${youtubeId}`;
     <div class="sec-h"><h2>{heading}</h2></div>
     <div class="frame" data-yt={youtubeId} data-title={title}>
       <button type="button" class="play">
-        <Image src={poster} alt="" width={1440} quality={70} widths={[640, 1024, 1440]} sizes="(max-width: 1520px) 100vw, 1440px" loading="lazy" />
+        <Image src={poster} alt="" width={1440} quality={60} widths={[480, 720, 1024, 1440]} sizes="(max-width: 760px) calc(100vw - 32px), (max-width: 1520px) calc(100vw - 128px), 1440px" loading="lazy" />
         <span class="label">
           <span class="icon" aria-hidden="true"></span>
           <span>

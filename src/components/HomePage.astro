@@ -39,7 +39,7 @@ const jsonLd = organizationLd(await getSchedule());
   </WeekPlanner>
 
   <figure class="photo">
-    <Image src={groupPhoto} alt={home.photoAlt} width={Math.min(groupPhoto.width, 2400)} quality={72} widths={[640, 1024, 1600, 2400]} sizes="100vw" />
+    <Image src={groupPhoto} alt={home.photoAlt} width={Math.min(groupPhoto.width, 2400)} quality={72} widths={[640, 1024, 1600, 2400]} sizes="100vw" loading="lazy" />
     <figcaption class="band"><div class="wrap">{home.photoCaption}</div></figcaption>
   </figure>
 

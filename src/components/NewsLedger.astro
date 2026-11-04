@@ -36,14 +36,14 @@ const fullSize = new Map(
           <time class="num" datetime={p.date.toISOString().slice(0, 10)}>{fmt.format(p.date)}</time>
           {p.image && (
             <a class="thumb" href={p.href ?? fullSize.get(p)} aria-label={p.href ? p.title : `${p.title}: ${lang === 'de' ? 'Foto in voller Größe' : 'full-size photo'}`} tabindex={p.href ? -1 : undefined}>
-              <Image src={p.image.meta} alt={alt} width={capWidth(p.image.meta, 720)} quality={75} widths={[240, 480, 720]} sizes="(max-width: 760px) 100vw, 160px" loading="lazy" decoding="async" />
+              <Image src={p.image.meta} alt={alt} width={capWidth(p.image.meta, 720)} quality={62} widths={[240, 400, 560, 720]} sizes="(max-width: 760px) calc(100vw - 32px), 160px" loading="lazy" decoding="async" />
             </a>
           )}
           <div class="text">
             {(d.kind || d.place) && <span class="kind">{[d.kind, d.place].filter(Boolean).join(', ')}</span>}
             <H lang={p.textLang !== lang ? p.textLang : undefined}>{p.href ? <a href={p.href}>{p.title}</a> : p.title}</H>
             {p.hasPage ? (
-              <p lang={p.descriptionLang !== lang ? p.descriptionLang : undefined}>{teaser(p.paragraphs[0] ?? '')} <a class="more" href={p.href} lang={lang}>{more}</a></p>
+              <p lang={p.descriptionLang !== lang ? p.descriptionLang : undefined}>{teaser(p.paragraphs[0] ?? '')} <a class="more" href={p.href} lang={lang}>{more}<span class="visually-hidden">: <span lang={p.textLang !== lang ? p.textLang : undefined}>{p.title}</span></span></a></p>
             ) : (
               p.paragraphs.map((t) => <p class="full" lang={p.descriptionLang !== lang ? p.descriptionLang : undefined}>{t}</p>)
             )}

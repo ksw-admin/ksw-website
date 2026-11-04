@@ -13,7 +13,7 @@ const { lang } = Astro.props;
 const t = useTranslations(lang);
 ---
 
-<aside id="beta-banner" class="band beta-banner" aria-label={t('beta.banner.title')} hidden>
+<aside id="beta-banner" class="band beta-banner" aria-label={t('beta.banner.title')}>
   <div class="wrap beta-wrap">
     <p class="beta-text">
       <strong>{t('beta.banner.title')}:</strong>
@@ -26,6 +26,10 @@ const t = useTranslations(lang);
     </div>
   </div>
 </aside>
+<script is:inline>
+  // Runs before the first paint: closed banners stay closed for the session, without a layout shift.
+  try { if (sessionStorage.getItem('ksw-beta-dismissed') === '1') document.getElementById('beta-banner').hidden = true; } catch (e) {}
+</script>
 
 <script>
   // Rendered only in a beta build (Base.astro). Cookie handling from src/lib/split-test.ts (tested).
@@ -37,7 +41,6 @@ const t = useTranslations(lang);
     dismissed = sessionStorage.getItem('ksw-beta-dismissed') === '1';
   } catch {}
   if (banner && !dismissed) {
-    banner.hidden = false;
     document.getElementById('beta-dismiss-btn')?.addEventListener('click', () => {
       banner.hidden = true;
       try {

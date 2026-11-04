@@ -14,7 +14,7 @@ const { master } = site;
     <div class="sec-h"><h2 id="master-title">{heading}</h2></div>
     <div class="cols">
     <figure>
-      <Image src={photo} alt={photoAlt} width={Math.min(photo.width, 1000)} quality={75} widths={[400, 700, 1000]} sizes="(max-width: 760px) 100vw, 40vw" loading="lazy" />
+      <Image src={photo} alt={photoAlt} width={Math.min(photo.width, 1000)} quality={75} widths={[400, 560, 700, 1000]} sizes="(max-width: 760px) calc(100vw - 32px), 40vw" loading="lazy" />
       {caption && <figcaption>{caption}</figcaption>}
     </figure>
     <div>

@@ -1,5 +1,7 @@
 ---
 import '@fontsource-variable/archivo/wdth.css';
+// Same file the CSS above references (Vite hashes it once): preloaded so the headline font loads in parallel with the CSS.
+import archivoLatin from '@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2?url';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -59,6 +61,7 @@ const beta = isBetaBuild();
       } catch (e) {}
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="preload" href={archivoLatin} as="font" type="font/woff2" crossorigin />
     <title>{fullTitle}</title>
     <meta name="description" content={metaDescription} />
     {(noindex || isFallback) && <meta name="robots" content="noindex" />}
