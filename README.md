@@ -36,7 +36,7 @@ Netlify does the deploys.
 | Links to home page sections | `/#schedule` (timetable), `/#ksw`, `/#taichi`, `/#video`, `/#dates`, `/#news`, `/#master`, `/#contact` (contact, trial lesson); FAQ answers `/faq/#<file name>`, e.g. `/faq/#kalender`. Same with `/en/`. |
 | Question form | FAQ page, Netlify Forms, form name `frage`. Notifications: Netlify › Forms. Nothing sent appears on the site by itself. |
 | Interface texts (de/en) | `src/i18n/ui.ts` |
-| CMS config | `public/admin/config.yml` (branch: `astro-redesign` until the merge, then `main`) |
+| CMS config | `public/admin/config.yml` (branch: `main`; the old Eleventy site is kept as branch `legacy`) |
 | Design tokens | `src/styles/global.css` |
 
 ### Code layout

@@ -5,9 +5,8 @@
 backend:
   name: github
   repo: ksw-admin/ksw-website
-  # IMPORTANT: astro-redesign until the merge. main still holds the old Eleventy site,
-  # and files written in the new layout would break it. Switch to main when merging.
-  branch: astro-redesign
+  # The live site. Until the merge (2026-11) this was astro-redesign; the old Eleventy site is the branch legacy.
+  branch: main
   base_url: https://api.netlify.com
   auth_endpoint: auth
   commit_messages:
