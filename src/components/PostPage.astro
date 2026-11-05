@@ -24,7 +24,7 @@ const paragraphs = post.paragraphs;
 <Base
   title={post.title}
   alternate={post.alternate}
-  description={paragraphs[0]?.slice(0, 160)}
+  description={paragraphs[0]}
   image={post.image ? `/og/${post.slug}.jpg` : undefined}
   imageAlt={post.imageText && post.imageText !== 'placeholder' ? post.imageText : post.title}
   ogType="article"
