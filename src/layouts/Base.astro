@@ -12,6 +12,7 @@ import ClosureBanner from '../components/ClosureBanner.astro';
 import BetaBanner from '../components/BetaBanner.astro';
 import BetaSwitch from '../components/BetaSwitch.astro';
 import { site } from '../lib/site';
+import { getHome } from '../lib/home';
 import { isBetaBuild } from '../lib/split-test';
 import { getLangFromUrl } from '../i18n/ui';
 
@@ -31,11 +32,13 @@ interface Props {
   articleDate?: string;
 }
 
-const { title, description = site.description, alternate, image = '/og/default.jpg', imageAlt = 'Gruppenfoto der Kampfkunst Academy auf der Matte', jsonLd, noindex = false, ogType = 'website', articleDate } = Astro.props;
+const { title, description = site.description, alternate, image = '/og/default.jpg', imageAlt: imageAltProp, jsonLd, noindex = false, ogType = 'website', articleDate } = Astro.props;
 // The requested address. On an untranslated English page the i18n fallback rewrites to the German route, and
 // Astro.url then holds the German address; originPathname keeps the /en/... one the visitor asked for.
 const reqPath = Astro.originPathname || Astro.url.pathname;
 const lang = getLangFromUrl(new URL(reqPath, Astro.site));
+// Default preview image = the home page photo, so its alt text comes from home.json in the page's language (CMS).
+const imageAlt = imageAltProp ?? getHome(lang).photoAlt;
 // One line for meta tags (post texts contain line breaks), max ~160 characters for search results and previews.
 const metaDescription = (() => {
   const s = description.replace(/\s+/g, ' ').trim();
