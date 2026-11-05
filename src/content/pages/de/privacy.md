@@ -70,7 +70,7 @@ Ihnen als von der Datenverarbeitung betroffenen Person stehen verschiedene Recht
 - Recht auf Einschränkung der Verarbeitung: Sie können die Einschränkung der Verarbeitung Ihrer personenbezogenen Daten verlangen, soweit die Richtigkeit der Daten von Ihnen bestritten wird, die Verarbeitung unrechtmäßig ist, Sie aber deren Löschung ablehnen. Außerdem steht Ihnen dieses Recht zu, wenn wir die Daten nicht mehr benötigen, Sie diese jedoch zur Geltendmachung, Ausübung oder Verteidigung von Rechtsansprüchen benötigen. Darüber hinaus haben Sie dieses Recht, wenn Sie Widerspruch gegen die Verarbeitung Ihrer personenbezogenen Daten eingelegt haben;
 - Recht auf Datenübertragbarkeit: Sie können verlangen, dass wir Ihnen Ihre personenbezogenen Daten, die Sie uns bereitgestellt haben, in einem strukturierten, gängigen und maschinenlesebaren Format übermitteln. Alternativ können Sie die direkte Übermittlung der von Ihnen uns bereitgestellten personenbezogenen Daten an einen anderen Verantwortlichen verlangen, soweit dies möglich ist.
 - Beschwerderecht: Sie können sich bei der für uns zuständigen Aufsichtsbehörde beschweren, z.B. wenn Sie der Ansicht sind, dass wir Ihre personenbezogenen Daten in unrechtmäßiger Weise verarbeiten. Die für uns zuständige Behörde ist: Landesbeauftragte für Datenschutz und Informationsfreiheit Nordrhein-Westfalen
-- Kavelleriestr. 2 – 4
+- Kavalleriestraße 2–4
 - 40213 Düsseldorf
 - Tel.: 0211 38424-0
 - Fax: 0211 38424-10
