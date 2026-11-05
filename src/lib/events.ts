@@ -1,0 +1,68 @@
+// Upcoming dates ("Termine", CMS: Einstellungen › Termine): tournaments, gradings, seminars, club events.
+// Pure functions (no Astro imports): used by the home page block, the calendar feeds and the tests.
+// Dates are "YYYY-MM-DD" strings in German local time, times "HH:MM", like closures.
+import { MONTHS_SHORT_EN, todayInGermany, WEEKDAYS_SHORT } from './dates.ts';
+
+export type EventKind = 'Turnier' | 'Prüfung' | 'Seminar' | 'Verein';
+export type SiteEvent = {
+  from: string;
+  to?: string;
+  time?: string;
+  time_to?: string;
+  title: string;
+  title_en?: string;
+  kind?: EventKind;
+  place?: string;
+  link?: string;
+  /** Called off: stays in the list (struck through, "Abgesagt") until its date, STATUS:CANCELLED in the calendar. */
+  cancelled?: boolean;
+  /** Slug of the report under "Aktuelles" (CMS: relation field "Bericht"); past dates link to it. */
+  report?: string;
+};
+
+export const lastDay = (e: SiteEvent) => (e.to && e.to >= e.from ? e.to : e.from);
+
+/** Not over yet (shown until the end of its last day). */
+export const isUpcoming = (e: SiteEvent, today: string) => lastDay(e) >= today;
+
+export const titleOf = (e: SiteEvent, lang: 'de' | 'en') => (lang === 'en' && e.title_en?.trim() ? e.title_en.trim() : e.title.trim());
+
+const KIND_EN: Record<EventKind, string> = { Turnier: 'Tournament', Prüfung: 'Grading', Seminar: 'Seminar', Verein: 'Club' };
+export const kindOf = (e: SiteEvent, lang: 'de' | 'en') => (e.kind ? (lang === 'de' ? e.kind : KIND_EN[e.kind]) : undefined);
+
+const parts = (d: string) => d.split('-').map(Number) as [number, number, number];
+const wd = (d: string, lang: 'de' | 'en') => {
+  const [y, m, day] = parts(d);
+  return WEEKDAYS_SHORT[lang][new Date(Date.UTC(y, m - 1, day)).getUTCDay()];
+};
+/** "9.5." / "9 May"; with the year when it is not the current one ("16.1.2027" / "16 Jan 2027"). */
+const short = (d: string, lang: 'de' | 'en', thisYear: number) => {
+  const [y, m, day] = parts(d);
+  const year = y !== thisYear ? (lang === 'de' ? String(y) : ` ${y}`) : '';
+  return lang === 'de' ? `${day}.${m}.${year}` : `${day} ${MONTHS_SHORT_EN[m - 1]}${year}`;
+};
+
+/** "Sa 9.5., 10:00 Uhr" / "Sa 9.5. bis So 10.5." (English: "Sat 9 May, 10:00" / "Sat 9 May to Sun 10 May").
+ *  thisYear: dates in other years get the year (default: the current year in Germany). */
+export function whenOf(e: SiteEvent, lang: 'de' | 'en', thisYear = Number(todayInGermany().slice(0, 4))): string {
+  const start = `${wd(e.from, lang)} ${short(e.from, lang, thisYear)}`;
+  const end = lastDay(e);
+  if (end !== e.from) return `${start} ${lang === 'de' ? 'bis' : 'to'} ${wd(end, lang)} ${short(end, lang, thisYear)}`;
+  if (!e.time) return start;
+  const range = e.time_to ? `${e.time}–${e.time_to}` : e.time;
+  return lang === 'de' ? `${start}, ${range} Uhr` : `${start}, ${range}`;
+}
+
+/** Calendar end for a timed one-day event: the given end time, else two hours after the start. */
+export function endTime(e: SiteEvent): string | undefined {
+  if (!e.time) return undefined;
+  if (e.time_to && e.time_to > e.time) return e.time_to;
+  const [h, m] = e.time.split(':').map(Number);
+  const t = Math.min(h * 60 + m + 120, 23 * 60 + 59);
+  return `${String(Math.floor(t / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')}`;
+}
+
+/** Stable calendar UID part: date plus a slug of the title. */
+export const eventKey = (e: SiteEvent) =>
+  `${e.from}-${e.title.toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40)}`;
+

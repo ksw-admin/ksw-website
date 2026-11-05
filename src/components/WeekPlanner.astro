@@ -1,0 +1,264 @@
+---
+/**
+ * Hero: the training week. Each slot is a button: tapping a group marks it (both days) and shows its details
+ * in the panel next to the headline (below the week on phones). Without JS the full week still shows.
+ * Data: src/content/schedule.json.
+ */
+import { getSchedule, minutes, dayShort, dayList, disciplineName, groupName, WEEKDAYS, type Weekday, type Slot } from '../lib/schedule';
+import { googleCalendarUrl, webcalUrl } from '../lib/calendar-links';
+import { useTranslations, localePath, type Lang } from '../i18n/ui';
+import { site } from '../lib/site';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const slots = await getSchedule();
+
+// Show Mon..last training day (at least Mon-Fri), and the hours that have training.
+const usedDays = new Set(slots.flatMap((s) => s.days));
+const lastDay = Math.max(4, ...[...usedDays].map((d) => WEEKDAYS.indexOf(d)));
+const days = WEEKDAYS.slice(0, lastDay + 1) as Weekday[];
+const STEP = 15;
+const start = Math.floor(Math.min(...slots.map((s) => minutes(s.from))) / 60) * 60;
+const end = Math.max(...slots.map((s) => minutes(s.to)));
+const rows = (end - start) / STEP;
+const row = (time: string) => (minutes(time) - start) / STEP + 2;
+const hours = Array.from({ length: Math.floor((end - start) / 60) + 1 }, (_, i) => start / 60 + i);
+
+const de = lang === 'de';
+const short = (s: Slot) =>
+  s.discipline === 'taichi' ? 'Tai Chi' : s.ageMax === undefined ? `${de ? 'ab' : ''} ${s.ageMin}${de ? '' : '+'}`.trim() : `${s.ageMin}–${s.ageMax}`;
+const when = (s: Slot) => `${dayList(s.days, lang)}, ${s.from} ${de ? 'bis' : 'to'} ${s.to}${de ? ' Uhr' : ''}`;
+// Calendar subscription (src/lib/calendar-links.ts), if switched on in the CMS (site.json > calendar).
+const webcal = (feed: string) => webcalUrl(Astro.site!.host, feed);
+const google = (feed: string) => googleCalendarUrl(Astro.site!.host, feed);
+const title = (s: Slot) => groupName(s, lang, { spelled: true });
+---
+
+<header class="hero band" id="schedule">
+  <!-- 도장 (dojang): the training hall, which is what the hero shows. Vertical like a hall banner, outline only,
+       cut off at the right edge; a graphic (drawn from data-sign), not text. -->
+  <div class="hangul hero-sign" lang="ko" aria-hidden="true" data-sign="도장"></div>
+  <div class="wrap">
+    <div class="head">
+      <slot name="headline" />
+    </div>
+
+    <!-- Phones only: the instruction above the timetable it explains (desktop: in the panel next to it). -->
+    <p class="hint" aria-hidden="true">{t('week.hint')}</p>
+
+    <div class="detail" id="slot-detail" aria-live="polite">
+      <!-- All texts in one grid cell, only the chosen one visible: the panel is always as tall as the longest
+           text, so the button below does not jump when another group is chosen. -->
+      <div class="variants">
+      <p class="pick">{t('week.pick')}</p>
+      {
+        slots.map((s) => (
+          <div data-detail={s.id} hidden>
+            <h2>{title(s)}</h2>
+            <p class="when">{when(s)}</p>
+            {s.discipline === 'taichi' && <p>{t('week.taichi.who')}</p>}
+            {s.note && <p>{s.note}</p>}
+            <a class="more" href={localePath(s.discipline === 'taichi' ? '/category/taichi/' : '/category/kuksoolwon/', lang)}>
+              {s.discipline === 'taichi' ? t('week.more.taichi') : t('week.more.ksw')}
+            </a>
+          </div>
+        ))
+      }
+      </div>
+      <a class="btn" href={localePath('/#contact', lang)}>{t('cta.trial')}</a>
+    </div>
+
+    <!-- Timetable and the calendar link below it as one column: the link always sits right under the timetable. -->
+    <div class="week-col">
+    <div class="week">
+      <div class="week-head">{t('week.title')} <span>{site.hall.street}, {site.hall.note}</span></div>
+      <div class="grid" style={`--rows:${rows};--cols:${days.length}`}>
+        {days.map((d, i) => <div class="day" style={`grid-column:${i + 2}`}>{dayShort(d, lang)}</div>)}
+        {hours.map((h) => (
+          <>
+            <div class="tick num" style={`grid-row:${row(`${String(h).padStart(2, '0')}:00`)}`}>{h}:00</div>
+            <div class="rule" style={`grid-row:${row(`${String(h).padStart(2, '0')}:00`)}`} />
+          </>
+        ))}
+        {days.map((d, i) => (!usedDays.has(d) ? <div class="empty" style={`grid-column:${i + 2}`}>{t('week.none')}</div> : null))}
+        {slots.flatMap((s) =>
+          s.days.map((d) => (
+            <button
+              type="button"
+              class:list={['slot', s.discipline === 'kuksoolwon' ? 'k' : 't']}
+              style={`grid-column:${days.indexOf(d) + 2};grid-row:${row(s.from)} / ${row(s.to)}`}
+              data-id={s.id}
+              aria-pressed="false"
+              aria-controls="slot-detail"
+              aria-label={`${title(s)}, ${when(s)}`}
+            >
+              <span>{short(s)}</span>
+              <small class="num">{s.from}</small>
+            </button>
+          )),
+        )}
+      </div>
+      <div class="legend">
+        <span><i style="background:var(--slot-k)"></i>Kuk Sool Won</span>
+        <span><i style="background:var(--jade)"></i>{disciplineName('taichi', lang)}</span>
+        <span><i style="background:var(--gelb);box-shadow:inset 0 0 0 2px #000"></i>{t('week.yours')}</span>
+      </div>
+    </div>
+    <!-- Calendar page (with the subscribe links there), or without it the subscribe links here; both follow the
+         selected group once one is tapped (script below). -->
+    {(site.calendar || site.calendarPage) && (
+      <p class="cal" id="cal" data-label-all={t('week.calendar')} data-label-one={t('week.calendar.one')}>
+        {site.calendarPage && (
+          <a class="page" data-page href={localePath('/dates/', lang)}>
+            {site.calendar ? (de ? 'Kalender und Abo' : 'Calendar and subscription') : de ? 'Kalender der nächsten Wochen' : 'Calendar for the coming weeks'}
+          </a>
+        )}
+        {site.calendar && !site.calendarPage && (
+          <>
+            <span class="cal-label">{t('week.calendar')}</span>
+            <a data-cal="google" href={google('training')} rel="noopener">{de ? 'Google Kalender' : 'Google Calendar'}</a>
+            <a data-cal="webcal" href={webcal('training')}>iPhone, Mac, Outlook</a>
+            <a class="howto" href={localePath('/faq/#kalender', lang)}>{t('week.calendar.howto')}</a>
+          </>
+        )}
+      </p>
+    )}
+    </div>
+  </div>
+</header>
+
+<script>
+  const buttons = [...document.querySelectorAll<HTMLButtonElement>('.week .slot')];
+  const panel = document.getElementById('slot-detail')!;
+  const details = [...panel.querySelectorAll<HTMLElement>('[data-detail]')];
+  const pick = panel.querySelector<HTMLElement>('.pick')!;
+  const variants = panel.querySelector<HTMLElement>('.variants')!;
+  // Calendar links follow the selection: all groups, or the selected group's feed.
+  const cal = document.getElementById('cal');
+  const calLinks = cal ? [...cal.querySelectorAll<HTMLAnchorElement>('a[data-cal]')] : [];
+  for (const a of calLinks) a.dataset.all = a.href;
+  const pageLink = cal?.querySelector<HTMLAnchorElement>('a[data-page]');
+  if (pageLink) pageLink.dataset.all = pageLink.href;
+  let current: string | null = null;
+
+  function select(id: string | null) {
+    current = id;
+    for (const b of buttons) {
+      const on = b.dataset.id === id;
+      b.setAttribute('aria-pressed', String(on));
+      b.classList.toggle('hit', on);
+      b.classList.toggle('dim', id !== null && !on);
+    }
+    for (const d of details) d.hidden = d.dataset.detail !== id;
+    pick.hidden = id !== null;
+    variants.classList.toggle('picked', id !== null);
+    if (cal) {
+      // The feed name is in both links (Google: URL-encoded inside cid); swap it for the group id.
+      for (const a of calLinks) a.href = id ? a.dataset.all!.replace('training.ics', `${id}.ics`) : a.dataset.all!;
+      const label = cal.querySelector('.cal-label');
+      if (label) label.textContent = id ? cal.dataset.labelOne! : cal.dataset.labelAll!;
+      // The calendar page opens filtered to the selected group.
+      if (pageLink) pageLink.href = id ? `${pageLink.dataset.all}?group=${id}` : pageLink.dataset.all!;
+    }
+  }
+
+  for (const b of buttons) {
+    b.addEventListener('click', () => {
+      select(b.dataset.id === current ? null : b.dataset.id!);
+      // Phones: the panel sits below the week; bring it into view so the tap visibly does something.
+      if (current && matchMedia('(max-width: 860px)').matches) {
+        const smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+        panel.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'nearest' });
+      }
+    });
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && current) select(null);
+  });
+</script>
+
+<style>
+  /* More room under the header on wide screens (28px on phones, up to 64px). */
+  .hero { padding-block: clamp(28px, 4vw, 64px) 56px; position: relative; overflow: clip; }
+  .hero > .wrap { position: relative; z-index: 1; }
+  .hero-sign {
+    /* Left edge: behind the headline and the page margin (on the right the opaque timetable would cover it). */
+    position: absolute; z-index: 0; left: -0.14em; top: 50%; transform: translateY(-50%);
+    writing-mode: vertical-rl; text-orientation: upright; white-space: nowrap; font-family: var(--hangul); font-weight: 800; line-height: 1;
+    font-size: clamp(9rem, 21vw, 24rem); pointer-events: none; user-select: none;
+    /* Flat imprint: one tone just off the background, no edges. Works on the dark and the light background. */
+    color: color-mix(in srgb, var(--fg) 7%, var(--bg));
+  }
+  /* Phones and tablets: centred behind the headline; capped so both signs stay inside the hero on tablets. */
+  @media (max-width: 860px) { .hero-sign { top: 8px; left: 50%; transform: translateX(-50%); font-size: min(62vw, 17rem); } }
+  .wrap {
+    display: grid; gap: 0 48px; align-items: start;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    grid-template-areas: 'head week' 'detail week';
+  }
+  .head { grid-area: head; }
+  .week-col { grid-area: week; }
+  .detail { grid-area: detail; }
+  .hint { display: none; grid-area: hint; font-weight: 700; }
+  @media (max-width: 860px) {
+    .wrap { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'head' 'hint' 'week' 'detail'; gap: 24px; }
+    .hint { display: block; margin-bottom: -8px; }
+    .pick { display: none; }
+  }
+
+  .detail { margin-top: 34px; border-top: 2px solid var(--fg); padding-top: 18px; max-width: 30rem; min-height: 11rem; scroll-margin-bottom: 96px; }
+  .pick { font-weight: 700; font-size: 1.15rem; }
+  .variants { display: grid; }
+  .variants > * { grid-area: 1 / 1; }
+  /* Hidden texts keep their space (invisible, and not read out), so the tallest one sets the height. */
+  .variants > [hidden] { display: block; visibility: hidden; }
+  /* Phones: nothing chosen yet = no empty space under the timetable (the instruction is above it there). */
+  @media (max-width: 860px) { .variants:not(.picked) { display: none; } .variants > .pick { display: none; } }
+  .detail h2 { font-size: var(--fs-sub); line-height: 1.15; }
+  .detail .when { font-size: 1.15rem; font-weight: 600; margin-top: 4px; }
+  .detail p + p { margin-top: 4px; }
+  .detail .more { display: inline-block; margin-top: 10px; font-weight: 700; text-underline-offset: 4px; }
+  .detail .btn { margin-top: 18px; }
+  /* Phones: the calendar link sits right under the timetable it belongs to; the group panel follows. */
+  @media (max-width: 860px) { .detail { margin-top: 0; min-height: 0; border-top: 0; padding-top: 0; } }
+
+  .week {
+    background: var(--card); border: 2px solid var(--fg); border-radius: 4px; padding: 16px 16px 12px;
+    box-shadow: 12px 12px 0 var(--gelb); margin-right: 12px;
+  }
+  @media (max-width: 500px) { .week { box-shadow: 8px 8px 0 var(--gelb); margin-right: 8px; } }
+  .week-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; font-weight: 700; }
+  .week-head span { font-weight: 500; font-size: var(--fs-meta); color: var(--stein); }
+  .grid {
+    display: grid; column-gap: 6px; font-size: 0.8rem;
+    grid-template-columns: 3.2rem repeat(var(--cols), minmax(0, 1fr));
+    grid-template-rows: auto repeat(var(--rows), clamp(15px, 1.15vw, 22px));
+  }
+  .day { grid-row: 1; text-align: center; font-weight: 800; padding-bottom: 6px; }
+  .tick { grid-column: 1; color: var(--stein); transform: translateY(-0.55em); font-weight: 500; }
+  .rule { grid-column: 2 / -1; border-top: 1px solid var(--linie); pointer-events: none; }
+  .slot {
+    border: 0; border-radius: 3px; margin-block: 1px; padding: 3px 6px; min-width: 0; overflow: hidden; cursor: pointer;
+    display: flex; flex-direction: column; justify-content: center; align-items: flex-start; text-align: left;
+    font: 700 0.8rem/1.1 var(--f);
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .slot small { font-weight: 500; font-size: 0.72rem; }
+  .slot.k { background: var(--slot-k); color: var(--slot-k-fg); }
+  .slot.t { background: var(--jade); color: #fff; }
+  .slot:hover { box-shadow: inset 0 0 0 2px var(--gelb); }
+  /* Other groups while one is selected: only the fill fades, the label stays readable. */
+  .slot.k.dim { background: color-mix(in srgb, var(--slot-k) 14%, var(--card)); color: var(--fg); }
+  .slot.t.dim { background: color-mix(in srgb, var(--jade) 20%, var(--card)); color: var(--fg); }
+  .slot.dim small { color: var(--stein); }
+  .slot.hit { background: var(--gelb); color: #000; box-shadow: inset 0 0 0 2px #000; }
+  .empty { grid-row: 2 / -1; display: flex; align-items: center; justify-content: center; color: var(--stein); writing-mode: vertical-rl; font-size: 0.75rem; }
+  .cal { display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: baseline; margin: 22px 12px 0 0; }
+  .cal-label { flex-basis: 100%; font-weight: 700; }
+  .cal .page { font-weight: 700; text-underline-offset: 4px; }
+  .cal a[data-cal] { font-weight: 600; text-underline-offset: 4px; }
+  .cal .howto { font-size: var(--fs-meta); color: var(--stein); }
+  .legend { display: flex; gap: 18px; margin-top: 12px; font-size: var(--fs-meta); flex-wrap: wrap; }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+</style>

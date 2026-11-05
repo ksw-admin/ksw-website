@@ -1,0 +1,289 @@
+---
+/**
+ * Beta page: Lean opt-in / opt-out switcher for Netlify Split Testing.
+ * Adheres strictly to design-system/README.md:
+ * - Archivo condensed heading on the yellow rule (.sec-h)
+ * - Yellow mat box shadow (8px 8px 0 var(--gelb)) on the switcher panel
+ * - No emoji, no pills, no generic SaaS card grids
+ * - Left-aligned, concise, plain language
+ */
+import Base from '../layouts/Base.astro';
+import { useTranslations, localePath, type Lang } from '../i18n/ui';
+import { site } from '../lib/site';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const isDe = lang === 'de';
+---
+
+<Base
+  title={t('beta.page.title')}
+  description={t('beta.page.lead')}
+  alternate={{ de: '/beta/', en: '/en/beta/' }}
+  noindex
+>
+  <section class="band beta-section">
+    <div class="wrap">
+      <div class="sec-h">
+        <h1 class="page-title">{t('beta.page.title')}</h1>
+      </div>
+
+      <p class="intro">{t('beta.page.lead')}</p>
+
+      <!-- Switcher Panel with Signature Yellow Mat Shadow -->
+      <!-- Texts for the script below (it runs in the browser and cannot read the build's variables). -->
+      <div class="switcher-panel" id="beta-panel" data-active={t('beta.page.active')} data-inactive={t('beta.page.inactive')}>
+        <div class="status-block">
+          <p class="status-label">{isDe ? 'Aktive Version:' : 'Active version:'}</p>
+          <p class="status-value">
+            <span id="status-dot" class="dot"></span>
+            <strong id="status-text">{t('beta.page.active')}</strong>
+          </p>
+          <p class="status-cookie num">
+            Netlify Split-Testing: <code id="cookie-label">nf_ab=astro-redesign</code>
+          </p>
+        </div>
+
+        <div class="action-block">
+          <button type="button" id="btn-leave-beta" class="btn">
+            {t('beta.page.btn.leave')}
+          </button>
+          <button type="button" id="btn-join-beta" class="btn" hidden>
+            {t('beta.page.btn.join')}
+          </button>
+          <a href={localePath('/', lang)} class="home-link">
+            {isDe ? 'Zur Startseite' : 'To home page'}
+          </a>
+        </div>
+      </div>
+
+      <!-- Share Box -->
+      <div class="share-box">
+        <h2>{t('beta.page.share')}</h2>
+        <p class="share-hint">
+          {
+            isDe
+              ? 'Dieser Link aktiviert die Vorschau auf einem anderen Gerät oder Browser:'
+              : 'This link activates the preview on another device or browser:'
+          }
+        </p>
+        <div class="share-row">
+          <input
+            type="text"
+            id="share-link-input"
+            class="num"
+            readonly
+            value="https://www.kuk-sool-won-griepentrog.de/?beta=1"
+            aria-label={t('beta.page.share')}
+          />
+          <button type="button" id="btn-copy-link" class="btn">
+            {isDe ? 'Kopieren' : 'Copy'}
+          </button>
+        </div>
+        <p id="copy-confirmation" class="copy-success" aria-live="polite" hidden>
+          {t('beta.page.share.copied')}
+        </p>
+      </div>
+
+      <!-- Feedback Note -->
+      <div class="feedback-box">
+        <h2>{t('beta.page.feedback.title')}</h2>
+        <p>{t('beta.page.feedback.text')}</p>
+        <p class="feedback-links">
+          <a href={localePath(site.questionForm ? '/faq/#frage' : '/faq/', lang)} class="link">
+            {site.questionForm ? (isDe ? 'Frage stellen' : 'Ask a question') : isDe ? 'Häufige Fragen' : 'FAQ'}
+          </a>
+          <span class="sep">·</span>
+          <a href={localePath('/other/contact/', lang)} class="link">
+            {isDe ? 'Kontakt' : 'Contact'}
+          </a>
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Cookie handling from src/lib/split-test.ts (tested); texts from the data- attributes on #beta-panel.
+  import { getSplitCookie, buildSplitCookie, buildResetCookie, PROD_BRANCH } from '../lib/split-test';
+
+  const panel = document.getElementById('beta-panel')!;
+  const secure = location.protocol === 'https:';
+  // On this page the visitor sees the beta, unless the cookie says main (e.g. the branch deploy URL).
+  const onMain = getSplitCookie(document.cookie) === PROD_BRANCH;
+  const statusText = document.getElementById('status-text');
+  const cookieLabel = document.getElementById('cookie-label');
+  const btnJoin = document.getElementById('btn-join-beta');
+  const btnLeave = document.getElementById('btn-leave-beta');
+
+  document.getElementById('status-dot')?.classList.toggle('inactive', onMain);
+  if (statusText) statusText.textContent = onMain ? panel.dataset.inactive! : panel.dataset.active!;
+  if (cookieLabel) cookieLabel.textContent = onMain ? buildResetCookie().split(';')[0] : buildSplitCookie().split(';')[0];
+  if (btnJoin) btnJoin.hidden = !onMain;
+  if (btnLeave) btnLeave.hidden = onMain;
+
+  btnLeave?.addEventListener('click', () => {
+    document.cookie = buildResetCookie(undefined, secure);
+    try {
+      sessionStorage.removeItem('ksw-beta-dismissed');
+    } catch {}
+    location.replace('/');
+  });
+  btnJoin?.addEventListener('click', () => {
+    document.cookie = buildSplitCookie(undefined, secure);
+    location.replace('/');
+  });
+
+  // Share link: opt-in address on this site's origin (works on the live site through the injected snippet).
+  const shareInput = document.getElementById('share-link-input') as HTMLInputElement | null;
+  const copyConf = document.getElementById('copy-confirmation');
+  if (shareInput) shareInput.value = `${location.origin}/?beta=1`;
+  document.getElementById('btn-copy-link')?.addEventListener('click', async () => {
+    if (!shareInput) return;
+    try {
+      await navigator.clipboard.writeText(shareInput.value);
+    } catch {
+      shareInput.select(); // no clipboard access (http, old browser): select the text for manual copying
+      return;
+    }
+    if (copyConf) {
+      copyConf.hidden = false;
+      setTimeout(() => (copyConf.hidden = true), 3000);
+    }
+  });
+</script>
+
+<style>
+  .beta-section {
+    padding-block: var(--space-page-top) var(--space-section);
+  }
+  .intro {
+    font-size: 1.15rem;
+    color: var(--stein);
+    margin-top: 16px;
+    max-width: 65ch;
+  }
+  /* The switcher panel: Nearly square (radius-md: 4px), bordered, with the site's solid yellow mat */
+  .switcher-panel {
+    background: var(--card);
+    border: 2px solid var(--fg);
+    border-radius: 4px;
+    box-shadow: 8px 8px 0 var(--gelb);
+    padding: 24px;
+    margin-top: 36px;
+    max-width: 640px;
+    display: grid;
+    gap: 20px;
+  }
+  .status-block {
+    display: grid;
+    gap: 4px;
+  }
+  .status-label {
+    font-size: var(--fs-meta);
+    color: var(--stein);
+    margin: 0;
+  }
+  .status-value {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.25rem;
+    margin: 0;
+  }
+  .dot {
+    width: 10px;
+    height: 10px;
+    background: var(--jade);
+    display: inline-block;
+  }
+  .dot.inactive {
+    background: var(--stein);
+  }
+  .status-cookie {
+    font-size: var(--fs-meta);
+    color: var(--stein);
+    margin: 4px 0 0;
+  }
+  .status-cookie code {
+    background: var(--bg);
+    border: 1px solid var(--linie);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--fg);
+  }
+  .action-block {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding-top: 12px;
+    border-top: 1px solid var(--linie);
+  }
+  .home-link {
+    font-weight: 700;
+    text-underline-offset: 3px;
+  }
+  .home-link:hover,
+  .home-link:focus-visible {
+    color: var(--fg);
+    text-decoration: underline;
+  }
+
+  /* Share and feedback sections: quiet, left-aligned, no cards */
+  .share-box,
+  .feedback-box {
+    margin-top: 48px;
+    max-width: 640px;
+  }
+  h2 {
+    font-size: var(--fs-sub);
+    font-weight: 800;
+    font-stretch: 62%;
+    margin-bottom: 8px;
+  }
+  .share-hint,
+  .feedback-box p {
+    color: var(--stein);
+    margin: 0 0 12px;
+  }
+  .share-row {
+    display: flex;
+    gap: 8px;
+  }
+  .share-row input {
+    flex: 1;
+    background: var(--bg);
+    color: var(--fg);
+    border: 1px solid var(--linie);
+    border-radius: 4px;
+    padding: 10px 14px;
+    font: inherit;
+    font-size: 0.95rem;
+  }
+  .share-row input:focus-visible {
+    outline: 3px solid var(--jade);
+    outline-offset: 1px;
+  }
+  .copy-success {
+    margin: 8px 0 0;
+    color: var(--jade);
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+  .feedback-links {
+    margin-top: 8px;
+  }
+  .link {
+    font-weight: 700;
+    text-underline-offset: 3px;
+  }
+  .sep {
+    color: var(--linie);
+    margin-inline: 6px;
+  }
+</style>

@@ -1,0 +1,32 @@
+---
+// Decap CMS admin. An Astro page (not public/admin/index.html) so /admin/ also works on the dev server.
+// The config stays in public/admin/config.yml (Decap loads config.yml next to this page).
+// The live preview (src/admin/preview.ts) is bundled by Astro and uses the site's own rules, CSS and font.
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Inhalte bearbeiten | Kampfkunst Academy Griepentrog</title>
+    <link rel="icon" href="/favicon.ico" />
+  </head>
+  <body>
+    <!-- Start Decap by hand (src/admin/preview.ts calls CMS.init) so the local mode can switch off drafts. -->
+    <script is:inline>window.CMS_MANUAL_INIT = true;</script>
+    <!-- Decap CMS, pinned with a hash (SRI): the browser refuses the file if the CDN serves anything else.
+         Update: change the version AND the hash. New hash:
+         curl -sL https://cdn.jsdelivr.net/npm/decap-cms@<version>/dist/decap-cms.js | openssl dgst -sha384 -binary | openssl base64 -A
+         (release notes: github.com/decaporg/decap-cms/releases) -->
+    <script
+      is:inline
+      src="https://cdn.jsdelivr.net/npm/decap-cms@3.17.1/dist/decap-cms.js"
+      integrity="sha384-d2pbrhjc5asvSK35gKkrgRIk0Wq+2CQynWnXtSsYWQawXCgBXhcAK737jBAKXT4T"
+      crossorigin="anonymous"></script>
+    <script>
+      import '../../admin/preview';
+    </script>
+  </body>
+</html>

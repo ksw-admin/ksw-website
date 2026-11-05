@@ -1,0 +1,30 @@
+<!-- @dsCard group="Timetable" height=230 -->
+<div class="ksw">
+  <div class="week">
+    <div class="slots">
+      <button class="slot k" type="button" data-id="a" aria-pressed="false" aria-label="Kuk Sool Won, 7 bis 8 Jahre, Montag, 17:00 bis 18:00 Uhr"><span>7–8</span><small class="num">17:00</small></button>
+      <button class="slot k" type="button" data-id="b" aria-pressed="false" aria-label="Kuk Sool Won, 9 bis 11 Jahre, Montag, 18:00 bis 19:00 Uhr"><span>9–11</span><small class="num">18:00</small></button>
+      <button class="slot t" type="button" data-id="c" aria-pressed="false" aria-label="Tai Chi und Qi Gong, Dienstag, 18:30 bis 19:30 Uhr"><span>Tai Chi</span><small class="num">18:30</small></button>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--slot-k)"></i>Kuk Sool Won</span>
+      <span><i style="background:var(--jade)"></i>Tai Chi und Qi Gong</span>
+      <span><i style="background:var(--gelb);box-shadow:inset 0 0 0 2px #000"></i>Ausgewählt</span>
+    </div>
+  </div>
+</div>
+<script>
+  const slots = [...document.querySelectorAll('.slot')];
+  let current = null;
+  const select = (id) => {
+    current = id;
+    for (const s of slots) {
+      const on = s.dataset.id === id;
+      s.classList.toggle('hit', on);
+      s.classList.toggle('dim', id !== null && !on);
+      s.setAttribute('aria-pressed', String(on));
+    }
+  };
+  for (const s of slots) s.addEventListener('click', () => select(s.dataset.id === current ? null : s.dataset.id));
+  select('b');
+</script>

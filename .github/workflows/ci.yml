@@ -1,0 +1,61 @@
+# Checks every push and pull request: type check + full build (Netlify does the deploys).
+# A CMS edit with a broken field or a missing photo turns red here before anyone relies on the deploy.
+name: CI
+
+on:
+  push:
+    branches: [main, astro-redesign]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Check and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Type check (astro check)
+        run: npm run check
+
+      - name: Unit tests (text rules, age finder, phone links)
+        run: npm test
+
+      - name: Build (astro build + redirects + service worker)
+        run: npm run build
+
+      - name: Check the build output
+        run: |
+          set -eu
+          for f in index.html en/index.html offline/index.html 404.html service-worker.js manifest.json \
+                   _redirects _headers robots.txt sitemap-index.xml admin/index.html admin/config.yml og/default.jpg; do
+            test -s "dist/$f" || { echo "::error::dist/$f is missing or empty"; exit 1; }
+          done
+          # Photos must go through the image pipeline, not public/images.
+          if grep -rlE 'src="/images/[^"]+\.(jpe?g|png|webp)"' dist --include=*.html; then
+            echo "::error::Pages load unoptimized photos from /images/ (see files above)"; exit 1
+          fi
+          echo "Pages: $(find dist -name index.html | wc -l), size: $(du -sh dist | cut -f1)"
+
+      - name: Upload the built site
+        uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: dist
+          retention-days: 7

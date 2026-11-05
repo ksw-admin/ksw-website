@@ -1,0 +1,17 @@
+---
+/** Shown after the FAQ question form was sent (German and English routes). */
+import ThanksPage from './ThanksPage.astro';
+import { useTranslations, localePath, type Lang } from '../i18n/ui';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<ThanksPage
+  title={t('faq.thanks.title')}
+  heading={t('faq.thanks.title')}
+  text={t('faq.thanks.text')}
+  back={{ href: localePath('/faq/', lang), label: t('faq.thanks.back') }}
+  alternate={{ de: '/faq/thanks/', en: '/en/faq/thanks/' }}
+/>

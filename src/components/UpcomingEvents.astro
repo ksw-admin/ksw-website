@@ -1,0 +1,133 @@
+---
+/**
+ * "Demnächst" inside the news section of the home page (same topic: tournaments, gradings, club life, here the ones
+ * still to come), from src/content/events.json (CMS: Einstellungen › Termine). The next three show; any further ones
+ * sit behind "Weitere … Termine anzeigen" in place, so a long list never pushes the posts down.
+ * Cancelled dates stay until their day: "Abgesagt" in front of kind and place, date and title struck through (<s>,
+ * "no longer accurate"; the word carries the meaning for screen readers).
+ * Nothing upcoming = a one-line empty state (no tournaments announced, training as in the timetable). Static site: the script hides dates that have passed since the
+ * last build, moves the next ones up and counts the rest. Without JS all upcoming dates show.
+ */
+import { getEvents } from '../lib/events-data';
+import { kindOf, lastDay, titleOf, whenOf } from '../lib/events';
+import { localePath, type Lang } from '../i18n/ui';
+import EventMeta from './EventMeta.astro';
+import { site } from '../lib/site';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const de = lang === 'de';
+const events = await getEvents();
+/** How many dates show before the "more" button. */
+const SHOWN = 3;
+---
+
+<div class="upcoming" id="dates" data-shown={SHOWN}>
+  <div class="sub-row">
+    <h3 class="sub">{de ? 'Demnächst' : 'Coming up'}</h3>
+    {site.calendarPage && <a href={localePath('/dates/', lang)}>{de ? 'Ganzer Kalender' : 'Full calendar'}</a>}
+  </div>
+  <!-- Empty state: always true, however long the list stays empty, and points somewhere useful. -->
+  <p class="empty" hidden={events.length > 0}>
+    {de ? 'Gerade sind keine Turniere oder Prüfungen angekündigt. Das Training läuft wie im ' : 'No tournaments or gradings announced right now. Training runs as in the '}<a href={localePath('/#schedule', lang)}>{de ? 'Wochenplan' : 'timetable'}</a>.
+  </p>
+  {
+    events.length > 0 && (
+      <>
+      <ul id="dates-list">
+        {events.map((e) => (
+          <li data-end={lastDay(e)} class:list={{ cancelled: e.cancelled }}>
+            <p class="when num">{e.cancelled ? <s>{whenOf(e, lang)}</s> : whenOf(e, lang)}</p>
+            <div>
+              {(e.cancelled || e.kind || e.place) && (
+                <p class="meta"><EventMeta event={e} lang={lang} /></p>
+              )}
+              <h4 lang={lang === 'en' && !e.title_en?.trim() ? 'de' : undefined}>
+                {e.cancelled ? (
+                  <s>{e.link ? <a href={e.link} rel="noopener">{titleOf(e, lang)}</a> : titleOf(e, lang)}</s>
+                ) : e.link ? (
+                  <a href={e.link} rel="noopener">{titleOf(e, lang)}</a>
+                ) : (
+                  titleOf(e, lang)
+                )}
+              </h4>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <!-- {n} is replaced by the script with the number of further dates. -->
+      <button
+        type="button"
+        class="more-dates"
+        aria-expanded="false"
+        aria-controls="dates-list"
+        hidden
+        data-more={de ? 'Weitere {n} Termine anzeigen' : 'Show {n} more dates'}
+        data-more-one={de ? 'Einen weiteren Termin anzeigen' : 'Show 1 more date'}
+        data-less={de ? 'Weniger anzeigen' : 'Show fewer'}
+      ></button>
+      </>
+    )
+  }
+</div>
+
+<script is:inline>
+  (function () {
+    var box = document.getElementById('dates');
+    if (!box) return;
+    var shownMax = Number(box.dataset.shown) || 3;
+    var today = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Berlin' });
+    var upcoming = [];
+    box.querySelectorAll('li').forEach(function (li) {
+      if (li.dataset.end >= today) upcoming.push(li);
+      else li.hidden = true;
+    });
+    // All dates passed since the last build: show the empty state instead.
+    if (!upcoming.length) { box.querySelector('.empty').hidden = false; return; }
+    var extra = upcoming.slice(shownMax);
+    if (!extra.length) return;
+    var btn = box.querySelector('.more-dates');
+    var label = function () {
+      return extra.length === 1 ? btn.dataset.moreOne : btn.dataset.more.replace('{n}', extra.length);
+    };
+    extra.forEach(function (li) { li.hidden = true; });
+    btn.textContent = label();
+    btn.hidden = false;
+    btn.addEventListener('click', function () {
+      var open = btn.getAttribute('aria-expanded') !== 'true';
+      extra.forEach(function (li) { li.hidden = !open; });
+      btn.setAttribute('aria-expanded', String(open));
+      btn.textContent = open ? btn.dataset.less : label();
+    });
+  })();
+</script>
+
+<style>
+  .upcoming { margin-top: 26px; margin-bottom: 40px; }
+  /* Same row as "Zuletzt" / "Alle Beiträge" below. */
+  .sub-row { display: flex; align-items: baseline; justify-content: space-between; gap: 8px 16px; flex-wrap: wrap; }
+  .sub-row a { font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
+  .sub { font-size: var(--fs-sub); font-weight: 800; }
+  .empty { margin-top: 10px; color: var(--stein); max-width: 62ch; }
+  .empty a { color: var(--fg); font-weight: 700; text-underline-offset: 3px; }
+  ul { list-style: none; margin: 8px 0 0; padding: 0; }
+  li { display: grid; grid-template-columns: 15.5rem minmax(0, 1fr); gap: 4px 24px; padding-block: 14px; border-bottom: 1px solid var(--linie); align-items: baseline; }
+  /* display: grid above would otherwise override the hidden attribute (past or further dates). */
+  li[hidden] { display: none; }
+  .when { font-weight: 700; }
+  .meta { font-size: var(--fs-meta); font-weight: 600; color: var(--stein); margin-bottom: 2px; }
+  h4 { margin: 0; font-size: var(--fs-item); font-weight: 700; line-height: 1.2; }
+  h4 a { text-underline-offset: 4px; }
+  /* Cancelled: kept in place so nobody misses it; muted and struck through, the word in full colour. */
+  .cancelled .when, .cancelled h4 { color: var(--stein); }
+  .cancelled s { text-decoration-thickness: 2px; }
+  /* Plain text button in the link style: shows more of the same list, not a call to action. */
+  .more-dates {
+    margin-top: 12px; padding: 4px 0; background: none; border: 0; cursor: pointer;
+    font: 700 0.95rem var(--f); color: var(--fg); text-decoration: underline; text-underline-offset: 4px;
+  }
+  .more-dates:focus-visible { outline: 3px solid var(--gelb); outline-offset: 2px; }
+  @media (max-width: 760px) {
+    li { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>

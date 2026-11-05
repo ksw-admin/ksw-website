@@ -1,0 +1,22 @@
+---
+/**
+ * ?beta=1 / ?beta=0 on any page of the beta build: sets the nf_ab cookie and reloads once if the branch changes,
+ * so Netlify serves the chosen version. Bundled from src/lib/split-test.ts (the tested code). Rendered by Base.astro
+ * only in a beta build. Opt-in from the live site goes through the snippet injected in Netlify.
+ */
+---
+
+<script>
+  import { betaSwitch } from '../lib/split-test';
+
+  const params = new URLSearchParams(location.search);
+  const { set, reload } = betaSwitch(params.get('beta'), document.cookie, location.protocol === 'https:');
+  if (set) {
+    document.cookie = set;
+    params.delete('beta');
+    const q = params.toString();
+    const clean = location.pathname + (q ? `?${q}` : '') + location.hash;
+    if (reload) location.replace(clean);
+    else history.replaceState(null, '', clean);
+  }
+</script>

@@ -4,3 +4,16 @@
   X-Content-Type-Options: nosniff
   X-XSS-Protection: 1; mode=block
 /admin
+
+# Browsers must always re-check the worker and the manifest, so updates reach installed phones.
+/service-worker.js
+  Cache-Control: no-cache
+/manifest.json
+  Cache-Control: no-cache
+# Calendar subscriptions: right type for calendar apps; short cache so closures reach subscribers quickly.
+/calendar/*
+  Content-Type: text/calendar; charset=utf-8
+  Cache-Control: public, max-age=900
+# Astro build assets have a content hash in the name.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable

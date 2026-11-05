@@ -1,0 +1,7 @@
+# Build settings for this branch. They override the site-wide settings in the Netlify UI, so every branch
+# (main, astro-redesign, a beta branch for split testing) builds the way its own code needs.
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Node version comes from .nvmrc.
