@@ -2,13 +2,12 @@
 // Read directly (not a content collection): an empty list is the normal state, and Astro would warn about an empty
 // collection on every page. The build still fails on a broken entry, with the message below.
 import { z } from 'astro/zod';
+import { isoDate, opt } from './cms-schema';
 import raw from '../content/closures.json';
 import { inFeed, isCurrent, type Closure } from './closures';
 import { todayInGermany } from './dates';
 
-const date = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Datum als JJJJ-MM-TT');
-// Decap writes "" or null for empty optional fields.
-const opt = <T extends z.ZodType>(s: T) => z.preprocess((v) => (v === '' || v === null ? undefined : v), s.optional());
+const date = isoDate();
 const Closures = z.object({
   items: z
     .array(

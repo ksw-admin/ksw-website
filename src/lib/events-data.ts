@@ -1,14 +1,14 @@
 // Upcoming dates from the CMS (src/content/events.json), read directly like closures (an empty list is normal).
 // A broken entry fails the build with the message below.
 import { z } from 'astro/zod';
+import { isoDate, opt } from './cms-schema';
 import raw from '../content/events.json';
 import { FEED_HISTORY_DAYS } from './closures';
 import { addDays, todayInGermany } from './dates';
 import { isUpcoming, lastDay, type SiteEvent } from './events';
 
-const date = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Termine: Datum als JJJJ-MM-TT');
+const date = isoDate('Termine');
 const time = z.string().regex(/^\d{2}:\d{2}$/, 'Termine: Uhrzeit als HH:MM, z.B. 10:00');
-const opt = <T extends z.ZodType>(s: T) => z.preprocess((v) => (v === '' || v === null ? undefined : v), s.optional());
 const Events = z.object({
   items: z
     .array(

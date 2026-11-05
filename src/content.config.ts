@@ -1,12 +1,11 @@
 import { defineCollection } from 'astro:content';
 import { glob, file } from 'astro/loaders';
 import { z } from 'astro/zod';
+import { opt } from './lib/cms-schema';
 
 // Keep the raw file name as id (no slugify), so old URLs with umlauts and ´ stay the same.
 const keepName = ({ entry }: { entry: string }) => entry.replace(/\.md$/, '');
 
-// Decap writes "" for empty optional fields; treat that as "not set".
-const opt = <T extends z.ZodType>(schema: T) => z.preprocess((v) => (v === '' || v === null ? undefined : v), schema.optional());
 
 // Decap/Netlify CMS wrote tags as a list, older files as a single string.
 const tags = z
