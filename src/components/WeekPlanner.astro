@@ -180,20 +180,18 @@ const title = (s: Slot) => groupName(s, lang, { spelled: true });
 
 <style>
   /* More room under the header on wide screens (28px on phones, up to 64px). */
-  .hero { padding-block: clamp(28px, 4vw, 64px) 56px; position: relative; overflow-x: clip; }
+  .hero { padding-block: clamp(28px, 4vw, 64px) 56px; position: relative; overflow: clip; }
   .hero > .wrap { position: relative; z-index: 1; }
   .hero-sign {
     /* Left edge: behind the headline and the page margin (on the right the opaque timetable would cover it). */
     position: absolute; z-index: 0; left: -0.14em; top: 50%; transform: translateY(-50%);
     writing-mode: vertical-rl; text-orientation: upright; white-space: nowrap; font-family: var(--hangul); font-weight: 800; line-height: 1;
     font-size: clamp(9rem, 21vw, 24rem); pointer-events: none; user-select: none;
-    /* Engraved into the surface: filled just off the background, a dark edge above and a light edge below
-       (like letters cut into a wooden board). Works on the dark and the light background. */
-    color: color-mix(in srgb, var(--fg) 6%, var(--bg));
-    text-shadow: 0 -2px 1px color-mix(in srgb, #000 45%, transparent), 0 2px 1px color-mix(in srgb, var(--fg) 10%, transparent);
+    /* Flat imprint: one tone just off the background, no edges. Works on the dark and the light background. */
+    color: color-mix(in srgb, var(--fg) 7%, var(--bg));
   }
-  /* Phones: large and centred behind the headline. */
-  @media (max-width: 860px) { .hero-sign { top: 8px; left: 50%; transform: translateX(-50%); font-size: 62vw; } }
+  /* Phones and tablets: centred behind the headline; capped so both signs stay inside the hero on tablets. */
+  @media (max-width: 860px) { .hero-sign { top: 8px; left: 50%; transform: translateX(-50%); font-size: min(62vw, 17rem); } }
   .wrap {
     display: grid; gap: 0 48px; align-items: start;
     grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
