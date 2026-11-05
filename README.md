@@ -39,6 +39,18 @@ Netlify does the deploys.
 | CMS config | `public/admin/config.yml` (branch: `astro-redesign` until the merge, then `main`) |
 | Design tokens | `src/styles/global.css` |
 
+### Code layout
+
+- `src/lib/`: pure logic, tested in `tests/` (no Astro imports unless the name ends in `-data`, which reads CMS files):
+  `dates.ts` (date arithmetic, month and weekday names), `closures.ts`, `events.ts`, `agenda.ts` (calendar page days),
+  `ics.ts` (feeds), `schedule.ts` (groups, `groupName()`), `calendar-links.ts` (subscribe URLs), `cms-schema.ts`
+  (`opt`, `isoDate` for CMS data), `youtube.ts` / `blocks.ts` (report blocks) and `markdown-blocks.ts` (their
+  Markdown plugin).
+- `src/components/`: one component per block. Shared small pieces: `HangulSign`, `EventMeta` ("Abgesagt, Art,
+  Ort"), `BackLink`, `ThanksPage`, `VideoEmbeds`.
+- `src/scripts/`: browser code bundled by Astro (`youtube-player.ts`). Scripts that must run before the first paint
+  (hiding past dates, the closure banner) stay inline in their component.
+
 ## CMS
 
 - Online (GitHub login via Netlify): changes are drafts (Entwurf → In Prüfung → Bereit → Veröffentlichen). Each draft is a
