@@ -1,5 +1,5 @@
 ---
-title: Tai Chi
+title: Tai Chi & Atemschulung
 description: Taichi
 tags: taichi
 galleryImages:
@@ -21,7 +21,7 @@ galleryImages:
 
 Tai Chi-Qi Gong bedeutet Körper und Geist in Einklang zu bringen.
 
-Angelehnt an den Yang Stil hat sich mein Stil durch die spezielle Atemtechnik weiter entwickelt.
+Angelehnt an den Yang-Stil hat sich mein Stil durch die spezielle Atemtechnik weiterentwickelt.
 
 Seit über 10 Jahren gebe ich mit diesen Atemübungen Unterricht im Krankenhaus.
 
