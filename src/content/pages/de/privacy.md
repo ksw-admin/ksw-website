@@ -70,7 +70,7 @@ Ihnen als von der Datenverarbeitung betroffenen Person stehen verschiedene Recht
 - Recht auf Einschränkung der Verarbeitung: Sie können die Einschränkung der Verarbeitung Ihrer personenbezogenen Daten verlangen, soweit die Richtigkeit der Daten von Ihnen bestritten wird, die Verarbeitung unrechtmäßig ist, Sie aber deren Löschung ablehnen. Außerdem steht Ihnen dieses Recht zu, wenn wir die Daten nicht mehr benötigen, Sie diese jedoch zur Geltendmachung, Ausübung oder Verteidigung von Rechtsansprüchen benötigen. Darüber hinaus haben Sie dieses Recht, wenn Sie Widerspruch gegen die Verarbeitung Ihrer personenbezogenen Daten eingelegt haben;
 - Recht auf Datenübertragbarkeit: Sie können verlangen, dass wir Ihnen Ihre personenbezogenen Daten, die Sie uns bereitgestellt haben, in einem strukturierten, gängigen und maschinenlesebaren Format übermitteln. Alternativ können Sie die direkte Übermittlung der von Ihnen uns bereitgestellten personenbezogenen Daten an einen anderen Verantwortlichen verlangen, soweit dies möglich ist.
 - Beschwerderecht: Sie können sich bei der für uns zuständigen Aufsichtsbehörde beschweren, z.B. wenn Sie der Ansicht sind, dass wir Ihre personenbezogenen Daten in unrechtmäßiger Weise verarbeiten. Die für uns zuständige Behörde ist: Landesbeauftragte für Datenschutz und Informationsfreiheit Nordrhein-Westfalen
-- Kavalleriestraße 2–4
+- Kavelleriestr. 2 – 4
 - 40213 Düsseldorf
 - Tel.: 0211 38424-0
 - Fax: 0211 38424-10
@@ -94,7 +94,7 @@ Netlify und Cloudflare sind unter dem EU-US Data Privacy Framework zertifiziert.
 
 **YouTube-Video:** Das Video auf der Startseite wird erst nach einem Klick auf „Video abspielen“ von YouTube (Google Ireland Ltd.) geladen; erst dann werden Daten wie Ihre IP-Adresse an Google übertragen (Art. 6 Abs. 1 lit. a DSGVO).
 
-**Formulare (Kontakt, Fragen):** Über das Kontaktformular und das Fragen-Formular auf der Seite „FAQ“ können Sie uns schreiben. Netlify speichert Ihre Angaben (Kontaktformular: Name, Nachricht und die E-Mail-Adresse oder Telefonnummer, die Sie angeben; Fragen-Formular: die Frage, die Sprache der Seite und, falls angegeben, Ihre E-Mail-Adresse) und leitet sie an uns weiter; zum Schutz vor Spam prüft Netlify Einsendungen automatisch mit dem Dienst Akismet (Automattic Inc., USA). Wir nutzen die Angaben nur, um Ihre Nachricht oder Frage zu beantworten; Fragen nehmen wir gegebenenfalls ohne Namen und E-Mail-Adresse mit Antwort in die FAQ auf. Danach löschen wir die Angaben (Art. 6 Abs. 1 lit. b und f DSGVO).
+<!-- Der Absatz zu den Formularen (Kontakt, Fragen) steht nicht hier: die Seite fügt ihn nur ein, wenn ein Formular eingeschaltet ist (CMS: Einstellungen › Kontakt und Allgemeines). Text: src/pages/other/[page].astro -->
 
 **Kalender-Abo:** Wenn Sie die Trainingszeiten als Kalender abonnieren, ruft Ihre Kalender-App die Datei regelmäßig bei Netlify ab; dabei fallen die oben unter „Hosting“ genannten Server-Logdaten an.
 

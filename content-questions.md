@@ -15,7 +15,9 @@ From the content pass on 2026-11-03 (old site vs. redesign). Answer here or tell
 - [ ] **Names:** students' last names are now shortened to an initial (Elif E., Steven D., Daniel D., Helena und Lars C.).
       Adults in a role keep their full name (Andreas Weiherer, Melanie Döring, Salvatore Tiso, Daniel Stöpke). OK?
       Note: "Melanie Döring" next to "Steven D." may still reveal Steven's surname.
-- [ ] **Impressum:** VAT ID (USt-IdNr.), if any. Legal drafts (Datenschutz, Impressum) are marked ENTWURF in the source.
+- [ ] **Legal texts:** Impressum and the first part of the Datenschutz are Peter's original texts (2026-11-05: only TMG → DDG,
+      and the old contact-form paragraph removed from the Impressum). Only the new Datenschutz section "Datenverarbeitung
+      über unsere Website" is still marked ENTWURF: Peter reads it once.
 
 ## FAQ: questions only Peter can answer
 
