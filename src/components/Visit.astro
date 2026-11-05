@@ -26,7 +26,7 @@ const appleRoute = `https://maps.apple.com/?daddr=${encodeURIComponent(destinati
         <span class="visually-hidden">{de ? 'Anrufen: ' : 'Call: '}</span>{primaryPhone.value.replace(/ - /g, ' ')}
       </a>
       <p class="who">
-        {site.contactName}. <a href={`mailto:${site.email}`}>{site.email}</a>
+        {site.contactName}. <a class="mail" href={`mailto:${site.email}`}>{site.email}</a>
         {others.map((p) => <><br />{p.label} {p.value}</>)}
       </p>
       <p class="faq-hint">
@@ -70,6 +70,8 @@ const appleRoute = `https://maps.apple.com/?daddr=${encodeURIComponent(destinati
   .icon svg { width: 52%; height: 52%; }
   .phone:hover .icon { transform: rotate(-12deg); }
   .who { margin-top: 8px; font-weight: 600; }
+  /* The address wraps to its own line as a whole; it only breaks inside on very narrow screens. */
+  .mail { display: inline-block; max-width: 100%; overflow-wrap: anywhere; }
   .faq-hint { margin-top: 20px; color: var(--stein); max-width: 48ch; }
   .faq-hint a { color: var(--panel-fg); font-weight: 700; text-underline-offset: 4px; }
   .intro { margin-top: 14px; font-size: var(--fs-lead); max-width: 44ch; }
