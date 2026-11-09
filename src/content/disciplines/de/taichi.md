@@ -1,8 +1,8 @@
 ---
 title: Tai Chi & Atemschulung
 description: "Tai Chi, Qi Gong und Atemschulung in Duisburg-Rheinhausen: ruhige Bewegungen und Atemtechnik im Yang-Stil, in jedem Alter erlernbar."
-image: images/Gem17T.jpg
-image_text: "Die Tai-Chi-Gruppe in blauen Shirts bei einer gemeinsamen Übung auf einer Wiese im Park."
+image: images/taichi-rumeln-2026.jpg
+image_text: "Peter Griepentrog und die Tai-Chi-Gruppe in blauen Shirts in ruhiger Grundstellung auf einer Wiese, dahinter das Zelt der Akademie."
 tags: taichi
 galleryImages:
   - link_text: Duisburg bewegt sich-Tai Chi - 2024

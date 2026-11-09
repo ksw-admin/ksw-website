@@ -89,11 +89,11 @@ const titleImage = entry.data.image ? resolveImage(entry.filePath, entry.data.im
   .head { padding-block: var(--space-compact); }
   /* Title image: wide screens text left, photo right (the band had an empty right half); phones photo below. */
   .head.has-title-image .wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 24px 48px; align-items: center; }
-  /* object-position lower than centre: in these photos the people stand or lie in the lower half. */
-  .head :global(.title-image) { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; object-position: center 70%; border-radius: 4px; }
+  /* The photo in its own aspect ratio, never cropped: the Kuk Sool Won demo uses its full height, the Tai Chi photo
+     is a wide shot; a fixed format cut one of them. */
+  .head :global(.title-image) { display: block; width: 100%; height: auto; border-radius: 4px; }
   @media (max-width: 860px) {
     .head.has-title-image .wrap { grid-template-columns: minmax(0, 1fr); }
-    .head :global(.title-image) { aspect-ratio: 16 / 9; }
   }
   .head.k { background: var(--panel); color: var(--panel-fg); }
   .head.t { background: var(--tc-bg); color: var(--tc-fg); }
