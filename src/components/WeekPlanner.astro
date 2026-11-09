@@ -91,10 +91,12 @@ const title = (s: Slot) => groupName(s, lang, { spelled: true });
               data-id={s.id}
               aria-pressed="false"
               aria-controls="slot-detail"
-              aria-label={`${title(s)}, ${when(s)}`}
             >
+              {/* The name starts with the visible text ("4–6 16:00"), then the full wording for screen readers:
+                  voice control users can say what they see (WCAG 2.5.3 Label in Name). */}
               <span>{short(s)}</span>
               <small class="num">{s.from}</small>
+              <span class="visually-hidden">: {title(s)}, {when(s)}</span>
             </button>
           )),
         )}
