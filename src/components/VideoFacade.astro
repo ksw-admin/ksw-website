@@ -35,21 +35,29 @@ if (own && poster) {
         {/* Wide screens: the frame is 16:9 and a blurred copy of the poster fills the sides. While the video plays,
             the script paints the video into the tiny canvas (ambient light); the CSS blur scales it up. */}
         <span class="backdrop" aria-hidden="true"><canvas width="32" height="18"></canvas></span>
-        <video src={src} poster={poster || undefined} preload="none" playsinline controls controlslist="nodownload" aria-label={title}>
-          {captions && <track kind="captions" src={captions} srclang="de" label="Deutsch" />}
-        </video>
-        {/* Shown by the script when the browser cannot play the file (e.g. a phone video in HEVC). */}
-        <p class="vid-error" role="alert" hidden>
-          <strong>{de ? 'Dieses Video lässt sich in Ihrem Browser leider nicht abspielen.' : 'Sorry, this video cannot be played in your browser.'}</strong>
-          {watchUrl && <a href={watchUrl} rel="noopener">{de ? 'Auf YouTube ansehen' : 'Watch on YouTube'}</a>}
-        </p>
-        {/* Shown by the script (without JS the native controls are enough). */}
-        <button type="button" class="play" hidden data-resume={de ? 'Weiter abspielen' : 'Resume video'}>
+        {/* Video.js 10 player (neutral skin, our yellow as accent, German labels via <html lang>); loaded on the first
+            play (script below). The skin brings controls, captions menu and fullscreen. */}
+        <media-i18n>
+          <video-player poster={poster || undefined}>
+            <video-neutral-skin class="vjs-skin">
+              <video src={src} poster={poster || undefined} preload="none" playsinline controls controlslist="nodownload" aria-label={title}>
+                {captions && <track kind="captions" src={captions} srclang="de" label="Deutsch" />}
+              </video>
+            </video-neutral-skin>
+          </video-player>
+        </media-i18n>
+        {/* Our yellow button before the first play (the skin has no large one); then the skin's controls take over. */}
+        <button type="button" class="play" hidden>
           <span class="label">
             <span class="play-icon" aria-hidden="true"></span>
             <span><strong>{de ? 'Video abspielen' : 'Play video'}</strong></span>
           </span>
         </button>
+        {/* Shown by the script when the browser cannot play the file (e.g. a phone video in HEVC). */}
+        <p class="vid-error" role="alert" hidden>
+          <strong>{de ? 'Dieses Video lässt sich in Ihrem Browser leider nicht abspielen.' : 'Sorry, this video cannot be played in your browser.'}</strong>
+          {watchUrl && <a href={watchUrl} rel="noopener">{de ? 'Auf YouTube ansehen' : 'Watch on YouTube'}</a>}
+        </p>
       </div>
     ) : (
       <div class="frame" data-yt={youtubeId} data-title={title}>
@@ -73,30 +81,51 @@ if (own && poster) {
   import { initYoutubePlayers } from '../scripts/youtube-player';
   initYoutubePlayers('.video .frame[data-yt]', 'button', 'content');
 
-  // Own video: our play button over the poster; on click the native controls take over. Paused or at the end, the
-  // yellow button comes back in the middle (the video looks like ours at rest), but only the button takes clicks:
-  // the native controls below stay usable, e.g. to scrub while paused.
+  // Video.js 10 (neutral skin: flat control bar; our yellow, our font, German labels via <html lang>).
+  // Loaded only on the first click: a page view costs no player code. The click starts the plain <video> at once
+  // (browsers only allow sound when play() runs inside the click), then the skin takes over the controls.
+  // Without JS, or if loading fails, the native controls are used.
+  function loadPlayer(box: HTMLElement, video: HTMLVideoElement) {
+    Promise.all([
+      import('@videojs/html/i18n'),
+      import('@videojs/html/video/player'),
+      import('@videojs/html/video/neutral-skin'),
+    ])
+      .then(() => customElements.whenDefined('video-neutral-skin'))
+      .then(() => {
+        // WORKAROUND: the skin sets a black --media-background on its container inside its shadow DOM, which no
+        // documented CSS property reaches. One extra rule there lets our blurred backdrop show on the sides.
+        const root = box.querySelector('.vjs-skin')?.shadowRoot;
+        if (!root) return;
+        const sheet = new CSSStyleSheet();
+        sheet.replaceSync('.media-skin { --media-background: transparent; }');
+        root.adoptedStyleSheets = [...root.adoptedStyleSheets, sheet];
+      })
+      .catch((err) => {
+        console.error('[video] player could not load, using the native controls', err);
+        video.controls = true;
+      });
+  }
+
   document.querySelectorAll<HTMLElement>('.video .frame.own').forEach((box) => {
     const video = box.querySelector('video');
-    const button = box.querySelector<HTMLButtonElement>('.play');
-    const error = box.querySelector<HTMLElement>('.vid-error');
-    if (!video || !button) return;
-    video.controls = false;
-    button.hidden = false;
-    // No download button (controlslist) and no "Save video as…" menu. Easy to get around, but it stops the casual copy.
+    if (!video) return;
+    // No "Save video as…" menu. Easy to get around, but it stops the casual copy.
     video.addEventListener('contextmenu', (e) => e.preventDefault());
-    button.addEventListener('click', () => {
-      video.controls = true;
-      void video.play().catch(() => {});
-      video.focus();
-    });
-    video.addEventListener('play', () => { button.hidden = true; box.classList.remove('is-paused'); });
-    video.addEventListener('pause', () => {
-      if (!video.controls || (error && !error.hidden)) return; // not started yet, or the "cannot play" message shows
-      box.classList.add('is-paused');
-      button.setAttribute('aria-label', button.dataset.resume!);
+    const button = box.querySelector<HTMLButtonElement>('.play');
+    if (button) {
+      video.controls = false; // our button instead, until the player is there
       button.hidden = false;
-    });
+      button.addEventListener('click', () => {
+        void video.play().catch(() => {});
+        loadPlayer(box, video);
+        // Phones: the sticky contact bar would cover the player's controls; bring the whole frame into view
+        // (scroll-margin-bottom below; no movement if it is already fully visible).
+        const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        box.scrollIntoView({ block: 'nearest', behavior: calm ? 'auto' : 'smooth' });
+      }, { once: true });
+      video.addEventListener('play', () => button.remove(), { once: true });
+    }
     ambient(video, box.querySelector('.backdrop canvas'));
     unplayable(video, box.querySelector('.vid-error'));
   });
@@ -163,10 +192,23 @@ if (own && poster) {
      blurred, darkened copy of the poster fills the sides. */
   .frame.own { aspect-ratio: var(--ratio); width: min(100%, 420px, calc((100svh - 220px) * var(--ratio))); margin-inline: auto; }
   .frame.own video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  /* Video.js skin fills the frame; our yellow, our font, the frame's radius. Phone: cover; wide: contain (below). */
+  .frame.own media-i18n, .frame.own video-player { display: contents; }
+  .frame.own .vjs-skin {
+    position: absolute; inset: 0; display: block; width: 100%; height: 100%;
+    --media-accent-color: var(--gelb); --media-accent-text-color: #000; --media-border-radius: 4px;
+    --media-font-family: var(--f); --media-object-fit: cover; --media-object-position: center;
+    --media-background: transparent; /* our blurred backdrop and ambient light show on the sides */
+  }
+  /* The skin sets its black background again on its own inner container (created at runtime, hence :global). */
+  .frame.own .vjs-skin :global(media-container) { --media-background: transparent; background-color: transparent; }
   .backdrop { display: none; }
+  /* Room for the sticky contact bar on phones (MobileBar.astro: 8 + 46 + 8 px plus the safe area). */
+  @media (max-width: 700px) { .frame.own { scroll-margin-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); } }
   @media (min-width: 760px) {
     .frame.own { aspect-ratio: 16 / 9; width: min(100%, calc((100svh - 180px) * 16 / 9)); }
     .frame.own video { object-fit: contain; }
+    .frame.own .vjs-skin { --media-object-fit: contain; }
     .backdrop { display: block; position: absolute; inset: -40px; background: var(--poster, none) center / cover; filter: blur(32px) brightness(0.45) saturate(1.1); }
     .backdrop canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.8s ease; }
     .backdrop canvas.on { opacity: 1; }
@@ -178,12 +220,8 @@ if (own && poster) {
   .play { all: unset; cursor: pointer; position: absolute; inset: 0; display: block; }
   .play[hidden] { display: none; }
   .play:focus-visible { outline: 3px solid var(--gelb); outline-offset: -3px; }
-  /* Keyboard focus on the player itself, like everywhere else (the frame clips, so the ring sits inside). */
+  /* Keyboard focus on the plain <video> (fallback with native controls if Video.js cannot load). */
   .frame.own video:focus-visible { outline: 3px solid var(--gelb); outline-offset: -3px; }
-  /* Paused: only the yellow button, no text, no dimming; clicks outside it reach the native controls. */
-  .frame.own.is-paused .play { background: none; pointer-events: none; }
-  .frame.own.is-paused .play .play-icon { pointer-events: auto; cursor: pointer; box-shadow: 0 2px 14px rgb(0 0 0 / 0.35); }
-  .frame.own.is-paused .label > :not(.play-icon) { display: none; }
   .play :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(0.62); transition: filter 0.2s ease; }
   .play:hover :global(img) { filter: brightness(0.5); }
   .label { position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: center; gap: 18px; padding: clamp(16px, 3vw, 32px); color: #fff; }

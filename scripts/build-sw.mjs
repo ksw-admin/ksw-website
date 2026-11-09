@@ -16,7 +16,8 @@ const { count, size, warnings } = await generateSW({
     'images/Logo.svg',
     'images/icons/manifest-icon-*.png',
   ],
-  globIgnores: ['admin/**', 'service-worker.js'],
+  // _astro/vjs/: the video player and its language chunks, loaded only on play (astro.config.mjs).
+  globIgnores: ['admin/**', 'service-worker.js', '_astro/vjs/**'],
   swDest: 'dist/service-worker.js',
   inlineWorkboxRuntime: true, // one file, no workbox-*.js chunk, no CDN (the old worker loaded Workbox from Google)
   skipWaiting: true, // new versions take over at once, nobody stays on old pages

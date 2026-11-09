@@ -22,6 +22,22 @@ export default defineConfig({
       },
     }),
   ],
+  // Video.js (loaded only when someone plays the home video, ~50 language chunks) goes to _astro/vjs/, which the
+  // service worker leaves out of its precache (scripts/build-sw.mjs).
+  vite: {
+    environments: {
+      client: {
+        build: {
+          rollupOptions: {
+            output: {
+              chunkFileNames: (chunk) =>
+                chunk.moduleIds.some((id) => id.includes('@videojs')) ? '_astro/vjs/[name].[hash].js' : '_astro/[name].[hash].js',
+            },
+          },
+        },
+      },
+    },
+  },
   i18n: {
     defaultLocale: 'de',
     locales: ['de', 'en'],
