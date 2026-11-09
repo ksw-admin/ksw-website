@@ -1,7 +1,7 @@
 ---
 /**
- * The small line above a date's title: "Abgesagt, Turnier, Arnsberg" (cancelled first and bold, then kind and
- * place). Renders only the content: the caller wraps it in its own <p class="meta"> and styles that.
+ * The small line below a date's title: kind and place ("Turnier, Arnsberg"). "Abgesagt" is not here: it stands right
+ * before the title (it must not be missed). Renders only the content: the caller wraps it in its own <p class="meta"> and styles that.
  * Used by "Demnächst" (UpcomingEvents) and the calendar page.
  */
 import { kindOf, type SiteEvent } from '../lib/events';
@@ -12,9 +12,5 @@ const { event: e, lang } = Astro.props;
 const rest = [kindOf(e, lang), e.place].filter(Boolean).join(', ');
 ---
 
-{e.cancelled && <strong>{lang === 'de' ? 'Abgesagt' : 'Cancelled'}</strong>}{e.cancelled && rest && ', '}{rest}
+{rest}
 
-<style>
-  /* "Abgesagt" stands out from the muted rest of the line. */
-  strong { color: var(--fg); font-weight: 800; }
-</style>

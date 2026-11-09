@@ -39,18 +39,18 @@ const SHOWN = 3;
           <li data-end={lastDay(e)} class:list={{ cancelled: e.cancelled }}>
             <p class="when num">{e.cancelled ? <s>{whenOf(e, lang)}</s> : whenOf(e, lang)}</p>
             <div>
-              {(e.cancelled || e.kind || e.place) && (
-                <p class="meta"><EventMeta event={e} lang={lang} /></p>
-              )}
               <h4 lang={lang === 'en' && !e.title_en?.trim() ? 'de' : undefined}>
                 {e.cancelled ? (
-                  <s>{e.link ? <a href={e.link} rel="noopener">{titleOf(e, lang)}</a> : titleOf(e, lang)}</s>
+                  <><strong class="cx">{de ? 'Abgesagt:' : 'Cancelled:'}</strong> <s>{e.link ? <a href={e.link} rel="noopener">{titleOf(e, lang)}</a> : titleOf(e, lang)}</s></>
                 ) : e.link ? (
                   <a href={e.link} rel="noopener">{titleOf(e, lang)}</a>
                 ) : (
                   titleOf(e, lang)
                 )}
               </h4>
+              {(e.kind || e.place) && (
+                <p class="meta"><EventMeta event={e} lang={lang} /></p>
+              )}
             </div>
           </li>
         ))}
@@ -115,12 +115,13 @@ const SHOWN = 3;
   /* display: grid above would otherwise override the hidden attribute (past or further dates). */
   li[hidden] { display: none; }
   .when { font-weight: 700; }
-  .meta { font-size: var(--fs-meta); font-weight: 600; color: var(--stein); margin-bottom: 2px; }
+  .meta { font-size: var(--fs-meta); font-weight: 600; color: var(--stein); margin-top: 4px; }
   h4 { margin: 0; font-size: var(--fs-item); font-weight: 700; line-height: 1.2; }
   h4 a { text-underline-offset: 4px; }
   /* Cancelled: kept in place so nobody misses it; muted and struck through, the word in full colour. */
   .cancelled .when, .cancelled h4 { color: var(--stein); }
   .cancelled s { text-decoration-thickness: 2px; }
+  .cx { color: var(--fg); font-weight: 800; }
   /* Plain text button in the link style: shows more of the same list, not a call to action. */
   .more-dates {
     margin-top: 12px; padding: 4px 0; background: none; border: 0; cursor: pointer;

@@ -146,10 +146,10 @@ const title = de ? 'Kalender' : 'Calendar';
                 <li class="event" data-kind={kindKey(e)}>
                   <p class="date num">{whenOf({ ...e, time: undefined }, lang, thisYear)}</p>
                   <div>
-                    <p class="meta">{[kindOf(e, lang), e.place].filter(Boolean).join(', ')}</p>
                     <p class="ev-title" lang={lang === 'en' && !e.title_en?.trim() ? 'de' : undefined}>
                       {reportOf(e) ? <a href={reportOf(e)}>{titleOf(e, lang)}</a> : e.link ? <a href={e.link} rel="noopener">{titleOf(e, lang)}</a> : titleOf(e, lang)}
                     </p>
+                    <p class="meta">{[kindOf(e, lang), e.place].filter(Boolean).join(', ')}</p>
                   </div>
                 </li>
               ))}
@@ -166,10 +166,10 @@ const title = de ? 'Kalender' : 'Calendar';
                   <li class:list={['event', { cancelled: e.cancelled }]} data-kind={kindKey(e)} data-end={lastDay(e)}>
                     <p class="date num">{e.cancelled ? <s>{whenOf(e, lang, thisYear)}</s> : whenOf(e, lang, thisYear)}</p>
                     <div>
-                      <p class="meta"><EventMeta event={e} lang={lang} /></p>
                       <p class="ev-title" lang={lang === 'en' && !e.title_en?.trim() ? 'de' : undefined}>
-                        {e.cancelled ? <s>{titleOf(e, lang)}</s> : e.link ? <a href={e.link} rel="noopener">{titleOf(e, lang)}</a> : titleOf(e, lang)}
+                        {e.cancelled ? <><strong class="cx">{de ? 'Abgesagt:' : 'Cancelled:'}</strong> <s>{titleOf(e, lang)}</s></> : e.link ? <a href={e.link} rel="noopener">{titleOf(e, lang)}</a> : titleOf(e, lang)}
                       </p>
+                      <p class="meta"><EventMeta event={e} lang={lang} /></p>
                     </div>
                   </li>
                 ))}
@@ -185,10 +185,9 @@ const title = de ? 'Kalender' : 'Calendar';
                   <ul class="items">
                     {d.events.map((e) => (
                       <li class:list={['event', { cancelled: e.cancelled }]} data-kind={kindKey(e)}>
-                        <p class="meta"><EventMeta event={e} lang={lang} /></p>
                         <p class="ev-title" lang={lang === 'en' && !e.title_en?.trim() ? 'de' : undefined}>
                           {e.cancelled ? (
-                            <s>{e.time && d.date === e.from && <span class="num">{e.time} </span>}{titleOf(e, lang)}</s>
+                            <><strong class="cx">{de ? 'Abgesagt:' : 'Cancelled:'}</strong> <s>{e.time && d.date === e.from && <span class="num">{e.time} </span>}{titleOf(e, lang)}</s></>
                           ) : (
                             <>
                               {e.time && d.date === e.from && <span class="num">{e.time} </span>}
@@ -196,6 +195,7 @@ const title = de ? 'Kalender' : 'Calendar';
                             </>
                           )}
                         </p>
+                        <p class="meta"><EventMeta event={e} lang={lang} /></p>
                       </li>
                     ))}
                     {d.closures.map((c) => (
@@ -238,8 +238,8 @@ const title = de ? 'Kalender' : 'Calendar';
                 <li class:list={['event', { cancelled: e.cancelled }]} data-kind={kindKey(e)}>
                   <p class="date num">{e.cancelled ? <s>{whenOf(e, lang, thisYear)}</s> : whenOf(e, lang, thisYear)}</p>
                   <div>
+                    <p class="ev-title">{e.cancelled ? <><strong class="cx">{de ? 'Abgesagt:' : 'Cancelled:'}</strong> <s>{titleOf(e, lang)}</s></> : titleOf(e, lang)}</p>
                     <p class="meta"><EventMeta event={e} lang={lang} /></p>
-                    <p class="ev-title">{e.cancelled ? <s>{titleOf(e, lang)}</s> : titleOf(e, lang)}</p>
                   </div>
                 </li>
               ))}
@@ -414,11 +414,12 @@ const title = de ? 'Kalender' : 'Calendar';
   .closure { padding-left: 12px; border-left: 4px solid var(--gelb-ink); }
   .closure strong { font-weight: 800; }
   .event + .training, .event + .closure, .closure + .training { margin-top: 4px; }
-  .meta { font-size: var(--fs-meta); font-weight: 600; color: var(--stein); }
+  .meta { font-size: var(--fs-meta); font-weight: 600; color: var(--stein); margin-top: 4px; }
   .meta:empty { display: none; }
   .ev-title { font-size: var(--fs-item); font-weight: 700; line-height: 1.2; }
   .ev-title a { text-underline-offset: 4px; }
   .event.cancelled .ev-title, .event.cancelled .date { color: var(--stein); }
+  .cx { color: var(--fg); font-weight: 800; }
   .empty { margin-top: 20px; color: var(--stein); }
   @media (max-width: 640px) {
     .day, .later-list > li { grid-template-columns: minmax(0, 1fr); }
