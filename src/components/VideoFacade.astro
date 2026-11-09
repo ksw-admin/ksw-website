@@ -32,9 +32,10 @@ if (own && poster) {
     <div class="sec-h"><h2>{heading}</h2></div>
     {own ? (
       <div class="frame own" style={`--ratio: ${ratio}${poster ? `; --poster: url('${poster}')` : ''}`}>
-        {/* Wide screens: the frame is 16:9 and a blurred copy of the poster fills the sides (CSS only). */}
-        <span class="backdrop" aria-hidden="true"></span>
-        <video src={src} poster={poster || undefined} preload="none" playsinline controls aria-label={title}></video>
+        {/* Wide screens: the frame is 16:9 and a blurred copy of the poster fills the sides. While the video plays,
+            the script paints the video into the tiny canvas (ambient light); the CSS blur scales it up. */}
+        <span class="backdrop" aria-hidden="true"><canvas width="32" height="18"></canvas></span>
+        <video src={src} poster={poster || undefined} preload="none" playsinline controls controlslist="nodownload" aria-label={title}></video>
         {/* Shown by the script (without JS the native controls are enough). */}
         <button type="button" class="play" hidden>
           <span class="label">
@@ -72,13 +73,44 @@ if (own && poster) {
     if (!video || !button) return;
     video.controls = false;
     button.hidden = false;
+    // No download button (controlslist) and no "Save video as…" menu. Easy to get around, but it stops the casual copy.
+    video.addEventListener('contextmenu', (e) => e.preventDefault());
     button.addEventListener('click', () => {
       button.remove();
       video.controls = true;
       video.focus();
       void video.play().catch(() => {});
     });
+    ambient(video, box.querySelector('.backdrop canvas'));
   });
+
+  // Ambient backdrop: while the video plays on a wide screen, copy its middle band into a 32x18 canvas about
+  // 8 times a second. Each copy is only 30 % opaque, so colours drift instead of jumping at hard cuts. Same
+  // video element, so no second download. Off with "reduce motion": the still poster stays.
+  function ambient(video: HTMLVideoElement, canvas: HTMLCanvasElement | null) {
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) return;
+    const wide = matchMedia('(min-width: 760px)');
+    const calm = matchMedia('(prefers-reduced-motion: reduce)');
+    let timer = 0;
+    const paint = (alpha = 0.3) => {
+      const w = video.videoWidth, h = video.videoHeight;
+      if (!w || !h) return;
+      const sh = Math.min(h, (w * 9) / 16); // the 16:9 middle band, like the poster's background-size: cover
+      ctx.globalAlpha = alpha;
+      ctx.drawImage(video, 0, (h - sh) / 2, w, sh, 0, 0, canvas.width, canvas.height);
+    };
+    const start = () => {
+      if (!wide.matches || calm.matches || timer) return;
+      if (!canvas.classList.contains('on')) paint(1); // first frame fully; after a pause, keep blending
+      canvas.classList.add('on');
+      timer = window.setInterval(() => paint(), 120);
+    };
+    const stop = () => { clearInterval(timer); timer = 0; };
+    video.addEventListener('playing', start);
+    video.addEventListener('pause', stop);
+    video.addEventListener('ended', () => { stop(); canvas.classList.remove('on'); });
+  }
 </script>
 
 <style>
@@ -95,6 +127,8 @@ if (own && poster) {
     .frame.own { aspect-ratio: 16 / 9; width: min(100%, calc((100svh - 180px) * 16 / 9)); }
     .frame.own video { object-fit: contain; }
     .backdrop { display: block; position: absolute; inset: -40px; background: var(--poster, none) center / cover; filter: blur(32px) brightness(0.45) saturate(1.1); }
+    .backdrop canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.8s ease; }
+    .backdrop canvas.on { opacity: 1; }
   }
   /* Play button in the middle: at the bottom of a tall frame the phone's sticky contact bar would cover it. */
   .frame.own .play { background: rgb(0 0 0 / 0.3); transition: background 0.2s ease; }
