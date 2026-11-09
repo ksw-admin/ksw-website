@@ -57,6 +57,10 @@ const titleImage = entry.data.image ? resolveImage(entry.filePath, entry.data.im
             ))}
           </tbody>
         </table>
+        {/* "Is training on this week?": the calendar page with closures and dates (only when it is switched on). */}
+        {site.calendarPage && (
+          <p class="cal-link"><a href={localePath('/dates/', lang)}>{lang === 'de' ? 'Ausfälle und Termine im Kalender' : 'Closures and dates in the calendar'}</a></p>
+        )}
         <p class="hall">{site.hall.street}, {site.hall.note}<br />{site.hall.city}</p>
         <a class="btn" href={localePath('/#contact', lang)}>{t('cta.trial')}</a>
       </aside>
@@ -112,6 +116,8 @@ const titleImage = entry.data.image ? resolveImage(entry.filePath, entry.data.im
   th { font-weight: 600; }
   .hall { margin-top: 16px; color: var(--stein); }
   aside .btn { margin-top: 16px; }
+  .cal-link { margin-top: 12px; font-weight: 700; }
+  .cal-link a { text-decoration: underline; text-underline-offset: 4px; }
   .gallery { padding-block: 0 var(--space-section); }
   .gallery ul { list-style: none; padding: 0; margin: 24px 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
   .gallery a { text-decoration: none; display: grid; gap: 6px; font-weight: 600; transition: transform 300ms ease-in; }
