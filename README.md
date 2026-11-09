@@ -98,3 +98,7 @@ the claude.ai Design System artifact is its published view: https://claude.ai/ar
   (`src/lib/split-test.ts`; locally `PUBLIC_BETA_PREVIEW=1`). While the test runs, Netlify sets a cookie (`nf_ab`) on
   every visitor. **At the merge:** end the split test (Netlify › Split testing) and remove the injected snippet, then the
   Datenschutz sentence "Diese Website setzt keine Cookies" is true again.
+- **Soft launch (2026-11-09):** the split test may run at 100 % to `astro-redesign`. Meanwhile the CMS writes to
+  `astro-redesign` (`public/admin/config.yml`) and the Datenschutz names the `nf_ab` cookie. **At the merge** also: set
+  the CMS `branch` back to `main`, and replace the `nf_ab` paragraph with "Diese Website setzt keine Cookies und
+  erstellt keine Nutzerprofile." (see the ENTWURF comment in `src/content/pages/de/privacy.md`).
