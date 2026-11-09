@@ -62,6 +62,7 @@
   "video": {
     "src": "/video/griepentrog.mp4",
     "poster": "/video/griepentrog-poster.webp",
+    "captions": "/video/griepentrog.de.vtt",
     "title": "Wir sind sehr stolz auf unsere erfolgreiche Kampfkunst-Abteilung in Duisburg"
   },
   "email": "info@atemschulung-griepentrog.de",

@@ -25,6 +25,7 @@ const Site = z.object({
     .object({
       src: z.string().regex(/^\/.+\.mp4$/, 'path like /video/name.mp4').optional().or(z.literal('')),
       poster: z.string().optional().or(z.literal('')),
+      captions: z.string().regex(/^\/.+\.vtt$/, 'path like /video/name.de.vtt').optional().or(z.literal('')), // German captions (WebVTT)
       youtubeId: z.string().regex(/^[\w-]{11}$/).optional().or(z.literal('')),
       title: z.string(),
     })

@@ -13,8 +13,8 @@ import { join } from 'node:path';
 import youtubePoster from '../assets/images/video-poster.webp';
 import type { Lang } from '../i18n/ui';
 
-interface Props { src?: string; poster?: string; youtubeId?: string; title: string; heading: string; lang: Lang }
-const { src, poster, youtubeId, title, heading, lang } = Astro.props;
+interface Props { src?: string; poster?: string; captions?: string; youtubeId?: string; title: string; heading: string; lang: Lang }
+const { src, poster, captions, youtubeId, title, heading, lang } = Astro.props;
 const de = lang === 'de';
 const own = Boolean(src);
 const watchUrl = youtubeId ? `https://www.youtube.com/watch?v=${youtubeId}` : '';
@@ -35,7 +35,9 @@ if (own && poster) {
         {/* Wide screens: the frame is 16:9 and a blurred copy of the poster fills the sides. While the video plays,
             the script paints the video into the tiny canvas (ambient light); the CSS blur scales it up. */}
         <span class="backdrop" aria-hidden="true"><canvas width="32" height="18"></canvas></span>
-        <video src={src} poster={poster || undefined} preload="none" playsinline controls controlslist="nodownload" aria-label={title}></video>
+        <video src={src} poster={poster || undefined} preload="none" playsinline controls controlslist="nodownload" aria-label={title}>
+          {captions && <track kind="captions" src={captions} srclang="de" label="Deutsch" />}
+        </video>
         {/* Shown by the script (without JS the native controls are enough). */}
         <button type="button" class="play" hidden>
           <span class="label">
