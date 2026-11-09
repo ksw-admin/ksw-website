@@ -1,3 +1,11 @@
 {
-  "items": []
+  "items": [
+    {
+      "announce": 14,
+      "groups": "alle",
+      "from": "2026-11-13",
+      "text": "Kein Training am 13.11.2026",
+      "text_en": "No training"
+    }
+  ]
 }
