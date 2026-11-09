@@ -24,18 +24,18 @@ const textLang = page.textLang !== lang ? page.textLang : undefined;
 const bodyLang = bodyEntry === entry && lang !== 'de' ? 'de' : undefined;
 // Title image (CMS "Titelbild", also the link preview): right half of the title band on wide screens, below the
 // title on phones. First image on the page, so it loads at once.
-const lead = entry.data.image ? resolveImage(entry.filePath, entry.data.image) : undefined;
+const titleImage = entry.data.image ? resolveImage(entry.filePath, entry.data.image) : undefined;
 ---
 
 <Base title={page.title} description={page.description} alternate={page.alternate} image={page.preview ? `/og/discipline-${page.slug}.jpg` : undefined} imageAlt={page.preview?.alt}>
-  <section class:list={['band', 'head', isKsw ? 'k' : 't', { 'has-lead': lead }]}>
+  <section class:list={['band', 'head', isKsw ? 'k' : 't', { 'has-title-image': titleImage }]}>
     <div class="wrap">
       <div class="head-text">
         <HangulSign discipline={isKsw ? 'kuksoolwon' : 'taichi'} />
         <h1 class={isKsw ? 'cond' : 'wide'} lang={textLang}>{page.title}</h1>
       </div>
-      {lead && (
-        <Image class="lead" src={lead.meta} alt={page.preview?.alt ?? ''} width={capWidth(lead.meta, 960)} widths={[480, 720, 960].filter((w) => w <= lead.meta.width)} sizes="(max-width: 860px) calc(100vw - 32px), 50vw" loading="eager" fetchpriority="high" />
+      {titleImage && (
+        <Image class="title-image" src={titleImage.meta} alt={page.preview?.alt ?? ''} width={capWidth(titleImage.meta, 960)} widths={[480, 720, 960].filter((w) => w <= titleImage.meta.width)} sizes="(max-width: 860px) calc(100vw - 32px), 50vw" loading="eager" fetchpriority="high" />
       )}
     </div>
   </section>
@@ -88,12 +88,12 @@ const lead = entry.data.image ? resolveImage(entry.filePath, entry.data.image) :
 <style>
   .head { padding-block: var(--space-compact); }
   /* Title image: wide screens text left, photo right (the band had an empty right half); phones photo below. */
-  .head.has-lead .wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 24px 48px; align-items: center; }
+  .head.has-title-image .wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 24px 48px; align-items: center; }
   /* object-position lower than centre: in these photos the people stand or lie in the lower half. */
-  .head :global(.lead) { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; object-position: center 70%; border-radius: 4px; }
+  .head :global(.title-image) { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; object-position: center 70%; border-radius: 4px; }
   @media (max-width: 860px) {
-    .head.has-lead .wrap { grid-template-columns: minmax(0, 1fr); }
-    .head :global(.lead) { aspect-ratio: 16 / 9; }
+    .head.has-title-image .wrap { grid-template-columns: minmax(0, 1fr); }
+    .head :global(.title-image) { aspect-ratio: 16 / 9; }
   }
   .head.k { background: var(--panel); color: var(--panel-fg); }
   .head.t { background: var(--tc-bg); color: var(--tc-fg); }
