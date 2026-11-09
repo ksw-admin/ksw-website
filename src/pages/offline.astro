@@ -3,7 +3,7 @@
 // It is precached, so it always works: the things a visitor needs on the way to the hall.
 import Base from '../layouts/Base.astro';
 import { getSchedule, dayList, ageLabel } from '../lib/schedule';
-import { site, primaryPhone, telHref } from '../lib/site';
+import { site, primaryPhone, phoneLabel, telHref } from '../lib/site';
 
 const slots = await getSchedule();
 ---
@@ -26,7 +26,7 @@ const slots = await getSchedule();
         </tbody>
       </table>
       <p class="contact">
-        <a class="num" href={telHref(primaryPhone.value)}>{primaryPhone.value}</a><br />
+        <a class="num" href={telHref(primaryPhone.value)}>{phoneLabel(primaryPhone.value)}</a><br />
         {site.hall.street}, {site.hall.note}, {site.hall.city}
       </p>
     </div>

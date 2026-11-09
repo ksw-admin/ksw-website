@@ -46,7 +46,7 @@ if (own && poster) {
         {/* Shown by the script (without JS the native controls are enough). */}
         <button type="button" class="play" hidden>
           <span class="label">
-            <span class="icon" aria-hidden="true"></span>
+            <span class="play-icon" aria-hidden="true"></span>
             <span><strong>{de ? 'Video abspielen' : 'Play video'}</strong></span>
           </span>
         </button>
@@ -56,7 +56,7 @@ if (own && poster) {
         <button type="button" class="play">
           <Image src={youtubePoster} alt="" width={1440} quality={60} widths={[480, 720, 1024, 1440]} sizes="(max-width: 760px) calc(100vw - 32px), (max-width: 1520px) calc(100vw - 128px), 1440px" loading="lazy" />
           <span class="label">
-            <span class="icon" aria-hidden="true"></span>
+            <span class="play-icon" aria-hidden="true"></span>
             <span>
               <strong>{de ? 'Video abspielen' : 'Play video'}</strong>
               <small>{de ? 'Lädt den Player von YouTube. Dabei werden Daten an Google übertragen.' : 'Loads the player from YouTube. This sends data to Google.'}</small>
@@ -172,8 +172,6 @@ if (own && poster) {
   .play :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(0.62); transition: filter 0.2s ease; }
   .play:hover :global(img) { filter: brightness(0.5); }
   .label { position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: center; gap: 18px; padding: clamp(16px, 3vw, 32px); color: #fff; }
-  .icon { flex: none; width: clamp(56px, 7vw, 84px); aspect-ratio: 1; border-radius: 50%; background: var(--gelb); position: relative; }
-  .icon::after { content: ''; position: absolute; left: 38%; top: 28%; border-style: solid; border-width: 0.9em 0 0.9em 1.5em; border-color: transparent transparent transparent #000; font-size: clamp(14px, 1.6vw, 20px); }
   .label strong { display: block; font-size: clamp(1.2rem, 2vw, 1.6rem); }
   .label small { display: block; font-size: var(--fs-meta); opacity: 0.85; max-width: 46ch; }
   .vid-error { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; margin: 0; padding: 24px; background: rgb(0 0 0 / 0.82); color: #fff; text-align: center; }

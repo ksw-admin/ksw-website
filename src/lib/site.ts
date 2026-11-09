@@ -51,4 +51,4 @@ export const site = Site.parse(raw);
 
 export const primaryPhone = site.phones.find((p) => p.primary) ?? site.phones[0];
 
-export { telHref } from './phone';
+export { phoneLabel, telHref } from './phone';

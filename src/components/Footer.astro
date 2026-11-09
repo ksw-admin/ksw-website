@@ -4,7 +4,7 @@
  * Impressum and Datenschutz stay German only (legally binding text).
  */
 import { useTranslations, localePath, type Lang } from '../i18n/ui';
-import { site, primaryPhone, telHref } from '../lib/site';
+import { site, primaryPhone, phoneLabel, telHref } from '../lib/site';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -24,7 +24,7 @@ const groups = [
   {
     title: t('footer.contact'),
     links: [
-      { href: telHref(primaryPhone.value), label: primaryPhone.value.replace(/ - /g, ' ') },
+      { href: telHref(primaryPhone.value), label: phoneLabel(primaryPhone.value) },
       { href: `mailto:${site.email}`, label: site.email },
       { href: localePath('/other/contact/', lang), label: t('footer.directions') },
     ],

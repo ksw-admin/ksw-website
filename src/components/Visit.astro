@@ -1,5 +1,5 @@
 ---
-import { site, primaryPhone, telHref } from '../lib/site';
+import { site, primaryPhone, phoneLabel, telHref } from '../lib/site';
 import { localePath, type Lang } from '../i18n/ui';
 
 interface Props { lang: Lang; heading: string; intro?: string; /** 1 on the contact page, where this is the page heading */ level?: 1 | 2 }
@@ -23,11 +23,11 @@ const appleRoute = `https://maps.apple.com/?daddr=${encodeURIComponent(destinati
         <span class="icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" width="24" height="24" focusable="false"><path fill="currentColor" d="M6.6 10.8a15.2 15.2 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>
         </span>
-        <span class="visually-hidden">{de ? 'Anrufen: ' : 'Call: '}</span>{primaryPhone.value.replace(/ - /g, ' ')}
+        <span class="visually-hidden">{de ? 'Anrufen: ' : 'Call: '}</span>{phoneLabel(primaryPhone.value)}
       </a>
       <p class="who">
         {site.contactName}. <a class="mail" href={`mailto:${site.email}`}>{site.email}</a>
-        {others.map((p) => <><br />{p.label} {p.value}</>)}
+        {others.map((p) => <><br />{p.label} {phoneLabel(p.value)}</>)}
       </p>
       <p class="faq-hint">
         {de

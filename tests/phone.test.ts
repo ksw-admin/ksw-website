@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { telHref } from '../src/lib/phone.ts';
+import { phoneLabel, telHref } from '../src/lib/phone.ts';
 
 test('German numbers in the notations used on the site', () => {
   assert.equal(telHref('0170 - 90 42 408'), 'tel:+491709042408'); // site.json, mobile
@@ -15,4 +15,10 @@ test('German numbers in the notations used on the site', () => {
 test('every phone number in site.json gives a valid tel: link', () => {
   const site = JSON.parse(readFileSync(new URL('../src/content/site.json', import.meta.url), 'utf8'));
   for (const p of site.phones) assert.match(telHref(p.value), /^tel:\+\d{8,15}$/, p.value);
+});
+
+test('shown number: dash groups become spaces, nothing else changes', () => {
+  assert.equal(phoneLabel('0170 - 90 42 408'), '0170 90 42 408');
+  assert.equal(phoneLabel('02065 - 679631'), '02065 679631');
+  assert.equal(phoneLabel('+49 (0)203 44005952'), '+49 (0)203 44005952');
 });

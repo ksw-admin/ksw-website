@@ -167,6 +167,10 @@ img { max-width: 100%; height: auto; }
   clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }
 
+/* The yellow play button, one for every video: the home video (VideoFacade.astro) and videos in posts (below). */
+.play-icon { flex: none; position: relative; width: clamp(56px, 7vw, 84px); aspect-ratio: 1; border-radius: 50%; background: var(--gelb); }
+.play-icon::after { content: ''; position: absolute; left: 38%; top: 28%; border-style: solid; border-width: 0.9em 0 0.9em 1.5em; border-color: transparent transparent transparent #000; font-size: clamp(14px, 1.6vw, 20px); }
+
 /* Video in a Markdown text (src/lib/youtube.ts, script: VideoEmbeds.astro). Before the click: a dark 16:9 frame
    with the title and the home video's yellow play button, no YouTube thumbnail (that would already contact Google). */
 .yt-embed { margin-inline: 0; }
@@ -175,14 +179,13 @@ img { max-width: 100%; height: auto; }
   align-items: flex-end; gap: 18px; padding: clamp(16px, 3vw, 28px); cursor: pointer; text-align: left;
   background: #1a1c18; color: #fff; font: inherit;
 }
-.yt-embed .yt-play:hover .yt-icon { transform: scale(1.06); }
+.yt-embed .yt-play:hover .play-icon { transform: scale(1.06); }
 .yt-embed .yt-play:focus-visible { outline: 3px solid var(--gelb); outline-offset: 3px; }
-.yt-embed .yt-icon { flex: none; position: relative; width: clamp(52px, 6vw, 72px); aspect-ratio: 1; border-radius: 50%; background: var(--gelb); transition: transform 0.15s ease; }
-.yt-embed .yt-icon::after { content: ''; position: absolute; left: 38%; top: 28%; border-style: solid; border-width: 0.9em 0 0.9em 1.5em; border-color: transparent transparent transparent #000; font-size: clamp(13px, 1.4vw, 18px); }
+.yt-embed .play-icon { transition: transform 0.15s ease; }
 .yt-embed strong { display: block; font-size: var(--fs-item); line-height: 1.2; }
 .yt-embed small { display: block; margin-top: 4px; font-size: var(--fs-meta); opacity: 0.85; max-width: 46ch; }
 .yt-embed figcaption { margin-top: 8px; font-size: var(--fs-meta); color: var(--stein); }
-@media (prefers-reduced-motion: reduce) { .yt-embed .yt-icon { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .yt-embed .play-icon { transition: none; } }
 
 /* Fotoreihe in a report (src/lib/blocks.ts): 2 to 4 photos side by side, two per row on phones. */
 .photo-row > p { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr)); gap: 8px; }
