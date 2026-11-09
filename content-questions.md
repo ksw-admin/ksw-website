@@ -61,4 +61,9 @@ answer on the site yet; each one becomes an FAQ entry once answered:
       Suggestion: du for Kuk Sool Won and the general pages, Sie for Tai Chi and Atemschulung.
 - [ ] **Photos:** action photos from training (techniques, forms, Tai Chi outdoors) to replace some posed group photos;
       a single portrait of Peter for the master section.
+- [ ] **Title images (2026-11-09):** the Kuk Sool Won and Tai Chi pages now open with a photo next to the title (CMS:
+  Kampfkunst-Seiten › Titelbild; also the WhatsApp preview). Kuk Sool Won shows the self-defence demo (adults); most
+  groups are children 4 to 14, so a lively photo from a kids' training may speak more to parents. Tai Chi shows the
+  group far away with a bouncy castle; a closer photo (a few people, calm movement) would fit better. Landscape,
+  people in the lower half.
 - [ ] **Social media:** Instagram / Facebook / YouTube links, if the school has them (CMS: Einstellungen).
