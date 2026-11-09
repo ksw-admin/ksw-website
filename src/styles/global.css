@@ -8,6 +8,8 @@
   --silber: #a7adb2;
   --bronze: #b0703a;
 
+  /* Neutrals are warm greys (hue about 40°, like the hall's wood and the yellow/gold accents), not olive.
+     Keep the light ones this neutral: red minus blue at most 4 (#f5f4f1). Warmer drifts into "cream" templates. */
   --bg: #f5f4f1;
   --fg: #000000;
   --stein: #5f5c58;
