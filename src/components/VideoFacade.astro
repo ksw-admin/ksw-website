@@ -84,29 +84,38 @@ if (own && poster) {
     ambient(video, box.querySelector('.backdrop canvas'));
   });
 
-  // Ambient backdrop: while the video plays on a wide screen, copy its middle band into a 32x18 canvas about
-  // 8 times a second. Each copy is only 30 % opaque, so colours drift instead of jumping at hard cuts. Same
-  // video element, so no second download. Off with "reduce motion": the still poster stays.
+  // Ambient backdrop: while the video plays on a wide screen, copy its middle band into a 32x18 canvas on every
+  // video frame (requestVideoFrameCallback; animation frames as fallback). Each copy is 20 % opaque, so a cut
+  // fades over about 0.4 s instead of flashing. Same video element, so no second download.
+  // Off with "reduce motion": the still poster stays.
   function ambient(video: HTMLVideoElement, canvas: HTMLCanvasElement | null) {
     const ctx = canvas?.getContext('2d');
     if (!canvas || !ctx) return;
     const wide = matchMedia('(min-width: 760px)');
     const calm = matchMedia('(prefers-reduced-motion: reduce)');
-    let timer = 0;
-    const paint = (alpha = 0.3) => {
+    const perFrame = 'requestVideoFrameCallback' in video;
+    let running = false;
+    const paint = (alpha: number) => {
       const w = video.videoWidth, h = video.videoHeight;
       if (!w || !h) return;
       const sh = Math.min(h, (w * 9) / 16); // the 16:9 middle band, like the poster's background-size: cover
       ctx.globalAlpha = alpha;
       ctx.drawImage(video, 0, (h - sh) / 2, w, sh, 0, 0, canvas.width, canvas.height);
     };
+    const loop = () => {
+      if (!running) return;
+      paint(0.2);
+      if (perFrame) video.requestVideoFrameCallback(loop);
+      else requestAnimationFrame(loop);
+    };
     const start = () => {
-      if (!wide.matches || calm.matches || timer) return;
+      if (!wide.matches || calm.matches || running) return;
       if (!canvas.classList.contains('on')) paint(1); // first frame fully; after a pause, keep blending
       canvas.classList.add('on');
-      timer = window.setInterval(() => paint(), 120);
+      running = true;
+      loop();
     };
-    const stop = () => { clearInterval(timer); timer = 0; };
+    const stop = () => { running = false; };
     video.addEventListener('playing', start);
     video.addEventListener('pause', stop);
     video.addEventListener('ended', () => { stop(); canvas.classList.remove('on'); });
