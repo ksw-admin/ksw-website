@@ -37,10 +37,22 @@ export function buildAgenda(opts: { slots: FeedSlot[]; closures: Closure[]; even
       .sort((a, b) => a.from.localeCompare(b.from))
       .map((slot) => ({ slot, off: dayClosures.some((c) => affects(c, slot.discipline)) }));
     const closures = dayClosures.filter((c) => training.some((t) => t.off && affects(c, t.slot.discipline)));
-    const events = opts.events.filter((e) => e.from <= date && date <= lastDay(e));
+    // Approximate dates have no day: the calendar page lists them per week (approxInWeek), not here.
+    const events = opts.events.filter((e) => !e.approx && e.from <= date && date <= lastDay(e));
     if (training.length || events.length) out.push({ date, training, closures, events });
   }
   return out;
+}
+
+/** Approximate dates for the week starting `monday`: the week of their anchor (Anfang/Mitte/Ende), or the first
+ *  shown week (`firstMonday`) if the anchor already passed while the month still runs. */
+export function approxInWeek(events: SiteEvent[], monday: string, firstMonday: string): SiteEvent[] {
+  const sunday = addDays(monday, 6);
+  return events.filter((e) => {
+    if (!e.approx) return false;
+    const at = e.from < firstMonday ? firstMonday : e.from;
+    return at >= monday && at <= sunday;
+  });
 }
 
 /** Days grouped into weeks (Monday first), in order. */

@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { endTime, isUpcoming, kindOf, titleOf, whenOf, type SiteEvent } from '../src/lib/events.ts';
+import { anchorOf, endTime, isUpcoming, kindOf, lastDay, titleOf, whenOf, type SiteEvent } from '../src/lib/events.ts';
 import { buildCalendar } from '../src/lib/ics.ts';
 
 const turnier: SiteEvent = { from: '2026-05-09', time: '10:00', title: 'New Generation Turnier', kind: 'Turnier', place: 'Arnsberg', link: 'https://example.org/ausschreibung' };
@@ -49,12 +49,48 @@ test('calendar: timed event, multi-day all-day event, place and link', () => {
 });
 
 test('events.json (as edited in the CMS) is valid', () => {
-  const { items } = JSON.parse(readFileSync(new URL('../src/content/events.json', import.meta.url), 'utf8')) as { items: SiteEvent[] };
+  const { items } = JSON.parse(readFileSync(new URL('../src/content/events.json', import.meta.url), 'utf8')) as {
+    items: (Partial<SiteEvent> & { month?: string; part?: string })[];
+  };
   for (const e of items) {
-    assert.match(e.from, /^\d{4}-\d{2}-\d{2}$/);
-    assert.ok(e.title?.trim(), `${e.from}: Titel fehlt`);
-    if (e.to) assert.ok(e.to >= e.from, `${e.from}: "bis" liegt vor "von"`);
+    const at = e.from || e.month;
+    assert.ok(!!e.from !== !!e.month, `${at} ${e.title}: entweder Datum oder Monat`);
+    if (e.from) assert.match(e.from, /^\d{4}-\d{2}-\d{2}$/);
+    else assert.match(e.month!, /^\d{4}-\d{2}$/); // approximate: only the month is stored, never a day
+    assert.ok(e.title?.trim(), `${at}: Titel fehlt`);
+    if (e.to && e.from) assert.ok(e.to >= e.from, `${e.from}: "bis" liegt vor "von"`);
   }
+});
+
+const party: SiteEvent = { from: anchorOf('2026-12', 'Mitte'), title: 'Weihnachtsfeier', kind: 'Verein', approx: { month: '2026-12', part: 'Mitte' } };
+
+test('approximate date: month (and part) only, in both languages; year only when not the current one', () => {
+  assert.equal(whenOf(party, 'de', 2026), 'Mitte Dezember');
+  assert.equal(whenOf(party, 'en', 2026), 'Mid December');
+  assert.equal(whenOf({ ...party, approx: { month: '2026-12' } }, 'de', 2026), 'Dezember');
+  assert.equal(whenOf({ ...party, approx: { month: '2027-01', part: 'Anfang' } }, 'de', 2026), 'Anfang Januar 2027');
+  assert.equal(whenOf({ ...party, approx: { month: '2028-02', part: 'Ende' } }, 'en', 2026), 'Late February 2028');
+  assert.equal(whenOf({ ...party, time: '19:00' }, 'de', 2026), 'Mitte Dezember'); // a time never shows
+});
+
+test('approximate date: sort anchor, upcoming until the end of its month', () => {
+  assert.equal(anchorOf('2026-12'), '2026-12-01');
+  assert.equal(anchorOf('2026-12', 'Anfang'), '2026-12-01');
+  assert.equal(anchorOf('2026-12', 'Mitte'), '2026-12-15');
+  assert.equal(anchorOf('2026-12', 'Ende'), '2026-12-31');
+  assert.equal(anchorOf('2028-02', 'Ende'), '2028-02-29'); // leap year
+  assert.equal(lastDay(party), '2026-12-31');
+  assert.equal(isUpcoming(party, '2026-12-31'), true);
+  assert.equal(isUpcoming(party, '2027-01-01'), false);
+});
+
+test('calendar feed: no entry for an approximate date (it has no day)', () => {
+  const ics = buildCalendar({
+    name: 'Training', host: 'example.org', location: 'Halle', url: 'https://example.org/',
+    slots: [], closures: [], events: [party, turnier], now: new Date('2026-05-01T12:00:00Z'),
+  });
+  assert.doesNotMatch(ics, /Weihnachtsfeier/);
+  assert.match(ics, /New Generation Turnier/);
 });
 
 test('calendar: a cancelled date keeps its UID and is marked cancelled', () => {

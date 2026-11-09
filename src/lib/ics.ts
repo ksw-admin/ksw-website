@@ -134,6 +134,7 @@ export function buildCalendar(opts: {
   // Upcoming dates: all-day (multi-day or without time) or timed (end: given, else start + 2 hours).
   // Cancelled: same UID, STATUS:CANCELLED and a higher SEQUENCE, so subscribed calendars mark the existing entry.
   for (const e of opts.events ?? []) {
+    if (e.approx) continue; // no day, no calendar entry (getFeedEvents leaves them out already)
     const multi = lastDay(e) !== e.from;
     const timed = !multi && !!e.time;
     lines.push(

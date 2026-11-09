@@ -1,9 +1,10 @@
 // Upcoming dates ("Termine", CMS: Einstellungen › Termine): tournaments, gradings, seminars, club events.
 // Pure functions (no Astro imports): used by the home page block, the calendar feeds and the tests.
 // Dates are "YYYY-MM-DD" strings in German local time, times "HH:MM", like closures.
-import { MONTHS_SHORT_EN, todayInGermany, WEEKDAYS_SHORT } from './dates.ts';
+import { MONTHS, MONTHS_SHORT_EN, todayInGermany, WEEKDAYS_SHORT } from './dates.ts';
 
 export type EventKind = 'Turnier' | 'Prüfung' | 'Seminar' | 'Verein';
+export type MonthPart = 'Anfang' | 'Mitte' | 'Ende';
 export type SiteEvent = {
   from: string;
   to?: string;
@@ -18,9 +19,23 @@ export type SiteEvent = {
   cancelled?: boolean;
   /** Slug of the report under "Aktuelles" (CMS: relation field "Bericht"); past dates link to it. */
   report?: string;
+  /** Approximate date: only the month (and maybe Anfang/Mitte/Ende) is shown, "Mitte Dezember". For a date that is not
+   *  fixed yet, or whose day should not be public (a club party; the repo is public, so the day is never stored).
+   *  `from` is then only a sort anchor (anchorOf), shown nowhere. No time, no calendar entry. */
+  approx?: { month: string; part?: MonthPart };
 };
 
-export const lastDay = (e: SiteEvent) => (e.to && e.to >= e.from ? e.to : e.from);
+const monthEnd = (month: string) => {
+  const [y, m] = month.split('-').map(Number);
+  return `${month}-${String(new Date(Date.UTC(y, m, 0)).getUTCDate()).padStart(2, '0')}`;
+};
+
+/** Sort anchor of an approximate date: Anfang the 1st, Mitte the 15th, Ende the last day, no part the 1st. */
+export const anchorOf = (month: string, part?: MonthPart) =>
+  part === 'Ende' ? monthEnd(month) : `${month}-${part === 'Mitte' ? '15' : '01'}`;
+
+/** Approximate dates last until the end of their month (shown as upcoming until then). */
+export const lastDay = (e: SiteEvent) => (e.approx ? monthEnd(e.approx.month) : e.to && e.to >= e.from ? e.to : e.from);
 
 /** Not over yet (shown until the end of its last day). */
 export const isUpcoming = (e: SiteEvent, today: string) => lastDay(e) >= today;
@@ -45,12 +60,21 @@ const short = (d: string, lang: 'de' | 'en', thisYear: number) => {
 /** "Sa 9.5., 10:00 Uhr" / "Sa 9.5. bis So 10.5." (English: "Sat 9 May, 10:00" / "Sat 9 May to Sun 10 May").
  *  thisYear: dates in other years get the year (default: the current year in Germany). */
 export function whenOf(e: SiteEvent, lang: 'de' | 'en', thisYear = Number(todayInGermany().slice(0, 4))): string {
+  if (e.approx) return approxWhen(e.approx, lang, thisYear);
   const start = `${wd(e.from, lang)} ${short(e.from, lang, thisYear)}`;
   const end = lastDay(e);
   if (end !== e.from) return `${start} ${lang === 'de' ? 'bis' : 'to'} ${wd(end, lang)} ${short(end, lang, thisYear)}`;
   if (!e.time) return start;
   const range = e.time_to ? `${e.time}–${e.time_to}` : e.time;
   return lang === 'de' ? `${start}, ${range} Uhr` : `${start}, ${range}`;
+}
+
+const PART_EN: Record<MonthPart, string> = { Anfang: 'Early', Mitte: 'Mid', Ende: 'Late' };
+/** "Mitte Dezember" / "Mid December", "Dezember", "Anfang Januar 2027" (year only when not thisYear). */
+function approxWhen(v: NonNullable<SiteEvent['approx']>, lang: 'de' | 'en', thisYear: number): string {
+  const [y, m] = v.month.split('-').map(Number);
+  const part = v.part ? `${lang === 'de' ? v.part : PART_EN[v.part]} ` : '';
+  return `${part}${MONTHS[lang][m - 1]}${y !== thisYear ? ` ${y}` : ''}`;
 }
 
 /** Calendar end for a timed one-day event: the given end time, else two hours after the start. */

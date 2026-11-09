@@ -5,7 +5,7 @@ import { isoDate, opt } from './cms-schema';
 import raw from '../content/events.json';
 import { FEED_HISTORY_DAYS } from './closures';
 import { addDays, todayInGermany } from './dates';
-import { isUpcoming, lastDay, type SiteEvent } from './events';
+import { anchorOf, isUpcoming, lastDay, type SiteEvent } from './events';
 
 const date = isoDate('Termine');
 const time = z.string().regex(/^\d{2}:\d{2}$/, 'Termine: Uhrzeit als HH:MM, z.B. 10:00');
@@ -14,7 +14,11 @@ const Events = z.object({
     .array(
       z
         .object({
-          from: date,
+          // Either an exact date (from) or an approximate one (month, optional part). For the approximate one only
+          // the month is stored: the day of a not-yet-fixed or not-public date never reaches the public repo.
+          from: opt(date),
+          month: opt(z.string().regex(/^\d{4}-\d{2}$/, 'Termine: Monat als JJJJ-MM')),
+          part: opt(z.enum(['Anfang', 'Mitte', 'Ende'])),
           to: opt(date),
           time: opt(time),
           time_to: opt(time),
@@ -26,12 +30,18 @@ const Events = z.object({
           cancelled: z.preprocess((v) => (v === null ? undefined : v), z.boolean().optional()),
           report: opt(z.string()),
         })
-        .refine((e) => !e.to || e.to >= e.from, { message: 'Termine: "bis" muss am oder nach "von" liegen' }),
+        .refine((e) => !!e.from !== !!e.month, { message: 'Termine: entweder ein Datum oder (für ein ungefähres Datum) einen Monat angeben, nicht beides' })
+        .refine((e) => !e.to || !e.from || e.to >= e.from, { message: 'Termine: "bis" muss am oder nach "von" liegen' }),
     )
     .default([]),
 });
 
-const all: SiteEvent[] = Events.parse(raw).items;
+/** Approximate dates: sort anchor as from; bis, Uhrzeit are ignored (they would pretend a day). */
+const all: SiteEvent[] = Events.parse(raw).items.map(({ month, part, ...e }) =>
+  month
+    ? { ...e, from: anchorOf(month, part), to: undefined, time: undefined, time_to: undefined, approx: { month, part } }
+    : { ...e, from: e.from! },
+);
 
 /** Not over yet at build time, soonest first. */
 export async function getEvents(): Promise<SiteEvent[]> {
@@ -50,11 +60,11 @@ export async function getPastEvents(): Promise<SiteEvent[]> {
     .sort((a, b) => a.from.localeCompare(b.from) || (a.time ?? '').localeCompare(b.time ?? ''));
 }
 
-/** For the calendar feeds: upcoming dates plus those of the last year (like closures), so a past tournament
+/** For the calendar feeds (approximate dates left out): upcoming dates plus those of the last year (like closures), so a past tournament
  *  stays in subscribers' calendars instead of being deleted at the next rebuild. Cancelled ones stay too (marked). */
 export async function getFeedEvents(): Promise<SiteEvent[]> {
   const from = addDays(todayInGermany(), -FEED_HISTORY_DAYS);
   return all
-    .filter((e) => lastDay(e) >= from)
+    .filter((e) => !e.approx && lastDay(e) >= from) // a calendar entry needs a day
     .sort((a, b) => a.from.localeCompare(b.from) || (a.time ?? '').localeCompare(b.time ?? ''));
 }
