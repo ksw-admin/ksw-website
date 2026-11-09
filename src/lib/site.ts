@@ -18,9 +18,18 @@ const Site = z.object({
   }),
   // Profiles (Instagram, Facebook, YouTube, Flickr ...): footer, contact band, schema.org sameAs.
   social: z.array(z.object({ name: z.string(), url: z.url(), label: z.string().optional() })).default([]),
-  // Home page video. Loads from YouTube only after a click (privacy, no Google request on page view).
+  // Home page video. Either our own file (src, e.g. /video/x.mp4, plus a poster image; nothing loads before "play")
+  // or a YouTube id (loads from YouTube only after a click). src wins if both are set.
   // The heading above the video is a home page text (home.json › videoHeading).
-  video: z.object({ youtubeId: z.string().regex(/^[\w-]{11}$/), title: z.string() }).optional(),
+  video: z
+    .object({
+      src: z.string().regex(/^\/.+\.mp4$/, 'path like /video/name.mp4').optional().or(z.literal('')),
+      poster: z.string().optional().or(z.literal('')),
+      youtubeId: z.string().regex(/^[\w-]{11}$/).optional().or(z.literal('')),
+      title: z.string(),
+    })
+    .refine((v) => v.src || v.youtubeId, 'video: set a file (src) or a YouTube id')
+    .optional(),
   // Footer credit for whoever built the site; the link (e.g. a LinkedIn profile) is optional.
   credit: z
     .object({ text: z.string().min(1), url: z.url().optional().or(z.literal('')) })

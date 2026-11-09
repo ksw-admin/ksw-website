@@ -1,50 +1,100 @@
 ---
 /**
- * Click-to-load YouTube video. Until the visitor clicks, the page shows our own photo and contacts no Google server.
- * After the click the player loads from youtube-nocookie.com. Mention this in the Datenschutz text.
+ * Home page video, two modes (site.json › video):
+ * - src (own MP4 in public/video): a native <video>, preload="none", so only the poster loads before "play".
+ *   Comes from this site, no third party (Datenschutz: "Videos"). The frame takes the poster's aspect ratio
+ *   (the current video is portrait, 9:16).
+ * - youtubeId: click-to-load YouTube. Until the click the page shows our own photo and contacts no Google server;
+ *   then the player loads from youtube-nocookie.com.
  */
 import { Image } from 'astro:assets';
-import poster from '../assets/images/video-poster.webp';
+import sharp from 'sharp';
+import { join } from 'node:path';
+import youtubePoster from '../assets/images/video-poster.webp';
 import type { Lang } from '../i18n/ui';
 
-interface Props { youtubeId: string; title: string; heading: string; lang: Lang }
-const { youtubeId, title, heading, lang } = Astro.props;
+interface Props { src?: string; poster?: string; youtubeId?: string; title: string; heading: string; lang: Lang }
+const { src, poster, youtubeId, title, heading, lang } = Astro.props;
 const de = lang === 'de';
-const watchUrl = `https://www.youtube.com/watch?v=${youtubeId}`;
+const own = Boolean(src);
+const watchUrl = youtubeId ? `https://www.youtube.com/watch?v=${youtubeId}` : '';
+
+// Aspect ratio of the own video from its poster (public/…, read at build time from the project root); 9:16 without poster.
+let ratio = '9 / 16';
+if (own && poster) {
+  const meta = await sharp(join(process.cwd(), 'public', poster)).metadata();
+  if (meta.width && meta.height) ratio = `${meta.width} / ${meta.height}`;
+}
 ---
 
 <section class="video band" id="video">
   <div class="wrap">
     <div class="sec-h"><h2>{heading}</h2></div>
-    <div class="frame" data-yt={youtubeId} data-title={title}>
-      <button type="button" class="play">
-        <Image src={poster} alt="" width={1440} quality={60} widths={[480, 720, 1024, 1440]} sizes="(max-width: 760px) calc(100vw - 32px), (max-width: 1520px) calc(100vw - 128px), 1440px" loading="lazy" />
-        <span class="label">
-          <span class="icon" aria-hidden="true"></span>
-          <span>
-            <strong>{de ? 'Video abspielen' : 'Play video'}</strong>
-            <small>{de ? 'Lädt den Player von YouTube. Dabei werden Daten an Google übertragen.' : 'Loads the player from YouTube. This sends data to Google.'}</small>
+    {own ? (
+      <div class="frame own" style={`--ratio: ${ratio}`}>
+        <video src={src} poster={poster || undefined} preload="none" playsinline controls aria-label={title}></video>
+        {/* Shown by the script (without JS the native controls are enough). */}
+        <button type="button" class="play" hidden>
+          <span class="label">
+            <span class="icon" aria-hidden="true"></span>
+            <span><strong>{de ? 'Video abspielen' : 'Play video'}</strong></span>
           </span>
-        </span>
-      </button>
-    </div>
-    <p class="alt"><a href={watchUrl} rel="noopener">{de ? 'Auf YouTube ansehen' : 'Watch on YouTube'}</a></p>
+        </button>
+      </div>
+    ) : (
+      <div class="frame" data-yt={youtubeId} data-title={title}>
+        <button type="button" class="play">
+          <Image src={youtubePoster} alt="" width={1440} quality={60} widths={[480, 720, 1024, 1440]} sizes="(max-width: 760px) calc(100vw - 32px), (max-width: 1520px) calc(100vw - 128px), 1440px" loading="lazy" />
+          <span class="label">
+            <span class="icon" aria-hidden="true"></span>
+            <span>
+              <strong>{de ? 'Video abspielen' : 'Play video'}</strong>
+              <small>{de ? 'Lädt den Player von YouTube. Dabei werden Daten an Google übertragen.' : 'Loads the player from YouTube. This sends data to Google.'}</small>
+            </span>
+          </span>
+        </button>
+      </div>
+    )}
+    {!own && <p class="alt"><a href={watchUrl} rel="noopener">{de ? 'Auf YouTube ansehen' : 'Watch on YouTube'}</a></p>}
   </div>
 </section>
 
 <script>
   import { initYoutubePlayers } from '../scripts/youtube-player';
   initYoutubePlayers('.video .frame[data-yt]', 'button', 'content');
+
+  // Own video: our play button over the poster; on click the native controls take over.
+  document.querySelectorAll<HTMLElement>('.video .frame.own').forEach((box) => {
+    const video = box.querySelector('video');
+    const button = box.querySelector<HTMLButtonElement>('.play');
+    if (!video || !button) return;
+    video.controls = false;
+    button.hidden = false;
+    button.addEventListener('click', () => {
+      button.remove();
+      video.controls = true;
+      video.focus();
+      void video.play().catch(() => {});
+    });
+  });
 </script>
 
 <style>
   .video { padding-block: var(--space-section) 0; }
   .frame { position: relative; margin-top: 24px; aspect-ratio: 16 / 9; background: #000; border-radius: 4px; overflow: hidden; }
   .frame :global(iframe) { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  /* Own video: the file's aspect ratio, as large as fits the screen height, centered. */
+  .frame.own { aspect-ratio: var(--ratio); width: min(100%, 420px, calc((100svh - 220px) * var(--ratio))); margin-inline: auto; }
+  .frame.own video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  /* Play button in the middle: at the bottom of a tall frame the phone's sticky contact bar would cover it. */
+  .frame.own .play { background: rgb(0 0 0 / 0.3); transition: background 0.2s ease; }
+  .frame.own .play:hover { background: rgb(0 0 0 / 0.45); }
+  .frame.own .label { top: 0; flex-direction: column; justify-content: center; text-align: center; gap: 12px; text-shadow: 0 1px 6px rgb(0 0 0 / 0.6); }
   .play { all: unset; cursor: pointer; position: absolute; inset: 0; display: block; }
+  .play[hidden] { display: none; }
   .play:focus-visible { outline: 3px solid var(--gelb); outline-offset: -3px; }
-  .play img { width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(0.62); transition: filter 0.2s ease; }
-  .play:hover img { filter: brightness(0.5); }
+  .play :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(0.62); transition: filter 0.2s ease; }
+  .play:hover :global(img) { filter: brightness(0.5); }
   .label { position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: center; gap: 18px; padding: clamp(16px, 3vw, 32px); color: #fff; }
   .icon { flex: none; width: clamp(56px, 7vw, 84px); aspect-ratio: 1; border-radius: 50%; background: var(--gelb); position: relative; }
   .icon::after { content: ''; position: absolute; left: 38%; top: 28%; border-style: solid; border-width: 0.9em 0 0.9em 1.5em; border-color: transparent transparent transparent #000; font-size: clamp(14px, 1.6vw, 20px); }

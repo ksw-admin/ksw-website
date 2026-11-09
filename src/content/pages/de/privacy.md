@@ -96,7 +96,7 @@ Diese Website erstellt keine Nutzerprofile. Sie setzt nur ein technisch notwendi
 
 Netlify und Cloudflare sind unter dem EU-US Data Privacy Framework zertifiziert.
 
-**YouTube-Video:** Das Video auf der Startseite wird erst nach einem Klick auf „Video abspielen“ von YouTube (Google Ireland Ltd.) geladen; erst dann werden Daten wie Ihre IP-Adresse an Google übertragen (Art. 6 Abs. 1 lit. a DSGVO).
+**Videos:** Das Video auf der Startseite liegt auf dieser Website selbst und wird erst beim Abspielen geladen; dabei werden keine Daten an Dritte übertragen. Videos von YouTube (Google Ireland Ltd.) in einzelnen Beiträgen werden erst nach einem Klick auf „Video abspielen“ geladen; erst dann werden Daten wie Ihre IP-Adresse an Google übertragen (Art. 6 Abs. 1 lit. a DSGVO).
 
 <!-- Der Absatz zu den Formularen (Kontakt, Fragen) steht nicht hier: die Seite fügt ihn nur ein, wenn ein Formular eingeschaltet ist (CMS: Einstellungen › Kontakt und Allgemeines). Text: src/pages/other/[page].astro -->
 

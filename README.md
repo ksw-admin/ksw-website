@@ -91,7 +91,8 @@ the claude.ai Design System artifact is its published view: https://claude.ai/ar
 - Photos are optimized at build time (`astro:assets`); a reference to a missing image fails the build.
 - Untranslated English URLs redirect to the German page (`i18n.fallback`); the sitemap lists only real pages.
 - The service worker keeps the old URL `/service-worker.js`, so phones with the old site's worker update to the new one.
-- YouTube loads only after a click (privacy); fonts are self-hosted.
+- The home video is our own file (`public/video/`, MP4 H.264 720 px, `preload="none"`, poster from the video); the
+  service worker does not cache it. YouTube videos in posts load only after a click (privacy); fonts are self-hosted.
 - **Private beta (until the merge):** Netlify split test with 0 % to `astro-redesign`; testers opt in with
   `https://www.kuk-sool-won-griepentrog.de/?beta=1` (snippet injected on the live site in Netlify) and opt out with the
   banner or `/beta/`. Banner, `/beta/` and the `?beta=` switch are only built for the `astro-redesign` branch
