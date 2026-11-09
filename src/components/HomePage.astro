@@ -76,8 +76,10 @@ const jsonLd = organizationLd(await getSchedule());
   .lead { font-size: clamp(1.25rem, 1.1vw + 0.6rem, 1.5rem); max-width: 34ch; margin-top: 22px; font-weight: 500; }
   h1 { font-size: clamp(3.2rem, 7.5vw, 8.6rem); line-height: 0.86; letter-spacing: -0.01em; font-weight: 900; margin-top: 18px; }
   .photo { margin: 0; background: #000; }
-  @media (max-width: 760px) { .photo { display: none; } }
   .photo :global(img) { display: block; width: 100%; height: clamp(240px, 42vw, 560px); object-fit: cover; object-position: center 40%; }
+  /* Phones: the same pause between week plan and paths as on desktop (was hidden, so the first picture came three
+     screens down); 4:3 so the people stay large enough. */
+  @media (max-width: 760px) { .photo :global(img) { height: auto; aspect-ratio: 4 / 3; } }
   .photo figcaption { background: var(--bg); color: var(--stein); font-size: var(--fs-meta); padding-block: 10px; }
   .news { padding-block: var(--space-section); }
   /* Season total and the key to the medal dots in the list below. */

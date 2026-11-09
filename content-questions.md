@@ -63,7 +63,6 @@ answer on the site yet; each one becomes an FAQ entry once answered:
       a single portrait of Peter for the master section.
 - [ ] **Title images (2026-11-09):** the Kuk Sool Won and Tai Chi pages now open with a photo next to the title (CMS:
   Kampfkunst-Seiten › Titelbild; also the WhatsApp preview). Kuk Sool Won shows the self-defence demo (adults); most
-  groups are children 4 to 14, so a lively photo from a kids' training may speak more to parents. Tai Chi shows the
-  group far away with a bouncy castle; a closer photo (a few people, calm movement) would fit better. Landscape,
-  people in the lower half.
+  groups are children 4 to 14, so a lively photo from a kids' training may speak more to parents. Tai Chi: done, the
+  group in blue shirts at the FC Rumeln event (2026-09-26). Landscape photos; they are shown uncropped.
 - [ ] **Social media:** Instagram / Facebook / YouTube links, if the school has them (CMS: Einstellungen).
