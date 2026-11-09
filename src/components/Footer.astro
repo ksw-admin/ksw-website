@@ -17,6 +17,7 @@ const groups = [
       { href: localePath('/category/kuksoolwon/', lang), label: t('nav.ksw') },
       { href: localePath('/category/taichi/', lang), label: t('nav.taichi') },
       { href: localePath('/#schedule', lang), label: t('footer.times') },
+      ...(site.calendarPage ? [{ href: localePath('/dates/', lang), label: lang === 'de' ? 'Kalender' : 'Calendar' }] : []),
       { href: localePath('/articles/', lang), label: t('nav.news') },
       { href: localePath('/faq/', lang), label: t('faq.title') },
     ],
