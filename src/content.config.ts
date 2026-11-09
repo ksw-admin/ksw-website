@@ -55,7 +55,7 @@ const disciplines = defineCollection({
     title: opt(z.string()),
     description: opt(z.string()),
     tags,
-    // Link preview (WhatsApp, Facebook ...): a photo next to the entry; built to /og/discipline-<slug>.jpg.
+    // Title image (CMS "Titelbild"): top of the page next to the title, and the link preview /og/discipline-<slug>.jpg.
     image: opt(z.string()),
     image_text: opt(z.string()),
     galleryImages: z

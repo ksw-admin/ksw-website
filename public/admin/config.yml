@@ -129,8 +129,8 @@ collections:
     fields:
       - { label: Titel, name: title, widget: string, i18n: true }
       - { label: Kurzbeschreibung (für Google), name: description, widget: string, required: false, i18n: true, hint: 'Ein bis zwei Sätze, höchstens etwa 155 Zeichen: steht in Google unter dem Link und in der WhatsApp-Vorschau.' }
-      - { label: Vorschaubild (Link-Vorschau), name: image, widget: image, required: false, hint: 'Foto, das beim Teilen der Seite (WhatsApp, Facebook) erscheint. Am besten ein Foto mit Bewegung, nicht wieder ein Gruppenfoto.' }
-      - { label: Bildbeschreibung Vorschaubild, name: image_text, widget: string, required: false, i18n: true, hint: 'Was auf dem Foto zu sehen ist, für Menschen, die es nicht sehen.' }
+      - { label: Titelbild, name: image, widget: image, required: false, hint: 'Steht oben auf der Seite neben dem Titel und erscheint beim Teilen der Seite (WhatsApp, Facebook). Am besten ein Foto mit Bewegung, Querformat; die Personen eher in der unteren Bildhälfte (am Handy wird oben und unten etwas abgeschnitten).' }
+      - { label: Bildbeschreibung Titelbild, name: image_text, widget: string, required: false, i18n: true, hint: 'Was auf dem Foto zu sehen ist, für Menschen, die es nicht sehen.' }
       - { label: Text, name: body, widget: markdown, i18n: true }
       - label: Bildergalerie
         name: galleryImages
