@@ -21,6 +21,7 @@
       }
     ]
   },
+  "contactForm": false,
   "phones": [
     {
       "label": "Mobil",
@@ -32,16 +33,14 @@
       "value": "020 65 - 67 96 31"
     }
   ],
-  "questionForm": false,
-  "contactForm": false,
-  "calendar": true,
-  "calendarPage": true,
   "analytics": {
     "cloudflareToken": "5f7f1ea0441c4966ad1e864554f85b6a"
   },
   "shortName": "Kampfkunst Academy",
+  "questionForm": false,
   "name": "Kampfkunst Academy Peter Griepentrog",
   "contactName": "Peter Griepentrog",
+  "calendarPage": true,
   "social": [
     {
       "name": "Flickr",
@@ -61,7 +60,7 @@
   },
   "credit": {
     "text": "Website: Jonah L.",
-    "url": "https://www.linkedin.com/in/jonah-loewnich-3bb8481b7/"
+    "url": "https://links.skazu.net/"
   },
   "video": {
     "src": "/video/griepentrog.mp4",
@@ -70,5 +69,6 @@
     "title": "Wir sind sehr stolz auf unsere erfolgreiche Kampfkunst-Abteilung in Duisburg"
   },
   "email": "info@atemschulung-griepentrog.de",
-  "description": "Kuk Sool Won, Tai Chi und Qi Gong in Duisburg-Rheinhausen"
+  "description": "Kuk Sool Won, Tai Chi und Qi Gong in Duisburg-Rheinhausen",
+  "calendar": true
 }
