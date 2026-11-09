@@ -31,7 +31,9 @@ if (own && poster) {
   <div class="wrap">
     <div class="sec-h"><h2>{heading}</h2></div>
     {own ? (
-      <div class="frame own" style={`--ratio: ${ratio}`}>
+      <div class="frame own" style={`--ratio: ${ratio}${poster ? `; --poster: url('${poster}')` : ''}`}>
+        {/* Wide screens: the frame is 16:9 and a blurred copy of the poster fills the sides (CSS only). */}
+        <span class="backdrop" aria-hidden="true"></span>
         <video src={src} poster={poster || undefined} preload="none" playsinline controls aria-label={title}></video>
         {/* Shown by the script (without JS the native controls are enough). */}
         <button type="button" class="play" hidden>
@@ -83,9 +85,17 @@ if (own && poster) {
   .video { padding-block: var(--space-section) 0; }
   .frame { position: relative; margin-top: 24px; aspect-ratio: 16 / 9; background: #000; border-radius: 4px; overflow: hidden; }
   .frame :global(iframe) { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-  /* Own video: the file's aspect ratio, as large as fits the screen height, centered. */
+  /* Own video. Phone: the file's aspect ratio, as large as fits the screen height, centered.
+     Wide screens: a 16:9 frame like the other bands; the video sits in the middle (object-fit: contain) and a
+     blurred, darkened copy of the poster fills the sides. */
   .frame.own { aspect-ratio: var(--ratio); width: min(100%, 420px, calc((100svh - 220px) * var(--ratio))); margin-inline: auto; }
   .frame.own video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .backdrop { display: none; }
+  @media (min-width: 760px) {
+    .frame.own { aspect-ratio: 16 / 9; width: min(100%, calc((100svh - 180px) * 16 / 9)); }
+    .frame.own video { object-fit: contain; }
+    .backdrop { display: block; position: absolute; inset: -40px; background: var(--poster, none) center / cover; filter: blur(32px) brightness(0.45) saturate(1.1); }
+  }
   /* Play button in the middle: at the bottom of a tall frame the phone's sticky contact bar would cover it. */
   .frame.own .play { background: rgb(0 0 0 / 0.3); transition: background 0.2s ease; }
   .frame.own .play:hover { background: rgb(0 0 0 / 0.45); }
