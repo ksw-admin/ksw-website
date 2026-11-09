@@ -1,0 +1,47 @@
+---
+/**
+ * Title and details of a date (Termin), the same everywhere: "Demnächst" on the home page and every list on the
+ * calendar page (days, approximate dates, Später, Früher). Order: title, then kind and place (details follow their
+ * heading; screen reader heading navigation keeps them together). Cancelled: "Abgesagt:" right before the
+ * struck-through title, so it is not missed. The date column belongs to the caller: its format differs per list.
+ */
+import { kindOf, titleOf, type SiteEvent } from '../lib/events';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  event: SiteEvent;
+  lang: Lang;
+  /** h4 under a section heading (home page), p in the calendar lists. */
+  as?: 'h4' | 'p';
+  /** Link target instead of the event's own link (past dates: their report). */
+  href?: string;
+  /** Start time before the title (calendar day rows). */
+  time?: string;
+}
+const { event: e, lang, as: Tag = 'p', href = e.link, time } = Astro.props;
+const de = lang === 'de';
+const title = titleOf(e, lang);
+const details = [kindOf(e, lang), e.place].filter(Boolean).join(', ');
+/** External links (the organiser's page) get rel=noopener; our own report pages do not need it. */
+const rel = href !== undefined && href === e.link ? 'noopener' : undefined;
+---
+
+<Tag class:list={['ev-title', { cancelled: e.cancelled }]} lang={lang === 'en' && !e.title_en?.trim() ? 'de' : undefined}>
+  {e.cancelled && <><strong class="cx" lang={lang}>{de ? 'Abgesagt:' : 'Cancelled:'}</strong> </>}
+  {e.cancelled ? (
+    <s>{time && <span class="num">{time} </span>}{href ? <a href={href} rel={rel}>{title}</a> : title}</s>
+  ) : (
+    <>{time && <span class="num">{time} </span>}{href ? <a href={href} rel={rel}>{title}</a> : title}</>
+  )}
+</Tag>
+{details && <p class="meta">{details}</p>}
+
+<style>
+  .ev-title { margin: 0; font-size: var(--fs-item); font-weight: 700; line-height: 1.2; }
+  .ev-title a { text-underline-offset: 4px; }
+  /* Cancelled: muted and struck through; the word in full colour. */
+  .ev-title.cancelled { color: var(--stein); }
+  .cancelled s { text-decoration-thickness: 2px; }
+  .cx { color: var(--fg); font-weight: 800; }
+  .meta { margin: 4px 0 0; font-size: var(--fs-meta); font-weight: 600; color: var(--stein); }
+</style>
