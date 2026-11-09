@@ -288,9 +288,11 @@ collections:
             name: items
             widget: list
             required: false
-            summary: '{{fields.from}}  {{fields.title}}'
+            summary: '{{fields.from}}{{fields.part}} {{fields.month}}  {{fields.title}}'
             fields:
-              - { label: Datum, name: from, widget: datetime, date_format: DD.MM.YYYY, time_format: false, format: YYYY-MM-DD, picker_utc: true, hint: '„UTC“ neben dem Datum nicht beachten: so verschiebt sich der Tag nicht durch die Zeitzone.' }
+              - { label: Datum, name: from, widget: datetime, required: false, date_format: DD.MM.YYYY, time_format: false, format: YYYY-MM-DD, picker_utc: true, hint: '„UTC“ neben dem Datum nicht beachten: so verschiebt sich der Tag nicht durch die Zeitzone. Steht der Tag noch nicht fest oder soll er nicht öffentlich sein: leer lassen und unten „Ungefähres Datum“ wählen.' }
+              - { label: Ungefähres Datum (nur Monat), name: month, widget: datetime, required: false, date_format: MM.YYYY, time_format: false, format: YYYY-MM, picker_utc: true, hint: 'Statt „Datum“: für einen Termin, dessen Tag noch nicht feststeht oder nicht öffentlich sein soll (z.B. Weihnachtsfeier). Irgendeinen Tag im Monat anklicken: gespeichert wird nur der Monat, der Tag nirgends. Auf der Website steht dann z.B. „Dezember“; kein Eintrag im Kalender-Abo.' }
+              - { label: Teil des Monats, name: part, widget: select, required: false, options: [Anfang, Mitte, Ende], hint: 'Nur zum ungefähren Datum, optional: „Mitte Dezember“ statt „Dezember“.' }
               - { label: Bis (mehrtägig), name: to, widget: datetime, date_format: DD.MM.YYYY, time_format: false, format: YYYY-MM-DD, picker_utc: true, required: false }
               - { label: Uhrzeit, name: time, widget: string, required: false, pattern: ['^(\d{2}:\d{2})?$', 'Format HH:MM, z.B. 10:00'], hint: 'z.B. 10:00. Leer = ganztägig.' }
               - { label: Uhrzeit bis, name: time_to, widget: string, required: false, pattern: ['^(\d{2}:\d{2})?$', 'Format HH:MM, z.B. 16:00'], hint: 'Leer = im Kalender zwei Stunden.' }

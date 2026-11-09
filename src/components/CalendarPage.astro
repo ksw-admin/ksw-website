@@ -21,10 +21,10 @@ import { getSchedule, toFeed, dayShort, disciplineName, groupName as nameOf, typ
 import { googleCalendarUrl, webcalUrl } from '../lib/calendar-links';
 import { getClosures } from '../lib/closures-data';
 import { getEvents, getPastEvents } from '../lib/events-data';
-import { buildAgenda, byWeek, disciplineLines, mondayOf, weekLabel } from '../lib/agenda';
+import { approxInWeek, buildAgenda, byWeek, disciplineLines, mondayOf, weekLabel } from '../lib/agenda';
 import { headline, textOf, type Closure } from '../lib/closures';
 import { addDays, todayInGermany } from '../lib/dates';
-import { kindOf, titleOf, whenOf } from '../lib/events';
+import { kindOf, lastDay, titleOf, whenOf } from '../lib/events';
 import { site } from '../lib/site';
 import { getPosts } from '../lib/posts';
 import EventMeta from './EventMeta.astro';
@@ -159,6 +159,22 @@ const title = de ? 'Kalender' : 'Calendar';
         {weeks.map((w) => (
           <section class="week" data-week={w.monday} aria-labelledby={`w-${w.monday}`}>
             <h2 id={`w-${w.monday}`}>{weekLabel(w.monday, lang, thisYear)}</h2>
+            {/* Approximate dates ("Mitte Dezember"): no day, so one row at the top of their week. */}
+            {approxInWeek(events, w.monday, start).length > 0 && (
+              <ul class="later-list">
+                {approxInWeek(events, w.monday, start).map((e) => (
+                  <li class:list={['event', { cancelled: e.cancelled }]} data-kind={kindKey(e)} data-end={lastDay(e)}>
+                    <p class="date num">{e.cancelled ? <s>{whenOf(e, lang, thisYear)}</s> : whenOf(e, lang, thisYear)}</p>
+                    <div>
+                      <p class="meta"><EventMeta event={e} lang={lang} /></p>
+                      <p class="ev-title" lang={lang === 'en' && !e.title_en?.trim() ? 'de' : undefined}>
+                        {e.cancelled ? <s>{titleOf(e, lang)}</s> : e.link ? <a href={e.link} rel="noopener">{titleOf(e, lang)}</a> : titleOf(e, lang)}
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
             <ol class="days">
               {w.days.map((d) => (
                 <li class="day" data-date={d.date}>
@@ -249,6 +265,8 @@ const title = de ? 'Kalender' : 'Calendar';
     if (!agenda || !select) return;
     var today = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Berlin' });
     // Days already over since the last build go; today gets its label.
+    // Approximate dates whose month ended since the last build go too.
+    agenda.querySelectorAll('.week li[data-end]').forEach(function (li) { if (li.dataset.end < today) li.remove(); });
     agenda.querySelectorAll('.day').forEach(function (d) {
       if (d.dataset.date < today) d.remove();
       else if (d.dataset.date === today) { d.classList.add('is-today'); d.querySelector('.today').hidden = false; }

@@ -1,7 +1,8 @@
 // Calendar page: slots, closures and dates expanded into days (same rules as the calendar feeds).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { buildAgenda, byWeek, disciplineLines, mondayOf, weekLabel } from '../src/lib/agenda.ts';
+import { approxInWeek, buildAgenda, byWeek, disciplineLines, mondayOf, weekLabel } from '../src/lib/agenda.ts';
+import type { SiteEvent } from '../src/lib/events.ts';
 import type { FeedSlot } from '../src/lib/ics.ts';
 
 const kids: FeedSlot = { id: 'ksw-4-6', discipline: 'kuksoolwon', days: ['mo', 'fr'], from: '16:00', to: '17:00', title: 'Kuk Sool Won, 4–6 Jahre' };
@@ -58,4 +59,16 @@ test('discipline lines: one per discipline; partly cancelled shows singly; fully
   assert.equal((disciplineLines(day(['ksw-4-6', 'ksw-15-80']), ['kuksoolwon'])[0] as { off: boolean }).off, true);
   const tue = buildAgenda({ slots, closures: [], events: [], from: '2026-11-03', days: 1 })[0];
   assert.equal((disciplineLines(tue, ['kuksoolwon', 'taichi'])[0] as { only?: FeedSlot }).only?.id, 'taichi-di');
+});
+
+const party: SiteEvent = { from: '2026-12-15', title: 'Weihnachtsfeier', approx: { month: '2026-12', part: 'Mitte' } };
+
+test('approximate date: never on a day; listed in the week of its anchor, or the first shown week once that passed', () => {
+  const days = buildAgenda({ slots, closures: [], events: [party], from: '2026-12-14', days: 7 });
+  assert.ok(days.every((d) => d.events.length === 0));
+  assert.deepEqual(approxInWeek([party], '2026-12-14', '2026-11-30').map((e) => e.title), ['Weihnachtsfeier']); // week of the 15th
+  assert.equal(approxInWeek([party], '2026-12-07', '2026-11-30').length, 0);
+  assert.equal(approxInWeek([party], '2026-12-21', '2026-11-30').length, 0);
+  // Page built on 21 Dec: the anchor (15th) is behind, the month still runs: first shown week.
+  assert.equal(approxInWeek([party], '2026-12-21', '2026-12-21').length, 1);
 });
