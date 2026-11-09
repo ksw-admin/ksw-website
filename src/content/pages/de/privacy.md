@@ -84,7 +84,11 @@ Sofern wir Ihre personenbezogenen Daten auf Basis eines berechtigten Interesses 
 
 ### Datenverarbeitung über unsere Website
 
-Diese Website setzt keine Cookies und erstellt keine Nutzerprofile.
+Diese Website erstellt keine Nutzerprofile. Sie setzt nur ein technisch notwendiges Cookie:
+
+<!-- ENTWURF 2026-11-09: Cookie-Absatz gilt nur, solange die neue Website getestet wird (Netlify Split-Test). Beim Ende des Tests wieder "Diese Website setzt keine Cookies und erstellt keine Nutzerprofile." schreiben. -->
+
+**Cookie „nf_ab“:** Solange wir die neue Website testen, setzt Netlify dieses Cookie. Es speichert nur, welche Version der Website (neue oder bisherige) Sie sehen, damit Sie beim nächsten Aufruf dieselbe Version erhalten. Mit dem Knopf „Zur bisherigen Website“ wählen Sie die Version selbst. Das Cookie enthält keine Angaben zu Ihrer Person und wird nach einem Jahr gelöscht (§ 25 Abs. 2 Nr. 2 TDDDG, Art. 6 Abs. 1 lit. f DSGVO).
 
 **Hosting:** Die Website liegt bei Netlify, Inc. (USA). Beim Aufruf werden technisch notwendige Daten wie IP-Adresse, Uhrzeit und aufgerufene Seite in Server-Logfiles gespeichert, um den sicheren Betrieb zu gewährleisten (Art. 6 Abs. 1 lit. f DSGVO).
 
