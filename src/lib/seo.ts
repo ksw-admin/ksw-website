@@ -30,6 +30,8 @@ export function organizationLd(slots: Slot[]) {
       addressLocality: site.hall.city.split(' ').slice(1).join(' '),
       addressCountry: 'DE',
     },
+    ...(site.hall.geo ? { geo: { '@type': 'GeoCoordinates', latitude: site.hall.geo.lat, longitude: site.hall.geo.lng } } : {}),
+    hasMap: site.hall.osm,
     sport: ['Kuk Sool Won', 'Tai Chi', 'Qi Gong'],
     ...(site.social.length ? { sameAs: site.social.map((s) => s.url) } : {}),
     founder: { '@type': 'Person', name: site.contactName, jobTitle: `Kuk Sool Won Meister, ${site.master.dan}. Dan` },

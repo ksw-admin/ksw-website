@@ -2,6 +2,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import type { Lang } from '../i18n/ui';
 import { splitId } from './posts';
+import { resolveImage } from './images';
 
 type Entry = CollectionEntry<'disciplines'>;
 
@@ -16,6 +17,8 @@ export type Discipline = {
   translated: boolean;
   title: string;
   description?: string;
+  /** Link preview photo (German entry's image, alt text in the shown language if translated). */
+  preview?: { fsPath: string; alt?: string };
   alternate: { de: string; en?: string };
 };
 
@@ -40,6 +43,9 @@ export async function getDisciplines(lang: Lang): Promise<Discipline[]> {
         translated,
         title: text.data.title!.trim(),
         description: text.data.description ?? de.data.description,
+        preview: de.data.image
+          ? { fsPath: resolveImage(de.filePath, de.data.image)!.fsPath, alt: text.data.image_text ?? de.data.image_text }
+          : undefined,
         alternate: { de: `/category/${slug}/`, ...(translated ? { en: `/en/category/${slug}/` } : {}) },
       };
     });

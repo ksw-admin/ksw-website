@@ -1,9 +1,11 @@
 // Link preview images (WhatsApp, Facebook, Signal, LinkedIn, X): 1200x630 JPEG, small enough for WhatsApp (< 300 KB).
-// /og/default.jpg for normal pages, /og/<post slug>.jpg for every post with its own page and a photo.
+// /og/default.jpg for normal pages, /og/<post slug>.jpg for every post with its own page and a photo,
+// /og/discipline-<slug>.jpg for the Kuk Sool Won / Tai Chi pages when they have a preview photo.
 import type { APIRoute, GetStaticPaths } from 'astro';
 import sharp from 'sharp';
 import { getPosts } from '../../lib/posts';
 import { getHome, homeImage } from '../../lib/home';
+import { getDisciplines } from '../../lib/disciplines';
 
 export const OG_WIDTH = 1200;
 export const OG_HEIGHT = 630;
@@ -15,6 +17,9 @@ export const getStaticPaths = (async () => {
   return [
     { params: { slug: 'default' }, props: { src: DEFAULT_IMAGE } },
     ...posts.map((p) => ({ params: { slug: p.slug }, props: { src: p.image!.fsPath } })),
+    ...(await getDisciplines('de'))
+      .filter((d) => d.preview)
+      .map((d) => ({ params: { slug: `discipline-${d.slug}` }, props: { src: d.preview!.fsPath } })),
   ];
 }) satisfies GetStaticPaths;
 

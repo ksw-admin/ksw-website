@@ -53,7 +53,11 @@
     "street": "Beethovenstr. 18a",
     "note": "im Regenbogenhaus",
     "city": "47226 Duisburg-Rheinhausen",
-    "osm": "https://www.openstreetmap.org/search?query=Beethovenstra%C3%9Fe%2018a%2047226%20Duisburg"
+    "osm": "https://www.openstreetmap.org/search?query=Beethovenstra%C3%9Fe%2018a%2047226%20Duisburg",
+    "geo": {
+      "lat": 51.40478,
+      "lng": 6.71458
+    }
   },
   "credit": {
     "text": "Website: Jonah L.",

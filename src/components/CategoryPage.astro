@@ -24,7 +24,7 @@ const textLang = page.textLang !== lang ? page.textLang : undefined;
 const bodyLang = bodyEntry === entry && lang !== 'de' ? 'de' : undefined;
 ---
 
-<Base title={page.title} description={page.description} alternate={page.alternate}>
+<Base title={page.title} description={page.description} alternate={page.alternate} image={page.preview ? `/og/discipline-${page.slug}.jpg` : undefined} imageAlt={page.preview?.alt}>
   <section class:list={['band', 'head', isKsw ? 'k' : 't']}>
     <div class="wrap">
       <HangulSign discipline={isKsw ? 'kuksoolwon' : 'taichi'} />

@@ -3,6 +3,9 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import { satteri } from '@astrojs/markdown-satteri';
 import { blockImageSizes, markdownBlocks } from './src/lib/markdown-blocks.ts';
+import { lastmodFor, readPostDates } from './src/lib/sitemap-dates.ts';
+
+const postDates = readPostDates('./src/content/news/de');
 
 // https://astro.build/config
 export default defineConfig({
@@ -19,6 +22,11 @@ export default defineConfig({
       filter: (page) => {
         const path = new URL(page).pathname;
         return !path.includes('/offline/') && !path.includes('/404');
+      },
+      // <lastmod> only where it is known: posts, home page and post list (src/lib/sitemap-dates.ts).
+      serialize: (item) => {
+        const lastmod = lastmodFor(new URL(item.url).pathname, postDates);
+        return lastmod ? { ...item, lastmod } : item;
       },
     }),
   ],
