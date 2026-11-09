@@ -1,3 +1,5 @@
+# Template: served as /admin/config.yml by src/pages/admin/config.yml.ts, which fills in the Termine month options (the placeholder below).
+# Edit this file, not dist/admin/config.yml.
 # Decap CMS for kuk-sool-won-griepentrog.de (Astro).
 # Login: GitHub account with write access to the repo, via Netlify as OAuth provider (no Netlify Identity).
 # Local editing without login: `npm run cms` in a second terminal next to `npm run dev`, then open /admin/.
@@ -291,7 +293,7 @@ collections:
             widget: list
             required: false
             add_to_top: true # new dates at the top; the website sorts by date anyway
-            summary: '{{fields.title}}  {{fields.from}}{{fields.approx.part}} {{fields.approx.month}} {{fields.approx.year}}'
+            summary: '{{fields.title}}  {{fields.from}}{{fields.approx.part}} {{fields.approx.month}}'
             fields:
               - { label: Datum, name: from, widget: datetime, required: false, date_format: DD.MM.YYYY, time_format: false, format: YYYY-MM-DD, picker_utc: true, hint: '„UTC“ neben dem Datum nicht beachten: so verschiebt sich der Tag nicht durch die Zeitzone. Steht der Tag noch nicht fest oder soll er nicht öffentlich sein: leer lassen und unten „Stattdessen: ungefähres Datum“ aufklappen.' }
               - label: 'Stattdessen: ungefähres Datum'
@@ -299,10 +301,11 @@ collections:
                 widget: object
                 required: false
                 collapsed: true
-                hint: 'Nur wenn der Tag noch nicht feststeht oder nicht öffentlich sein soll (z.B. Weihnachtsfeier): „Datum“ oben leer lassen, hier Monat und Jahr wählen. Gespeichert wird kein Tag. Auf der Website steht z.B. „Mitte Dezember“; kein Eintrag im Kalender-Abo.'
+                hint: 'Nur wenn der Tag noch nicht feststeht oder nicht öffentlich sein soll (z.B. Weihnachtsfeier): „Datum“ oben leer lassen, hier den Monat wählen (ist beides gesetzt, gilt das Datum). Gespeichert wird kein Tag. Auf der Website steht z.B. „Mitte Dezember“; kein Eintrag im Kalender-Abo.'
                 fields:
-                  - { label: Monat, name: month, widget: select, required: false, options: [{ label: Januar, value: '01' }, { label: Februar, value: '02' }, { label: März, value: '03' }, { label: April, value: '04' }, { label: Mai, value: '05' }, { label: Juni, value: '06' }, { label: Juli, value: '07' }, { label: August, value: '08' }, { label: September, value: '09' }, { label: Oktober, value: '10' }, { label: November, value: '11' }, { label: Dezember, value: '12' }] }
-                  - { label: Jahr, name: year, widget: number, value_type: int, min: 2026, max: 2100, required: false }
+                  # One select (month and year together), so a month without a year cannot be saved. The options are
+                  # filled at every build (src/pages/admin/config.yml.ts): 12 months back to 36 months ahead.
+                  - { label: Monat, name: month, widget: select, required: false, options: __APPROX_MONTH_OPTIONS__ }
                   - { label: Teil des Monats, name: part, widget: select, required: false, options: [Anfang, Mitte, Ende], hint: 'Optional: „Mitte Dezember“ statt „Dezember“.' }
               - { label: Bis (mehrtägig), name: to, widget: datetime, date_format: DD.MM.YYYY, time_format: false, format: YYYY-MM-DD, picker_utc: true, required: false }
               - { label: Uhrzeit, name: time, widget: string, required: false, pattern: ['^(\d{2}:\d{2})?$', 'Format HH:MM, z.B. 10:00'], hint: 'z.B. 10:00. Leer = ganztägig.' }

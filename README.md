@@ -36,7 +36,7 @@ Netlify does the deploys.
 | Links to home page sections | `/#schedule` (timetable), `/#ksw`, `/#taichi`, `/#video`, `/#dates`, `/#news`, `/#master`, `/#contact` (contact, trial lesson); FAQ answers `/faq/#<file name>`, e.g. `/faq/#kalender`. Same with `/en/`. |
 | Question form | FAQ page, Netlify Forms, form name `frage`. Notifications: Netlify › Forms. Nothing sent appears on the site by itself. |
 | Interface texts (de/en) | `src/i18n/ui.ts` |
-| CMS config | `public/admin/config.yml` (branch: `main`; the old Eleventy site is kept as branch `legacy`) |
+| CMS config | `src/admin/config.yml`, a template: `src/pages/admin/config.yml.ts` serves it as `/admin/config.yml` and fills in the Termine month list at every build (branch: `main`; the old Eleventy site is kept as branch `legacy`) |
 | Design tokens | `src/styles/global.css` |
 
 ### Code layout
@@ -105,6 +105,6 @@ the claude.ai Design System artifact is its published view: https://claude.ai/ar
   every visitor. **At the merge:** end the split test (Netlify › Split testing) and remove the injected snippet, then the
   Datenschutz sentence "Diese Website setzt keine Cookies" is true again.
 - **Soft launch (2026-11-09):** the split test may run at 100 % to `astro-redesign`. Meanwhile the CMS writes to
-  `astro-redesign` (`public/admin/config.yml`) and the Datenschutz names the `nf_ab` cookie. **At the merge** also: set
+  `astro-redesign` (`src/admin/config.yml`) and the Datenschutz names the `nf_ab` cookie. **At the merge** also: set
   the CMS `branch` back to `main`, and replace the `nf_ab` paragraph with "Diese Website setzt keine Cookies und
   erstellt keine Nutzerprofile." (see the ENTWURF comment in `src/content/pages/de/privacy.md`).

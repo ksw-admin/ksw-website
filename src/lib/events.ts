@@ -34,6 +34,49 @@ const monthEnd = (month: string) => {
 export const anchorOf = (month: string, part?: MonthPart) =>
   part === 'Ende' ? monthEnd(month) : `${month}-${part === 'Mitte' ? '15' : '01'}`;
 
+/** One entry as the CMS saves it (Einstellungen › Termine), after the format checks in events-data.ts. */
+export type CmsEvent = Omit<SiteEvent, 'from' | 'approx'> & {
+  from?: string;
+  approx?: { month?: string; year?: number; part?: MonthPart };
+  /** Older format (2026-11-09): top-level month "YYYY-MM" and part. */
+  month?: string;
+  part?: MonthPart;
+};
+
+/**
+ * A CMS entry as a site date, settling what the CMS cannot prevent (it has no rules across fields), so the build
+ * never fails on it; each case gives a note for the build log.
+ * - exact date and approximate date both set: the exact date wins (the day is in the public repo anyway);
+ * - "bis" before "von": a one-day date;
+ * - neither: no date to show, the entry is left out.
+ * Approximate: "YYYY-MM" from the CMS select, or { month "MM", year }, or the older top-level month.
+ */
+export function fromCms(item: CmsEvent): { event?: SiteEvent; notes: string[] } {
+  const { approx, month: legacyMonth, part: legacyPart, ...rest } = item;
+  const notes: string[] = [];
+  const name = `"${item.title}"`;
+  const m = approx?.month;
+  const month = m && /^\d{4}-\d{2}$/.test(m) ? m : m && approx?.year ? `${approx.year}-${m}` : legacyMonth;
+  const part = approx?.part ?? legacyPart;
+  if (rest.from) {
+    if (month) notes.push(`${name}: Datum und ungefähres Datum gesetzt, das Datum gilt`);
+    let to = rest.to;
+    if (to && to < rest.from) {
+      notes.push(`${name}: "bis" liegt vor dem Datum, als eintägig behandelt`);
+      to = undefined;
+    }
+    return { event: { ...rest, from: rest.from, to }, notes };
+  }
+  if (month) {
+    return {
+      event: { ...rest, from: anchorOf(month, part), to: undefined, time: undefined, time_to: undefined, approx: { month, part } },
+      notes,
+    };
+  }
+  notes.push(`${name}: kein Datum und kein ungefähres Datum, weggelassen`);
+  return { notes };
+}
+
 /** Approximate dates last until the end of their month (shown as upcoming until then). */
 export const lastDay = (e: SiteEvent) => (e.approx ? monthEnd(e.approx.month) : e.to && e.to >= e.from ? e.to : e.from);
 

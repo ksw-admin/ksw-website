@@ -110,3 +110,25 @@ test('calendar: a cancelled date keeps its UID and is marked cancelled', () => {
   });
   assert.doesNotMatch(normal, /STATUS:CANCELLED/);
 });
+
+test('CMS entry: nothing the CMS can save stops the build', async () => {
+  const { fromCms } = await import('../src/lib/events.ts');
+  const both = fromCms({ title: 'Prüfung', from: '2026-11-13', approx: { month: '2026-11', part: 'Mitte' } });
+  assert.equal(both.event?.from, '2026-11-13'); // the exact date wins
+  assert.equal(both.event?.approx, undefined);
+  assert.match(both.notes[0], /das Datum gilt/);
+  const back = fromCms({ title: 'Camp', from: '2026-06-14', to: '2026-06-13' });
+  assert.equal(back.event?.to, undefined); // "bis" before "von": one day
+  assert.match(back.notes[0], /eintägig/);
+  const none = fromCms({ title: 'Ohne Datum', approx: {} });
+  assert.equal(none.event, undefined);
+  assert.match(none.notes[0], /weggelassen/);
+  const approx = fromCms({ title: 'Feier', approx: { month: '2026-12', part: 'Mitte' }, time: '19:00' });
+  assert.equal(approx.event?.from, '2026-12-15');
+  assert.equal(approx.event?.time, undefined);
+  assert.deepEqual(approx.event?.approx, { month: '2026-12', part: 'Mitte' });
+  assert.deepEqual(approx.notes, []);
+  // older shapes are still read
+  assert.equal(fromCms({ title: 'A', approx: { month: '11', year: 2026 } }).event?.approx?.month, '2026-11');
+  assert.equal(fromCms({ title: 'B', month: '2026-11', part: 'Ende' }).event?.from, '2026-11-30');
+});
