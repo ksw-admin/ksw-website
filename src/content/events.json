@@ -1,6 +1,25 @@
 {
   "items": [
     {
+      "cancelled": false,
+      "approx": {
+        "month": "2026-12",
+        "part": "Anfang"
+      },
+      "title": "Weihnachtsfeier",
+      "title_en": "Christmas Party",
+      "kind": "Verein"
+    },
+    {
+      "cancelled": false,
+      "approx": {
+        "month": "2026-11",
+        "part": "Mitte"
+      },
+      "title": "Gürtelprüfung",
+      "kind": "Prüfung"
+    },
+    {
       "from": "2026-02-14",
       "title": "Kids Tournament International Championship",
       "kind": "Turnier",
