@@ -41,11 +41,14 @@ const formsText =
     : null;
 ---
 
-<Base title={entry.data.title}>
+{/* Impressum and Datenschutz must be on the site (footer link), but not in Google: they contain Peter's private
+    address (provider / data controller), which Gemini's AI Overview showed as the training location (2026-11-09).
+    noindex keeps the pages out of the index; data-nosnippet keeps the text out of snippets and AI Overviews meanwhile. */}
+<Base title={entry.data.title} noindex>
   <section class="band">
     <div class="wrap">
       <div class="sec-h"><h1 class="page-title">{entry.data.title}</h1></div>
-      <div class="prose">
+      <div class="prose" data-nosnippet>
         <Content />
         {formsText && <p><strong>{formsText.label}</strong> {formsText.text}</p>}
       </div>
