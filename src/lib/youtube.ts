@@ -24,7 +24,7 @@ export function videoHtml(id: string, title: string, lang: 'de' | 'en' = 'de'): 
   const t = esc(title);
   return (
     `<figure class="yt-embed" data-yt="${id}" data-title="${t}">` +
-    `<button type="button" class="yt-play"><span class="yt-icon" aria-hidden="true"></span><span class="yt-text">` +
+    `<button type="button" class="yt-play"><span class="play-icon" aria-hidden="true"></span><span class="yt-text">` +
     `<strong>${t}</strong><small>${de ? 'Video abspielen. Lädt den Player von YouTube, dabei werden Daten an Google übertragen.' : 'Play video. Loads the player from YouTube, which sends data to Google.'}</small>` +
     `</span></button>` +
     `<figcaption><a href="https://www.youtube.com/watch?v=${id}" rel="noopener">${de ? 'Auf YouTube ansehen' : 'Watch on YouTube'}</a></figcaption>` +

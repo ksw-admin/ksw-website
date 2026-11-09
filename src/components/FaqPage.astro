@@ -7,7 +7,7 @@
 import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import { getFaq, plainAnswer } from '../lib/faq';
-import { site, primaryPhone, telHref } from '../lib/site';
+import { site, primaryPhone, phoneLabel, telHref } from '../lib/site';
 import { useTranslations, localePath, type Lang } from '../i18n/ui';
 
 interface Props { lang: Lang }
@@ -70,7 +70,7 @@ const jsonLd = {
       <>
       <p class="intro">{t('faq.contact.intro').replace('{name}', site.contactName)}</p>
       <p class="direct">
-        <a href={telHref(primaryPhone.value)}>{primaryPhone.value.replace(/ - /g, ' ')}</a>
+        <a href={telHref(primaryPhone.value)}>{phoneLabel(primaryPhone.value)}</a>
         <a href={`mailto:${site.email}`}>{site.email}</a>
         <a href={localePath('/other/contact/', lang)}>{t('footer.directions')}</a>
       </p>

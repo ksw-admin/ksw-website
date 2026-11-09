@@ -1,4 +1,4 @@
-// Phone numbers as written in the CMS -> tel: links. Pure, tested in tests/phone.test.ts.
+// Phone numbers as written in the CMS -> tel: links and the shown text. Pure, tested in tests/phone.test.ts.
 
 /**
  * German numbers in any common notation to an international tel: link.
@@ -10,3 +10,7 @@ export function telHref(value: string): string {
   else if (n.startsWith('0')) n = '+49' + n.slice(1);
   return 'tel:' + n;
 }
+
+/** The number as shown on the site: the CMS notation without the dash groups ("0170 - 90 42 408" -> "0170 90 42 408").
+ *  One place, so footer, FAQ, contact band and offline page always show it the same way. */
+export const phoneLabel = (value: string) => value.replace(/\s+-\s+/g, ' ').trim();
