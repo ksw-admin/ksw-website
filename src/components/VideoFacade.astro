@@ -35,8 +35,8 @@ if (own && poster) {
         {/* Wide screens: the frame is 16:9 and a blurred copy of the poster fills the sides. While the video plays,
             the script paints the video into the tiny canvas (ambient light); the CSS blur scales it up. */}
         <span class="backdrop" aria-hidden="true"><canvas width="32" height="18"></canvas></span>
-        {/* TRY: Video.js 10 player (web components, our yellow as accent, German labels via <html lang>).
-            The skin brings play button, controls, captions menu and fullscreen; our own overlay is not used. */}
+        {/* Video.js 10 player (neutral skin, our yellow as accent, German labels via <html lang>); loaded on the first
+            play (script below). The skin brings controls, captions menu and fullscreen. */}
         <media-i18n>
           <video-player poster={poster || undefined}>
             <video-neutral-skin class="vjs-skin">
@@ -220,12 +220,8 @@ if (own && poster) {
   .play { all: unset; cursor: pointer; position: absolute; inset: 0; display: block; }
   .play[hidden] { display: none; }
   .play:focus-visible { outline: 3px solid var(--gelb); outline-offset: -3px; }
-  /* Keyboard focus on the player itself, like everywhere else (the frame clips, so the ring sits inside). */
+  /* Keyboard focus on the plain <video> (fallback with native controls if Video.js cannot load). */
   .frame.own video:focus-visible { outline: 3px solid var(--gelb); outline-offset: -3px; }
-  /* Paused: only the yellow button, no text, no dimming; clicks outside it reach the native controls. */
-  .frame.own.is-paused .play { background: none; pointer-events: none; }
-  .frame.own.is-paused .play .play-icon { pointer-events: auto; cursor: pointer; box-shadow: 0 2px 14px rgb(0 0 0 / 0.35); }
-  .frame.own.is-paused .label > :not(.play-icon) { display: none; }
   .play :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(0.62); transition: filter 0.2s ease; }
   .play:hover :global(img) { filter: brightness(0.5); }
   .label { position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: center; gap: 18px; padding: clamp(16px, 3vw, 32px); color: #fff; }
