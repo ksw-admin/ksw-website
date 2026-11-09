@@ -11,7 +11,9 @@
 export const BETA_BRANCH = 'astro-redesign';
 export const PROD_BRANCH = 'main';
 export const COOKIE_NAME = 'nf_ab';
-export const COOKIE_MAX_AGE = 365 * 24 * 3600; // 1 year
+export const COOKIE_MAX_AGE = 365 * 24 * 3600; // 1 year: opt in to the new site
+/** Opt-out to the old site lasts one day only: the old site has no way back, so the visitor sees the new site again tomorrow. */
+export const OPT_OUT_MAX_AGE = 24 * 3600;
 
 type Env = Record<string, string | undefined>;
 
@@ -32,7 +34,8 @@ export function getSplitCookie(cookieString: string | null | undefined): string 
 
 /** Format a cookie string to opt in to a branch (default: the beta branch). */
 export function buildSplitCookie(branch: string = BETA_BRANCH, secure = false): string {
-  return `${COOKIE_NAME}=${encodeURIComponent(branch)}; path=/; max-age=${COOKIE_MAX_AGE}; SameSite=Lax${secure ? '; Secure' : ''}`;
+  const maxAge = branch === PROD_BRANCH ? OPT_OUT_MAX_AGE : COOKIE_MAX_AGE;
+  return `${COOKIE_NAME}=${encodeURIComponent(branch)}; path=/; max-age=${maxAge}; SameSite=Lax${secure ? '; Secure' : ''}`;
 }
 
 /** Format a cookie string to reset back to the production branch (`main`). */

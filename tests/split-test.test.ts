@@ -34,6 +34,7 @@ test('split-test: buildSplitCookie formats valid cookie strings', () => {
 test('split-test: buildResetCookie formats valid reset string', () => {
   const cookie = buildResetCookie();
   assert.match(cookie, new RegExp(`^${COOKIE_NAME}=${PROD_BRANCH};`));
+  assert.match(cookie, /max-age=86400;/); // opt-out lasts one day: the old site has no way back
 });
 
 test('split-test: query parameter parsing for opt-in and opt-out', () => {
