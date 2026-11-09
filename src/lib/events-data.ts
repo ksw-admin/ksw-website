@@ -9,14 +9,30 @@ import { anchorOf, isUpcoming, lastDay, type SiteEvent } from './events';
 
 const date = isoDate('Termine');
 const time = z.string().regex(/^\d{2}:\d{2}$/, 'Termine: Uhrzeit als HH:MM, z.B. 10:00');
+/** "YYYY-MM" of an approximate date: the CMS group (month + year) or the older top-level "YYYY-MM". */
+function approxMonth(e: { approx?: { month?: string; year?: number }; month?: string }): string | undefined {
+  if (e.approx?.month && e.approx.year) return `${e.approx.year}-${e.approx.month}`;
+  return e.month;
+}
+
 const Events = z.object({
   items: z
     .array(
       z
         .object({
-          // Either an exact date (from) or an approximate one (month, optional part). For the approximate one only
-          // the month is stored: the day of a not-yet-fixed or not-public date never reaches the public repo.
+          // Either an exact date (from) or an approximate one. For the approximate one only month and year are
+          // stored: the day of a not-yet-fixed or not-public date never reaches the public repo.
           from: opt(date),
+          // CMS group "Stattdessen: ungefähres Datum" (collapsed): month and year as plain selects, no date picker
+          // (the browser's date field cannot hold a month on its own). An untouched group is written empty.
+          approx: opt(
+            z.object({
+              month: opt(z.enum(['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'])),
+              year: opt(z.coerce.number().int().min(2000).max(2100)),
+              part: opt(z.enum(['Anfang', 'Mitte', 'Ende'])),
+            }),
+          ),
+          // Older format (2026-11-09 only): month "YYYY-MM" and part at the top level. Still read.
           month: opt(z.string().regex(/^\d{4}-\d{2}$/, 'Termine: Monat als JJJJ-MM')),
           part: opt(z.enum(['Anfang', 'Mitte', 'Ende'])),
           to: opt(date),
@@ -30,18 +46,21 @@ const Events = z.object({
           cancelled: z.preprocess((v) => (v === null ? undefined : v), z.boolean().optional()),
           report: opt(z.string()),
         })
-        .refine((e) => !!e.from !== !!e.month, { message: 'Termine: entweder ein Datum oder (für ein ungefähres Datum) einen Monat angeben, nicht beides' })
+        .refine((e) => !e.approx?.month === !e.approx?.year, { message: 'Termine: beim ungefähren Datum Monat und Jahr angeben' })
+        .refine((e) => !!e.from !== !!(approxMonth(e)), { message: 'Termine: entweder ein Datum oder ein ungefähres Datum (Monat und Jahr) angeben, nicht beides' })
         .refine((e) => !e.to || !e.from || e.to >= e.from, { message: 'Termine: "bis" muss am oder nach "von" liegen' }),
     )
     .default([]),
 });
 
 /** Approximate dates: sort anchor as from; bis, Uhrzeit are ignored (they would pretend a day). */
-const all: SiteEvent[] = Events.parse(raw).items.map(({ month, part, ...e }) =>
-  month
+const all: SiteEvent[] = Events.parse(raw).items.map(({ approx, month: _legacy, part: legacyPart, ...e }) => {
+  const month = approxMonth({ approx, month: _legacy });
+  const part = approx?.part ?? legacyPart;
+  return month
     ? { ...e, from: anchorOf(month, part), to: undefined, time: undefined, time_to: undefined, approx: { month, part } }
-    : { ...e, from: e.from! },
-);
+    : { ...e, from: e.from! };
+});
 
 /** Not over yet at build time, soonest first. */
 export async function getEvents(): Promise<SiteEvent[]> {

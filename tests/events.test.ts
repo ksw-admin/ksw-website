@@ -50,13 +50,16 @@ test('calendar: timed event, multi-day all-day event, place and link', () => {
 
 test('events.json (as edited in the CMS) is valid', () => {
   const { items } = JSON.parse(readFileSync(new URL('../src/content/events.json', import.meta.url), 'utf8')) as {
-    items: (Partial<SiteEvent> & { month?: string; part?: string })[];
+    items: (Omit<Partial<SiteEvent>, 'approx'> & { month?: string; part?: string; approx?: { month?: string; year?: number } })[];
   };
   for (const e of items) {
-    const at = e.from || e.month;
-    assert.ok(!!e.from !== !!e.month, `${at} ${e.title}: entweder Datum oder Monat`);
+    // Approximate date: CMS group approx { month "MM", year } or the older top-level month "YYYY-MM"; never a day.
+    const approx = e.approx?.month && e.approx.year ? `${e.approx.year}-${e.approx.month}` : e.month;
+    const at = e.from || approx;
+    assert.ok(!!e.from !== !!approx, `${at} ${e.title}: entweder Datum oder ungefähres Datum`);
+    assert.equal(!e.approx?.month, !e.approx?.year, `${e.title}: ungefähres Datum braucht Monat und Jahr`);
     if (e.from) assert.match(e.from, /^\d{4}-\d{2}-\d{2}$/);
-    else assert.match(e.month!, /^\d{4}-\d{2}$/); // approximate: only the month is stored, never a day
+    else assert.match(approx!, /^\d{4}-(0[1-9]|1[0-2])$/);
     assert.ok(e.title?.trim(), `${at}: Titel fehlt`);
     if (e.to && e.from) assert.ok(e.to >= e.from, `${e.from}: "bis" liegt vor "von"`);
   }

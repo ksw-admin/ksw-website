@@ -290,11 +290,20 @@ collections:
             name: items
             widget: list
             required: false
-            summary: '{{fields.from}}{{fields.part}} {{fields.month}}  {{fields.title}}'
+            add_to_top: true # new dates at the top; the website sorts by date anyway
+            summary: '{{fields.title}}  {{fields.from}}{{fields.approx.part}} {{fields.approx.month}} {{fields.approx.year}}'
             fields:
-              - { label: Datum, name: from, widget: datetime, required: false, date_format: DD.MM.YYYY, time_format: false, format: YYYY-MM-DD, picker_utc: true, hint: '„UTC“ neben dem Datum nicht beachten: so verschiebt sich der Tag nicht durch die Zeitzone. Steht der Tag noch nicht fest oder soll er nicht öffentlich sein: leer lassen und unten „Ungefähres Datum“ wählen.' }
-              - { label: Ungefähres Datum (nur Monat), name: month, widget: datetime, required: false, date_format: MM.YYYY, time_format: false, format: YYYY-MM, picker_utc: true, hint: 'Statt „Datum“: für einen Termin, dessen Tag noch nicht feststeht oder nicht öffentlich sein soll (z.B. Weihnachtsfeier). Irgendeinen Tag im Monat anklicken: gespeichert wird nur der Monat, der Tag nirgends. Auf der Website steht dann z.B. „Dezember“; kein Eintrag im Kalender-Abo.' }
-              - { label: Teil des Monats, name: part, widget: select, required: false, options: [Anfang, Mitte, Ende], hint: 'Nur zum ungefähren Datum, optional: „Mitte Dezember“ statt „Dezember“.' }
+              - { label: Datum, name: from, widget: datetime, required: false, date_format: DD.MM.YYYY, time_format: false, format: YYYY-MM-DD, picker_utc: true, hint: '„UTC“ neben dem Datum nicht beachten: so verschiebt sich der Tag nicht durch die Zeitzone. Steht der Tag noch nicht fest oder soll er nicht öffentlich sein: leer lassen und unten „Stattdessen: ungefähres Datum“ aufklappen.' }
+              - label: 'Stattdessen: ungefähres Datum'
+                name: approx
+                widget: object
+                required: false
+                collapsed: true
+                hint: 'Nur wenn der Tag noch nicht feststeht oder nicht öffentlich sein soll (z.B. Weihnachtsfeier): „Datum“ oben leer lassen, hier Monat und Jahr wählen. Gespeichert wird kein Tag. Auf der Website steht z.B. „Mitte Dezember“; kein Eintrag im Kalender-Abo.'
+                fields:
+                  - { label: Monat, name: month, widget: select, required: false, options: [{ label: Januar, value: '01' }, { label: Februar, value: '02' }, { label: März, value: '03' }, { label: April, value: '04' }, { label: Mai, value: '05' }, { label: Juni, value: '06' }, { label: Juli, value: '07' }, { label: August, value: '08' }, { label: September, value: '09' }, { label: Oktober, value: '10' }, { label: November, value: '11' }, { label: Dezember, value: '12' }] }
+                  - { label: Jahr, name: year, widget: number, value_type: int, min: 2026, max: 2100, required: false }
+                  - { label: Teil des Monats, name: part, widget: select, required: false, options: [Anfang, Mitte, Ende], hint: 'Optional: „Mitte Dezember“ statt „Dezember“.' }
               - { label: Bis (mehrtägig), name: to, widget: datetime, date_format: DD.MM.YYYY, time_format: false, format: YYYY-MM-DD, picker_utc: true, required: false }
               - { label: Uhrzeit, name: time, widget: string, required: false, pattern: ['^(\d{2}:\d{2})?$', 'Format HH:MM, z.B. 10:00'], hint: 'z.B. 10:00. Leer = ganztägig.' }
               - { label: Uhrzeit bis, name: time_to, widget: string, required: false, pattern: ['^(\d{2}:\d{2})?$', 'Format HH:MM, z.B. 16:00'], hint: 'Leer = im Kalender zwei Stunden.' }
