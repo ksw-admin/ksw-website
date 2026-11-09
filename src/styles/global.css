@@ -8,14 +8,16 @@
   --silber: #a7adb2;
   --bronze: #b0703a;
 
-  --bg: #f4f5f2;
+  /* Neutrals are warm greys (hue about 40°, like the hall's wood and the yellow/gold accents), not olive.
+     Keep the light ones this neutral: red minus blue at most 4 (#f5f4f1). Warmer drifts into "cream" templates. */
+  --bg: #f5f4f1;
   --fg: #000000;
-  --stein: #5c5f59;
-  --linie: #d3d6cf;
+  --stein: #5f5c58;
+  --linie: #d6d3cd;
   --card: #ffffff;
   /* Bands (Kuk Sool Won half, contact, footer, mobile bar) follow the theme: one flat step away from the page,
      darker in light mode, lighter in dark mode. No shadows, no radius: a tone, not a card. */
-  --panel: #e6e7e2;
+  --panel: #e8e6e1;
   --panel-fg: #000000;
   /* Yellow as ink (the 국술원 sign) and as text (phone number): readable on the page in each theme. */
   --gelb-ink: #d9ae00;
@@ -55,16 +57,16 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --bg: #141513; --fg: #ecede8; --stein: #a3a69f; --linie: #33352f; --card: #1c1e1b;
-    --tc-bg: #13302b; --tc-fg: #ddeae5; --slot-k: #ecede8; --slot-k-fg: #000000; --logo-filter: none;
-    --panel: #1f211d; --panel-fg: #ecede8; --gelb-ink: #ffdd00; --accent-text: #ffdd00; --btn-edge: transparent;
+    --bg: #151413; --fg: #edece8; --stein: #a6a39f; --linie: #35322f; --card: #1e1c1b;
+    --tc-bg: #13302b; --tc-fg: #ddeae5; --slot-k: #edece8; --slot-k-fg: #000000; --logo-filter: none;
+    --panel: #211f1d; --panel-fg: #edece8; --gelb-ink: #ffdd00; --accent-text: #ffdd00; --btn-edge: transparent;
     color-scheme: dark;
   }
 }
 :root[data-theme='dark'] {
-  --bg: #141513; --fg: #ecede8; --stein: #a3a69f; --linie: #33352f; --card: #1c1e1b;
-  --tc-bg: #13302b; --tc-fg: #ddeae5; --slot-k: #ecede8; --slot-k-fg: #000000; --logo-filter: none;
-  --panel: #1f211d; --panel-fg: #ecede8; --gelb-ink: #ffdd00; --accent-text: #ffdd00; --btn-edge: transparent;
+  --bg: #151413; --fg: #edece8; --stein: #a6a39f; --linie: #35322f; --card: #1e1c1b;
+  --tc-bg: #13302b; --tc-fg: #ddeae5; --slot-k: #edece8; --slot-k-fg: #000000; --logo-filter: none;
+  --panel: #211f1d; --panel-fg: #edece8; --gelb-ink: #ffdd00; --accent-text: #ffdd00; --btn-edge: transparent;
   color-scheme: dark;
 }
 

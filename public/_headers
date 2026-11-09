@@ -14,6 +14,9 @@
 /calendar/*
   Content-Type: text/calendar; charset=utf-8
   Cache-Control: public, max-age=900
+# Video captions: with nosniff, browsers ignore a caption track that is not served as text/vtt.
+/video/*.vtt
+  Content-Type: text/vtt; charset=utf-8
 # Astro build assets have a content hash in the name.
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable

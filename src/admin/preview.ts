@@ -25,7 +25,7 @@ const layoutCss = `
   .hint { font-weight: 600; font-size: 13px; line-height: 1.4; padding: 10px 14px; border-radius: 4px; margin-bottom: 12px; color: #000; }
   .hint.page { background: #fff8c2; border: 2px solid #000; }
   .hint.list { background: #ddeae5; border: 2px solid var(--jade); }
-  .hint.hidden { background: #e6e6e3; border: 2px dashed #5c5f59; }
+  .hint.hidden { background: #e6e6e3; border: 2px dashed #5f5c58; }
   .hint.warn { background: #fde8e4; border: 2px solid #8a1c12; }
   .is-hidden .row, .is-hidden .page { opacity: 0.45; }
 

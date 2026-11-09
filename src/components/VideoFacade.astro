@@ -1,54 +1,184 @@
 ---
 /**
- * Click-to-load YouTube video. Until the visitor clicks, the page shows our own photo and contacts no Google server.
- * After the click the player loads from youtube-nocookie.com. Mention this in the Datenschutz text.
+ * Home page video, two modes (site.json › video):
+ * - src (own MP4 in public/video): a native <video>, preload="none", so only the poster loads before "play".
+ *   Comes from this site, no third party (Datenschutz: "Videos"). The frame takes the poster's aspect ratio
+ *   (the current video is portrait, 9:16).
+ * - youtubeId: click-to-load YouTube. Until the click the page shows our own photo and contacts no Google server;
+ *   then the player loads from youtube-nocookie.com.
  */
 import { Image } from 'astro:assets';
-import poster from '../assets/images/video-poster.webp';
+import sharp from 'sharp';
+import { join } from 'node:path';
+import youtubePoster from '../assets/images/video-poster.webp';
 import type { Lang } from '../i18n/ui';
 
-interface Props { youtubeId: string; title: string; heading: string; lang: Lang }
-const { youtubeId, title, heading, lang } = Astro.props;
+interface Props { src?: string; poster?: string; captions?: string; youtubeId?: string; title: string; heading: string; lang: Lang }
+const { src, poster, captions, youtubeId, title, heading, lang } = Astro.props;
 const de = lang === 'de';
-const watchUrl = `https://www.youtube.com/watch?v=${youtubeId}`;
+const own = Boolean(src);
+const watchUrl = youtubeId ? `https://www.youtube.com/watch?v=${youtubeId}` : '';
+
+// Aspect ratio of the own video from its poster (public/…, read at build time from the project root); 9:16 without poster.
+let ratio = '9 / 16';
+if (own && poster) {
+  const meta = await sharp(join(process.cwd(), 'public', poster)).metadata();
+  if (meta.width && meta.height) ratio = `${meta.width} / ${meta.height}`;
+}
 ---
 
 <section class="video band" id="video">
   <div class="wrap">
     <div class="sec-h"><h2>{heading}</h2></div>
-    <div class="frame" data-yt={youtubeId} data-title={title}>
-      <button type="button" class="play">
-        <Image src={poster} alt="" width={1440} quality={60} widths={[480, 720, 1024, 1440]} sizes="(max-width: 760px) calc(100vw - 32px), (max-width: 1520px) calc(100vw - 128px), 1440px" loading="lazy" />
-        <span class="label">
-          <span class="icon" aria-hidden="true"></span>
-          <span>
-            <strong>{de ? 'Video abspielen' : 'Play video'}</strong>
-            <small>{de ? 'Lädt den Player von YouTube. Dabei werden Daten an Google übertragen.' : 'Loads the player from YouTube. This sends data to Google.'}</small>
+    {own ? (
+      <div class="frame own" style={`--ratio: ${ratio}${poster ? `; --poster: url('${poster}')` : ''}`}>
+        {/* Wide screens: the frame is 16:9 and a blurred copy of the poster fills the sides. While the video plays,
+            the script paints the video into the tiny canvas (ambient light); the CSS blur scales it up. */}
+        <span class="backdrop" aria-hidden="true"><canvas width="32" height="18"></canvas></span>
+        <video src={src} poster={poster || undefined} preload="none" playsinline controls controlslist="nodownload" aria-label={title}>
+          {captions && <track kind="captions" src={captions} srclang="de" label="Deutsch" />}
+        </video>
+        {/* Shown by the script when the browser cannot play the file (e.g. a phone video in HEVC). */}
+        <p class="vid-error" role="alert" hidden>
+          <strong>{de ? 'Dieses Video lässt sich in Ihrem Browser leider nicht abspielen.' : 'Sorry, this video cannot be played in your browser.'}</strong>
+          {watchUrl && <a href={watchUrl} rel="noopener">{de ? 'Auf YouTube ansehen' : 'Watch on YouTube'}</a>}
+        </p>
+        {/* Shown by the script (without JS the native controls are enough). */}
+        <button type="button" class="play" hidden>
+          <span class="label">
+            <span class="icon" aria-hidden="true"></span>
+            <span><strong>{de ? 'Video abspielen' : 'Play video'}</strong></span>
           </span>
-        </span>
-      </button>
-    </div>
-    <p class="alt"><a href={watchUrl} rel="noopener">{de ? 'Auf YouTube ansehen' : 'Watch on YouTube'}</a></p>
+        </button>
+      </div>
+    ) : (
+      <div class="frame" data-yt={youtubeId} data-title={title}>
+        <button type="button" class="play">
+          <Image src={youtubePoster} alt="" width={1440} quality={60} widths={[480, 720, 1024, 1440]} sizes="(max-width: 760px) calc(100vw - 32px), (max-width: 1520px) calc(100vw - 128px), 1440px" loading="lazy" />
+          <span class="label">
+            <span class="icon" aria-hidden="true"></span>
+            <span>
+              <strong>{de ? 'Video abspielen' : 'Play video'}</strong>
+              <small>{de ? 'Lädt den Player von YouTube. Dabei werden Daten an Google übertragen.' : 'Loads the player from YouTube. This sends data to Google.'}</small>
+            </span>
+          </span>
+        </button>
+      </div>
+    )}
+    {!own && <p class="alt"><a href={watchUrl} rel="noopener">{de ? 'Auf YouTube ansehen' : 'Watch on YouTube'}</a></p>}
   </div>
 </section>
 
 <script>
   import { initYoutubePlayers } from '../scripts/youtube-player';
   initYoutubePlayers('.video .frame[data-yt]', 'button', 'content');
+
+  // Own video: our play button over the poster; on click the native controls take over.
+  document.querySelectorAll<HTMLElement>('.video .frame.own').forEach((box) => {
+    const video = box.querySelector('video');
+    const button = box.querySelector<HTMLButtonElement>('.play');
+    if (!video || !button) return;
+    video.controls = false;
+    button.hidden = false;
+    // No download button (controlslist) and no "Save video as…" menu. Easy to get around, but it stops the casual copy.
+    video.addEventListener('contextmenu', (e) => e.preventDefault());
+    button.addEventListener('click', () => {
+      button.remove();
+      video.controls = true;
+      video.focus();
+      void video.play().catch(() => {});
+    });
+    ambient(video, box.querySelector('.backdrop canvas'));
+    unplayable(video, box.querySelector('.vid-error'));
+  });
+
+  // Clear message instead of a black box. Two cases: the browser rejects the file (error event), or it plays the
+  // sound but cannot decode the picture (no error, videoWidth stays 0; typical for HEVC from a phone).
+  function unplayable(video: HTMLVideoElement, message: HTMLElement | null) {
+    if (!message) return;
+    const show = () => {
+      video.pause();
+      video.controls = false;
+      message.hidden = false;
+      console.error('[video] cannot play', video.currentSrc, video.error?.code ?? 'no picture (codec?)');
+    };
+    video.addEventListener('error', show);
+    video.querySelector('source')?.addEventListener('error', show);
+    video.addEventListener('loadedmetadata', () => { if (video.videoWidth === 0) show(); });
+  }
+
+  // Ambient backdrop: while the video plays on a wide screen, copy its middle band into a 32x18 canvas on every
+  // video frame (requestVideoFrameCallback; animation frames as fallback). Each copy is 20 % opaque, so a cut
+  // fades over about 0.4 s instead of flashing. Same video element, so no second download.
+  // Off with "reduce motion": the still poster stays.
+  function ambient(video: HTMLVideoElement, canvas: HTMLCanvasElement | null) {
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) return;
+    const wide = matchMedia('(min-width: 760px)');
+    const calm = matchMedia('(prefers-reduced-motion: reduce)');
+    const perFrame = 'requestVideoFrameCallback' in video;
+    let running = false;
+    const paint = (alpha: number) => {
+      const w = video.videoWidth, h = video.videoHeight;
+      if (!w || !h) return;
+      const sh = Math.min(h, (w * 9) / 16); // the 16:9 middle band, like the poster's background-size: cover
+      ctx.globalAlpha = alpha;
+      ctx.drawImage(video, 0, (h - sh) / 2, w, sh, 0, 0, canvas.width, canvas.height);
+    };
+    const loop = () => {
+      if (!running) return;
+      paint(0.2);
+      if (perFrame) video.requestVideoFrameCallback(loop);
+      else requestAnimationFrame(loop);
+    };
+    const start = () => {
+      if (!wide.matches || calm.matches || running) return;
+      if (!canvas.classList.contains('on')) paint(1); // first frame fully; after a pause, keep blending
+      canvas.classList.add('on');
+      running = true;
+      loop();
+    };
+    const stop = () => { running = false; };
+    video.addEventListener('playing', start);
+    video.addEventListener('pause', stop);
+    video.addEventListener('ended', () => { stop(); canvas.classList.remove('on'); });
+  }
 </script>
 
 <style>
   .video { padding-block: var(--space-section) 0; }
   .frame { position: relative; margin-top: 24px; aspect-ratio: 16 / 9; background: #000; border-radius: 4px; overflow: hidden; }
   .frame :global(iframe) { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  /* Own video. Phone: the file's aspect ratio, as large as fits the screen height, centered.
+     Wide screens: a 16:9 frame like the other bands; the video sits in the middle (object-fit: contain) and a
+     blurred, darkened copy of the poster fills the sides. */
+  .frame.own { aspect-ratio: var(--ratio); width: min(100%, 420px, calc((100svh - 220px) * var(--ratio))); margin-inline: auto; }
+  .frame.own video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .backdrop { display: none; }
+  @media (min-width: 760px) {
+    .frame.own { aspect-ratio: 16 / 9; width: min(100%, calc((100svh - 180px) * 16 / 9)); }
+    .frame.own video { object-fit: contain; }
+    .backdrop { display: block; position: absolute; inset: -40px; background: var(--poster, none) center / cover; filter: blur(32px) brightness(0.45) saturate(1.1); }
+    .backdrop canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.8s ease; }
+    .backdrop canvas.on { opacity: 1; }
+  }
+  /* Play button in the middle: at the bottom of a tall frame the phone's sticky contact bar would cover it. */
+  .frame.own .play { background: rgb(0 0 0 / 0.3); transition: background 0.2s ease; }
+  .frame.own .play:hover { background: rgb(0 0 0 / 0.45); }
+  .frame.own .label { top: 0; flex-direction: column; justify-content: center; text-align: center; gap: 12px; text-shadow: 0 1px 6px rgb(0 0 0 / 0.6); }
   .play { all: unset; cursor: pointer; position: absolute; inset: 0; display: block; }
+  .play[hidden] { display: none; }
   .play:focus-visible { outline: 3px solid var(--gelb); outline-offset: -3px; }
-  .play img { width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(0.62); transition: filter 0.2s ease; }
-  .play:hover img { filter: brightness(0.5); }
+  .play :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(0.62); transition: filter 0.2s ease; }
+  .play:hover :global(img) { filter: brightness(0.5); }
   .label { position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: center; gap: 18px; padding: clamp(16px, 3vw, 32px); color: #fff; }
   .icon { flex: none; width: clamp(56px, 7vw, 84px); aspect-ratio: 1; border-radius: 50%; background: var(--gelb); position: relative; }
   .icon::after { content: ''; position: absolute; left: 38%; top: 28%; border-style: solid; border-width: 0.9em 0 0.9em 1.5em; border-color: transparent transparent transparent #000; font-size: clamp(14px, 1.6vw, 20px); }
   .label strong { display: block; font-size: clamp(1.2rem, 2vw, 1.6rem); }
   .label small { display: block; font-size: var(--fs-meta); opacity: 0.85; max-width: 46ch; }
+  .vid-error { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; margin: 0; padding: 24px; background: rgb(0 0 0 / 0.82); color: #fff; text-align: center; }
+  .vid-error[hidden] { display: none; }
+  .vid-error strong { max-width: 32ch; font-size: clamp(1.05rem, 1.6vw, 1.3rem); }
+  .vid-error a { color: var(--gelb); font-weight: 700; }
   .alt { margin-top: 10px; font-size: var(--fs-meta); color: var(--stein); }
 </style>

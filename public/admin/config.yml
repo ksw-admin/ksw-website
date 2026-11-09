@@ -404,5 +404,8 @@ collections:
             widget: object
             required: false
             fields:
-              - { label: YouTube-ID, name: youtubeId, widget: string, hint: 'Die 11 Zeichen nach „watch?v=“ in der YouTube-Adresse' }
+              - { label: Videodatei (MP4), name: src, widget: file, required: false, media_folder: /public/video, public_folder: /video, hint: 'Bitte kein Video direkt vom Handy hochladen: Handys speichern meist im Format HEVC, das nicht alle Browser abspielen, und die Dateien sind sehr groß. Neues Video an Jonah schicken, er wandelt es um (MP4/H.264, 720 px, unter 25 MB). Hat Vorrang vor der YouTube-ID.' }
+              - { label: Vorschaubild, name: poster, widget: image, required: false, media_folder: /public/video, public_folder: /video, hint: 'Standbild, das vor dem Abspielen zu sehen ist. Gleiches Seitenverhältnis wie das Video.' }
+              - { label: Untertitel (WebVTT), name: captions, widget: file, required: false, media_folder: /public/video, public_folder: /video, hint: 'Untertitel zur Videodatei als .vtt-Datei (deutsch). Besucher schalten sie im Player ein.' }
+              - { label: YouTube-ID, name: youtubeId, widget: string, required: false, hint: 'Nur wenn keine Videodatei gesetzt ist: die 11 Zeichen nach „watch?v=“ in der YouTube-Adresse' }
               - { label: Titel, name: title, widget: string, hint: 'Für Screenreader; die Überschrift über dem Video steht unter „Startseite“.' }
