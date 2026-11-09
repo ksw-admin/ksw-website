@@ -9,7 +9,14 @@ const Site = z.object({
   contactName: z.string(),
   email: z.email(),
   phones: z.array(z.object({ label: z.string(), value: z.string(), primary: z.boolean().optional() })).min(1),
-  hall: z.object({ street: z.string(), note: z.string().optional().or(z.literal('')), city: z.string(), osm: z.url() }),
+  hall: z.object({
+    street: z.string(),
+    note: z.string().optional().or(z.literal('')),
+    city: z.string(),
+    osm: z.url(),
+    // Position of the hall for Google (schema.org geo). Optional; a public address, so nothing new is revealed.
+    geo: z.object({ lat: z.number().min(-90).max(90), lng: z.number().min(-180).max(180) }).optional(),
+  }),
   master: z.object({
     dan: z.number().int(),
     since: z.number().int(),

@@ -55,6 +55,9 @@ const disciplines = defineCollection({
     title: opt(z.string()),
     description: opt(z.string()),
     tags,
+    // Link preview (WhatsApp, Facebook ...): a photo next to the entry; built to /og/discipline-<slug>.jpg.
+    image: opt(z.string()),
+    image_text: opt(z.string()),
     galleryImages: z
       .array(z.object({ image: z.string(), link: z.url(), link_text: z.string() }))
       .default([]),

@@ -128,7 +128,9 @@ collections:
     public_folder: images
     fields:
       - { label: Titel, name: title, widget: string, i18n: true }
-      - { label: Kurzbeschreibung (für Google), name: description, widget: string, required: false, i18n: true }
+      - { label: Kurzbeschreibung (für Google), name: description, widget: string, required: false, i18n: true, hint: 'Ein bis zwei Sätze, höchstens etwa 155 Zeichen: steht in Google unter dem Link und in der WhatsApp-Vorschau.' }
+      - { label: Vorschaubild (Link-Vorschau), name: image, widget: image, required: false, hint: 'Foto, das beim Teilen der Seite (WhatsApp, Facebook) erscheint. Am besten ein Foto mit Bewegung, nicht wieder ein Gruppenfoto.' }
+      - { label: Bildbeschreibung Vorschaubild, name: image_text, widget: string, required: false, i18n: true, hint: 'Was auf dem Foto zu sehen ist, für Menschen, die es nicht sehen.' }
       - { label: Text, name: body, widget: markdown, i18n: true }
       - label: Bildergalerie
         name: galleryImages
@@ -362,6 +364,15 @@ collections:
               - { label: Zusatz, name: note, widget: string, required: false }
               - { label: PLZ und Ort, name: city, widget: string }
               - { label: Link zur Karte (OpenStreetMap), name: osm, widget: string }
+              - label: Position (für Google)
+                name: geo
+                widget: object
+                required: false
+                collapsed: true
+                hint: 'Nur ändern, wenn die Halle umzieht: auf openstreetmap.org die Halle suchen, Rechtsklick › „Adresse anzeigen“; die zwei Zahlen links sind Breite und Länge.'
+                fields:
+                  - { label: Breite, name: lat, widget: number, value_type: float }
+                  - { label: Länge, name: lng, widget: number, value_type: float }
           - label: Meister
             name: master
             widget: object
