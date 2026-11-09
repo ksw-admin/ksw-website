@@ -44,7 +44,7 @@ if (own && poster) {
           {watchUrl && <a href={watchUrl} rel="noopener">{de ? 'Auf YouTube ansehen' : 'Watch on YouTube'}</a>}
         </p>
         {/* Shown by the script (without JS the native controls are enough). */}
-        <button type="button" class="play" hidden>
+        <button type="button" class="play" hidden data-resume={de ? 'Weiter abspielen' : 'Resume video'}>
           <span class="label">
             <span class="play-icon" aria-hidden="true"></span>
             <span><strong>{de ? 'Video abspielen' : 'Play video'}</strong></span>
@@ -73,20 +73,29 @@ if (own && poster) {
   import { initYoutubePlayers } from '../scripts/youtube-player';
   initYoutubePlayers('.video .frame[data-yt]', 'button', 'content');
 
-  // Own video: our play button over the poster; on click the native controls take over.
+  // Own video: our play button over the poster; on click the native controls take over. Paused or at the end, the
+  // yellow button comes back in the middle (the video looks like ours at rest), but only the button takes clicks:
+  // the native controls below stay usable, e.g. to scrub while paused.
   document.querySelectorAll<HTMLElement>('.video .frame.own').forEach((box) => {
     const video = box.querySelector('video');
     const button = box.querySelector<HTMLButtonElement>('.play');
+    const error = box.querySelector<HTMLElement>('.vid-error');
     if (!video || !button) return;
     video.controls = false;
     button.hidden = false;
     // No download button (controlslist) and no "Save video as…" menu. Easy to get around, but it stops the casual copy.
     video.addEventListener('contextmenu', (e) => e.preventDefault());
     button.addEventListener('click', () => {
-      button.remove();
       video.controls = true;
-      video.focus();
       void video.play().catch(() => {});
+      video.focus();
+    });
+    video.addEventListener('play', () => { button.hidden = true; box.classList.remove('is-paused'); });
+    video.addEventListener('pause', () => {
+      if (!video.controls || (error && !error.hidden)) return; // not started yet, or the "cannot play" message shows
+      box.classList.add('is-paused');
+      button.setAttribute('aria-label', button.dataset.resume!);
+      button.hidden = false;
     });
     ambient(video, box.querySelector('.backdrop canvas'));
     unplayable(video, box.querySelector('.vid-error'));
@@ -169,6 +178,12 @@ if (own && poster) {
   .play { all: unset; cursor: pointer; position: absolute; inset: 0; display: block; }
   .play[hidden] { display: none; }
   .play:focus-visible { outline: 3px solid var(--gelb); outline-offset: -3px; }
+  /* Keyboard focus on the player itself, like everywhere else (the frame clips, so the ring sits inside). */
+  .frame.own video:focus-visible { outline: 3px solid var(--gelb); outline-offset: -3px; }
+  /* Paused: only the yellow button, no text, no dimming; clicks outside it reach the native controls. */
+  .frame.own.is-paused .play { background: none; pointer-events: none; }
+  .frame.own.is-paused .play .play-icon { pointer-events: auto; cursor: pointer; box-shadow: 0 2px 14px rgb(0 0 0 / 0.35); }
+  .frame.own.is-paused .label > :not(.play-icon) { display: none; }
   .play :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(0.62); transition: filter 0.2s ease; }
   .play:hover :global(img) { filter: brightness(0.5); }
   .label { position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: center; gap: 18px; padding: clamp(16px, 3vw, 32px); color: #fff; }
