@@ -38,6 +38,11 @@ if (own && poster) {
         <video src={src} poster={poster || undefined} preload="none" playsinline controls controlslist="nodownload" aria-label={title}>
           {captions && <track kind="captions" src={captions} srclang="de" label="Deutsch" />}
         </video>
+        {/* Shown by the script when the browser cannot play the file (e.g. a phone video in HEVC). */}
+        <p class="vid-error" role="alert" hidden>
+          <strong>{de ? 'Dieses Video lässt sich in Ihrem Browser leider nicht abspielen.' : 'Sorry, this video cannot be played in your browser.'}</strong>
+          {watchUrl && <a href={watchUrl} rel="noopener">{de ? 'Auf YouTube ansehen' : 'Watch on YouTube'}</a>}
+        </p>
         {/* Shown by the script (without JS the native controls are enough). */}
         <button type="button" class="play" hidden>
           <span class="label">
@@ -84,7 +89,23 @@ if (own && poster) {
       void video.play().catch(() => {});
     });
     ambient(video, box.querySelector('.backdrop canvas'));
+    unplayable(video, box.querySelector('.vid-error'));
   });
+
+  // Clear message instead of a black box. Two cases: the browser rejects the file (error event), or it plays the
+  // sound but cannot decode the picture (no error, videoWidth stays 0; typical for HEVC from a phone).
+  function unplayable(video: HTMLVideoElement, message: HTMLElement | null) {
+    if (!message) return;
+    const show = () => {
+      video.pause();
+      video.controls = false;
+      message.hidden = false;
+      console.error('[video] cannot play', video.currentSrc, video.error?.code ?? 'no picture (codec?)');
+    };
+    video.addEventListener('error', show);
+    video.querySelector('source')?.addEventListener('error', show);
+    video.addEventListener('loadedmetadata', () => { if (video.videoWidth === 0) show(); });
+  }
 
   // Ambient backdrop: while the video plays on a wide screen, copy its middle band into a 32x18 canvas on every
   // video frame (requestVideoFrameCallback; animation frames as fallback). Each copy is 20 % opaque, so a cut
@@ -155,5 +176,9 @@ if (own && poster) {
   .icon::after { content: ''; position: absolute; left: 38%; top: 28%; border-style: solid; border-width: 0.9em 0 0.9em 1.5em; border-color: transparent transparent transparent #000; font-size: clamp(14px, 1.6vw, 20px); }
   .label strong { display: block; font-size: clamp(1.2rem, 2vw, 1.6rem); }
   .label small { display: block; font-size: var(--fs-meta); opacity: 0.85; max-width: 46ch; }
+  .vid-error { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; margin: 0; padding: 24px; background: rgb(0 0 0 / 0.82); color: #fff; text-align: center; }
+  .vid-error[hidden] { display: none; }
+  .vid-error strong { max-width: 32ch; font-size: clamp(1.05rem, 1.6vw, 1.3rem); }
+  .vid-error a { color: var(--gelb); font-weight: 700; }
   .alt { margin-top: 10px; font-size: var(--fs-meta); color: var(--stein); }
 </style>
