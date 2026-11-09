@@ -39,11 +39,11 @@ if (own && poster) {
             The skin brings play button, controls, captions menu and fullscreen; our own overlay is not used. */}
         <media-i18n>
           <video-player poster={poster || undefined}>
-            <video-skin class="vjs-skin">
+            <video-neutral-skin class="vjs-skin">
               <video src={src} preload="none" playsinline controlslist="nodownload" aria-label={title}>
                 {captions && <track kind="captions" src={captions} srclang="de" label="Deutsch" />}
               </video>
-            </video-skin>
+            </video-neutral-skin>
           </video-player>
         </media-i18n>
         {/* Our yellow button before the first play (the skin has no large one); then the skin's controls take over. */}
@@ -84,7 +84,7 @@ if (own && poster) {
   // TRY Video.js 10: the player elements, skin (with its own CSS) and German labels.
   import '@videojs/html/i18n';
   import '@videojs/html/video/player';
-  import '@videojs/html/video/skin';
+  import '@videojs/html/video/neutral-skin'; // TRY: the lighter skin, closer to a classic control bar
 
   document.querySelectorAll<HTMLElement>('.video .frame.own').forEach((box) => {
     const video = box.querySelector('video');
@@ -93,8 +93,8 @@ if (own && poster) {
     video.addEventListener('contextmenu', (e) => e.preventDefault());
     // WORKAROUND: the skin sets a black --media-background on its container inside its shadow DOM, which no
     // documented CSS property reaches. One extra rule there lets our blurred backdrop show on the sides.
-    const skin = box.querySelector('video-skin');
-    customElements.whenDefined('video-skin').then(() => {
+    const skin = box.querySelector('.vjs-skin');
+    customElements.whenDefined('video-neutral-skin').then(() => {
       const root = skin?.shadowRoot;
       if (!root) return;
       const sheet = new CSSStyleSheet();
