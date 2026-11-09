@@ -40,7 +40,7 @@ if (own && poster) {
         <media-i18n>
           <video-player poster={poster || undefined}>
             <video-neutral-skin class="vjs-skin">
-              <video src={src} preload="none" playsinline controlslist="nodownload" aria-label={title}>
+              <video src={src} poster={poster || undefined} preload="none" playsinline controls controlslist="nodownload" aria-label={title}>
                 {captions && <track kind="captions" src={captions} srclang="de" label="Deutsch" />}
               </video>
             </video-neutral-skin>
@@ -81,30 +81,49 @@ if (own && poster) {
   import { initYoutubePlayers } from '../scripts/youtube-player';
   initYoutubePlayers('.video .frame[data-yt]', 'button', 'content');
 
-  // TRY Video.js 10: the player elements, skin (with its own CSS) and German labels.
-  import '@videojs/html/i18n';
-  import '@videojs/html/video/player';
-  import '@videojs/html/video/neutral-skin'; // TRY: the lighter skin, closer to a classic control bar
+  // Video.js 10 (neutral skin: flat control bar; our yellow, our font, German labels via <html lang>).
+  // Loaded only on the first click: a page view costs no player code. The click starts the plain <video> at once
+  // (browsers only allow sound when play() runs inside the click), then the skin takes over the controls.
+  // Without JS, or if loading fails, the native controls are used.
+  function loadPlayer(box: HTMLElement, video: HTMLVideoElement) {
+    Promise.all([
+      import('@videojs/html/i18n'),
+      import('@videojs/html/video/player'),
+      import('@videojs/html/video/neutral-skin'),
+    ])
+      .then(() => customElements.whenDefined('video-neutral-skin'))
+      .then(() => {
+        // WORKAROUND: the skin sets a black --media-background on its container inside its shadow DOM, which no
+        // documented CSS property reaches. One extra rule there lets our blurred backdrop show on the sides.
+        const root = box.querySelector('.vjs-skin')?.shadowRoot;
+        if (!root) return;
+        const sheet = new CSSStyleSheet();
+        sheet.replaceSync('.media-skin { --media-background: transparent; }');
+        root.adoptedStyleSheets = [...root.adoptedStyleSheets, sheet];
+      })
+      .catch((err) => {
+        console.error('[video] player could not load, using the native controls', err);
+        video.controls = true;
+      });
+  }
 
   document.querySelectorAll<HTMLElement>('.video .frame.own').forEach((box) => {
     const video = box.querySelector('video');
     if (!video) return;
     // No "Save video as…" menu. Easy to get around, but it stops the casual copy.
     video.addEventListener('contextmenu', (e) => e.preventDefault());
-    // WORKAROUND: the skin sets a black --media-background on its container inside its shadow DOM, which no
-    // documented CSS property reaches. One extra rule there lets our blurred backdrop show on the sides.
-    const skin = box.querySelector('.vjs-skin');
-    customElements.whenDefined('video-neutral-skin').then(() => {
-      const root = skin?.shadowRoot;
-      if (!root) return;
-      const sheet = new CSSStyleSheet();
-      sheet.replaceSync('.media-skin { --media-background: transparent; }');
-      root.adoptedStyleSheets = [...root.adoptedStyleSheets, sheet];
-    });
     const button = box.querySelector<HTMLButtonElement>('.play');
     if (button) {
+      video.controls = false; // our button instead, until the player is there
       button.hidden = false;
-      button.addEventListener('click', () => { void video.play().catch(() => {}); });
+      button.addEventListener('click', () => {
+        void video.play().catch(() => {});
+        loadPlayer(box, video);
+        // Phones: the sticky contact bar would cover the player's controls; bring the whole frame into view
+        // (scroll-margin-bottom below; no movement if it is already fully visible).
+        const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        box.scrollIntoView({ block: 'nearest', behavior: calm ? 'auto' : 'smooth' });
+      }, { once: true });
       video.addEventListener('play', () => button.remove(), { once: true });
     }
     ambient(video, box.querySelector('.backdrop canvas'));
@@ -184,6 +203,8 @@ if (own && poster) {
   /* The skin sets its black background again on its own inner container (created at runtime, hence :global). */
   .frame.own .vjs-skin :global(media-container) { --media-background: transparent; background-color: transparent; }
   .backdrop { display: none; }
+  /* Room for the sticky contact bar on phones (MobileBar.astro: 8 + 46 + 8 px plus the safe area). */
+  @media (max-width: 700px) { .frame.own { scroll-margin-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); } }
   @media (min-width: 760px) {
     .frame.own { aspect-ratio: 16 / 9; width: min(100%, calc((100svh - 180px) * 16 / 9)); }
     .frame.own video { object-fit: contain; }
