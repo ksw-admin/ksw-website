@@ -1,8 +1,6 @@
 ---
 question: Bin ich zu alt zum Anfangen?
 order: 30
-show_on:
-  - taichi
 ---
 
 <!-- Quelle: Tai-Chi-Seite; Erwachsenengruppe ohne Altersgrenze (schedule.json); Beitrag vom 29.03.2026. -->
