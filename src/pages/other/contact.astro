@@ -1,17 +1,5 @@
 ---
-import Base from '../../layouts/Base.astro';
-import Visit from '../../components/Visit.astro';
-import ContactForm from '../../components/ContactForm.astro';
-import { site } from '../../lib/site';
+import ContactPage from '../../components/ContactPage.astro';
 ---
 
-<Base title="Kontakt" description="Telefon, E-Mail und Adresse der Trainingshalle in Duisburg-Rheinhausen">
-  <Visit lang="de" level={1} heading="Kontakt und Probetraining" intro="Wir freuen uns auf Fragen und Mitteilungen! Sendet einfach eine E-Mail oder ruft an." />
-  {site.contactForm && <ContactForm />}
-</Base>
-
-<style is:global>
-  /* The black contact band fills the window down to the footer (no grey gap on tall screens). */
-  body > main:has(> .visit:only-child) { display: flex; flex-direction: column; }
-  body > main > .visit:only-child { flex: 1 0 auto; }
-</style>
+<ContactPage lang="de" />
