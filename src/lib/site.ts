@@ -50,6 +50,8 @@ const Site = z.object({
   calendar: z.boolean().default(true),
   // Calendar page /dates/ (training, closures and dates by week; links from the timetable and "Demnächst"). Off: not built.
   calendarPage: z.boolean().default(false),
+  // Line at the end of every post ("Neugierig geworden? Komm zum Probetraining." + link to the Kuk Sool Won page). Off: no line.
+  postCta: z.boolean().default(true),
   // FAQ question form (Netlify Forms). Off: the FAQ points to phone and email instead.
   questionForm: z.boolean().default(false),
   // Cloudflare Web Analytics (cookieless, no consent banner needed). Empty token = no analytics.
