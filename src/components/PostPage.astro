@@ -4,6 +4,7 @@ import { Image } from 'astro:assets';
 import VideoEmbeds from './VideoEmbeds.astro';
 import BackLink from './BackLink.astro';
 import PostCta from './PostCta.astro';
+import { site } from '../lib/site';
 import Base from '../layouts/Base.astro';
 import Medals from './Medals.astro';
 import type { Post } from '../lib/posts';
@@ -70,7 +71,7 @@ const jsonLd = [
           </figure>
         )}
       </div>
-      <PostCta lang={post.lang} />
+      {site.postCta && <PostCta lang={post.lang} />}
       <BackLink lang={post.lang} place="back" />
     </div>
   </article>

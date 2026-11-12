@@ -41,6 +41,7 @@
   "name": "Kampfkunst Academy Peter Griepentrog",
   "contactName": "Peter Griepentrog",
   "calendarPage": true,
+  "postCta": true,
   "social": [
     {
       "name": "Flickr",
