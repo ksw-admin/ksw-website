@@ -51,6 +51,8 @@ jobs:
           if grep -rlE 'src="/images/[^"]+\.(jpe?g|png|webp)"' dist --include=*.html; then
             echo "::error::Pages load unoptimized photos from /images/ (see files above)"; exit 1
           fi
+          # Old addresses (public/_redirects) must lead to pages that exist.
+          node scripts/check-redirects.mjs
           echo "Pages: $(find dist -name index.html | wc -l), size: $(du -sh dist | cut -f1)"
 
       - name: Upload the built site

@@ -8,6 +8,7 @@ import VideoEmbeds from './VideoEmbeds.astro';
 import { getSchedule, dayList, ageLabel } from '../lib/schedule';
 import { resolveImage, capWidth } from '../lib/images';
 import { site } from '../lib/site';
+import { disciplineLd } from '../lib/seo';
 import { useTranslations, localePath } from '../i18n/ui';
 import type { Discipline } from '../lib/disciplines';
 
@@ -25,9 +26,12 @@ const bodyLang = bodyEntry === entry && lang !== 'de' ? 'de' : undefined;
 // Title image (CMS "Titelbild", also the link preview): right half of the title band on wide screens, below the
 // title on phones. First image on the page, so it loads at once.
 const titleImage = entry.data.image ? resolveImage(entry.filePath, entry.data.image) : undefined;
+// schema.org only on the page in its own language (an untranslated English URL shows German text and is noindex).
+const ownPath = page.alternate[lang];
+const jsonLd = ownPath ? disciplineLd({ slug: page.slug, lang, title: page.title, description: page.description, path: ownPath }) : undefined;
 ---
 
-<Base title={page.title} description={page.description} alternate={page.alternate} image={page.preview ? `/og/discipline-${page.slug}.jpg` : undefined} imageAlt={page.preview?.alt}>
+<Base title={page.title} description={page.description} alternate={page.alternate} image={page.preview ? `/og/discipline-${page.slug}.jpg` : undefined} imageAlt={page.preview?.alt} jsonLd={jsonLd}>
   <section class:list={['band', 'head', isKsw ? 'k' : 't', { 'has-title-image': titleImage }]}>
     <div class="wrap">
       <div class="head-text">

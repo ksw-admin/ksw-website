@@ -12,6 +12,7 @@ npm run dev        # site on http://localhost:4321
 npm run cms        # second terminal: local CMS backend, then open /admin/ (no login needed)
 npm run check      # type check (astro check)
 npm run build      # astro build + Netlify redirects (scripts/netlify-redirects.mjs) + service worker (scripts/build-sw.mjs)
+node scripts/check-redirects.mjs   # after a build: every old address in public/_redirects leads to an existing page (CI runs it)
 ```
 
 CI (`.github/workflows/ci.yml`) runs the type check, the build and an output check on every push and pull request.

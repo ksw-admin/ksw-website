@@ -11,6 +11,38 @@ const intlPhone = (v: string) => {
   return d.startsWith('0') ? '+49 ' + d.slice(1) : '+' + d;
 };
 
+/** The master as one entity (same @id everywhere): founder of the academy, author of the posts. Facts from site.json. */
+export function personLd() {
+  return {
+    '@type': 'Person',
+    '@id': `${SITE_URL}/#master`,
+    name: site.contactName,
+    jobTitle: `Kuk Sool Won Meister, ${site.master.dan}. Dan`,
+    knowsAbout: ['Kuk Sool Won', 'Tai Chi', 'Qi Gong'],
+    worksFor: { '@id': `${SITE_URL}/#academy` },
+  };
+}
+
+// The art a discipline page is about, tied to its Wikipedia article so search engines know which "Kuk Sool Won" is meant.
+const ART = {
+  kuksoolwon: { name: 'Kuk Sool Won', sameAs: 'https://de.wikipedia.org/wiki/Kuk_Sool_Won' },
+  taichi: { name: 'Tai Chi', sameAs: 'https://de.wikipedia.org/wiki/Taijiquan' },
+} as const;
+
+/** Kuk Sool Won / Tai Chi page: what it is about and who offers it (the academy entity from the home page). */
+export function disciplineLd(page: { slug: keyof typeof ART; lang: string; title: string; description?: string; path: string }) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: page.title,
+    ...(page.description ? { description: page.description } : {}),
+    url: SITE_URL + page.path,
+    inLanguage: page.lang,
+    about: { '@type': 'Thing', ...ART[page.slug] },
+    publisher: { '@id': `${SITE_URL}/#academy` },
+  };
+}
+
 export function organizationLd(slots: Slot[]) {
   return {
     '@context': 'https://schema.org',
@@ -34,7 +66,7 @@ export function organizationLd(slots: Slot[]) {
     hasMap: site.hall.osm,
     sport: ['Kuk Sool Won', 'Tai Chi', 'Qi Gong'],
     ...(site.social.length ? { sameAs: site.social.map((s) => s.url) } : {}),
-    founder: { '@type': 'Person', name: site.contactName, jobTitle: `Kuk Sool Won Meister, ${site.master.dan}. Dan` },
+    founder: personLd(),
     openingHoursSpecification: slots.flatMap((s) =>
       s.days.map((d) => ({ '@type': 'OpeningHoursSpecification', dayOfWeek: `https://schema.org/${DAY_URI[d]}`, opens: s.from, closes: s.to })),
     ),
@@ -51,7 +83,7 @@ export function articleLd(post: Post) {
     inLanguage: post.textLang,
     ...(post.href ? { url: SITE_URL + post.href } : {}),
     ...(post.image && post.hasPage ? { image: [SITE_URL + encodeURI(`/og/${post.slug}.jpg`)] } : {}),
-    author: { '@type': 'Person', name: site.contactName },
+    author: { '@type': 'Person', '@id': `${SITE_URL}/#master`, name: site.contactName },
     publisher: { '@id': `${SITE_URL}/#academy` },
   };
 }
