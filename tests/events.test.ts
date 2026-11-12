@@ -53,11 +53,13 @@ test('events.json (as edited in the CMS) is valid', () => {
     items: (Omit<Partial<SiteEvent>, 'approx'> & { month?: string; part?: string; approx?: { month?: string; year?: number } })[];
   };
   for (const e of items) {
-    // Approximate date: CMS group approx { month "MM", year } or the older top-level month "YYYY-MM"; never a day.
-    const approx = e.approx?.month && e.approx.year ? `${e.approx.year}-${e.approx.month}` : e.month;
+    // Approximate date, never a day: CMS group approx { month "YYYY-MM" } (month list generated at every build),
+    // the earlier form approx { month "MM", year }, or the oldest top-level month "YYYY-MM". Same order as fromCms().
+    const m = e.approx?.month;
+    const approx = m && /^\d{4}-\d{2}$/.test(m) ? m : m && e.approx?.year ? `${e.approx.year}-${m}` : e.month;
     const at = e.from || approx;
     assert.ok(!!e.from !== !!approx, `${at} ${e.title}: entweder Datum oder ungefähres Datum`);
-    assert.equal(!e.approx?.month, !e.approx?.year, `${e.title}: ungefähres Datum braucht Monat und Jahr`);
+    if (m && !/^\d{4}-\d{2}$/.test(m)) assert.ok(e.approx?.year, `${e.title}: ungefähres Datum braucht Monat und Jahr`);
     if (e.from) assert.match(e.from, /^\d{4}-\d{2}-\d{2}$/);
     else assert.match(approx!, /^\d{4}-(0[1-9]|1[0-2])$/);
     assert.ok(e.title?.trim(), `${at}: Titel fehlt`);
