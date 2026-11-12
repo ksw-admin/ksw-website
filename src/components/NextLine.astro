@@ -1,0 +1,25 @@
+---
+/**
+ * One quiet line that leads on at the end of a page: a bold opener, one sentence, one link with a small chevron.
+ * Used under posts (PostCta: to the training) and on the Kuk Sool Won / Tai Chi pages (to the other discipline).
+ */
+interface Props { label: string; lead: string; text: string; href: string; link: string }
+const { label, lead, text, href, link } = Astro.props;
+---
+
+<aside class="next" aria-label={label}>
+  <p>
+    <strong>{lead}</strong>{' '}
+    {text}{' '}
+    <a href={href}>{link}<svg class="arrow" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false"><path d="m6 3 5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  </p>
+</aside>
+
+<style>
+  .next { margin-top: 40px; padding-top: 20px; border-top: 2px solid var(--gelb); max-width: 68ch; }
+  .next p { font-size: var(--fs-body-lg); line-height: 1.5; }
+  .next a { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; text-underline-offset: 4px; }
+  .arrow { flex: none; transition: transform 0.15s ease; }
+  .next a:hover .arrow { transform: translateX(2px); }
+  @media (prefers-reduced-motion: reduce) { .arrow { transition: none; } }
+</style>

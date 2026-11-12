@@ -7,6 +7,7 @@ import HangulSign from './HangulSign.astro';
 import VideoEmbeds from './VideoEmbeds.astro';
 import NewsLedger from './NewsLedger.astro';
 import FaqList from './FaqList.astro';
+import NextLine from './NextLine.astro';
 import { getPosts } from '../lib/posts';
 import { getFaq } from '../lib/faq';
 import { getSchedule, dayList, ageLabel } from '../lib/schedule';
@@ -46,20 +47,21 @@ const faq = (await getFaq(lang)).filter((f) => f.showOn.includes(page.slug));
 const youngest = Math.min(...(await getSchedule('kuksoolwon')).map((s) => s.ageMin ?? Infinity));
 const de = lang === 'de';
 // Photo albums (Flickr): the newest ones show, the rest opens on request, so the reports and questions below stay near.
-const ALBUMS_SHOWN = 4;
+const ALBUMS_SHOWN = 10; // two rows of five on desktop
+const ALBUMS_SHOWN_SMALL = 4; // two rows of two on phones
 const albums = entry.data.galleryImages.map((g) => ({ ...g, img: resolveImage(entry.filePath, g.image)!.meta }));
 const other = isKsw
   ? {
       slug: 'taichi' as const,
       title: de ? 'Tai Chi, Qi Gong und Atemschulung' : 'Tai Chi, Qi Gong and breathing training',
-      line: de ? 'Ruhige Bewegungen und Atemtechnik, in jedem Alter erlernbar.' : 'Calm movements and breathing technique, at any age.',
+      line: de ? 'ruhige Bewegungen und Atemtechnik, in jedem Alter erlernbar.' : 'calm movements and breathing technique, at any age.',
     }
   : {
       slug: 'kuksoolwon' as const,
       title: 'Kuk Sool Won',
       line: Number.isFinite(youngest)
-        ? de ? `Koreanische Kampfkunst für Kinder ab ${youngest} Jahren, Jugendliche und Erwachsene.` : `Korean martial art for children from age ${youngest}, teenagers and adults.`
-        : de ? 'Koreanische Kampfkunst für Kinder, Jugendliche und Erwachsene.' : 'Korean martial art for children, teenagers and adults.',
+        ? de ? `koreanische Kampfkunst für Kinder ab ${youngest} Jahren, Jugendliche und Erwachsene.` : `Korean martial art for children from age ${youngest}, teenagers and adults.`
+        : de ? 'koreanische Kampfkunst für Kinder, Jugendliche und Erwachsene.' : 'Korean martial art for children, teenagers and adults.',
     };
 ---
 
@@ -109,17 +111,17 @@ const other = isKsw
         <div class="sec-h"><h2>{t('gallery.title')}</h2></div>
         <ul>
           {albums.map((g, i) => (
-            <li class:list={{ extra: i >= ALBUMS_SHOWN }}>
+            <li class:list={{ extra: i >= ALBUMS_SHOWN, 'extra-small': i >= ALBUMS_SHOWN_SMALL && i < ALBUMS_SHOWN }}>
               <a href={g.link} rel="noopener">
-                <Image src={g.img} alt="" width={capWidth(g.img, 600)} quality={75} widths={[300, 600]} sizes="(max-width: 600px) 100vw, 300px" loading="lazy" />
+                <Image src={g.img} alt="" width={capWidth(g.img, 600)} quality={75} widths={[300, 600]} sizes="(max-width: 860px) 50vw, 240px" loading="lazy" />
                 <span lang={lang !== 'de' ? 'de' : undefined}>{g.link_text}</span>
               </a>
             </li>
           ))}
         </ul>
         {/* Opens the rest of the albums (CSS :has below); an empty <details> so it works without JavaScript. */}
-        {albums.length > ALBUMS_SHOWN && (
-          <details>
+        {albums.length > ALBUMS_SHOWN_SMALL && (
+          <details class:list={{ 'small-only': albums.length <= ALBUMS_SHOWN }}>
             <summary>
               <span class="closed">{de ? `Alle ${albums.length} Alben zeigen` : `Show all ${albums.length} albums`}</span>
               <span class="open">{de ? 'Weniger Alben zeigen' : 'Show fewer albums'}</span>
@@ -149,11 +151,15 @@ const other = isKsw
   )}
 
   <section class="band also">
-    <div class="wrap"><p>
-      {de ? 'Auch bei uns:' : 'Also with us:'}{' '}
-      <a class={other.slug === 'taichi' ? 'wide' : 'cond'} href={localePath(`/category/${other.slug}/`, lang)}>{other.title}</a>.{' '}
-      {other.line}
-    </p></div>
+    <div class="wrap">
+      <NextLine
+        label={de ? 'Die andere Kampfkunst der Academy' : "The academy's other art"}
+        lead={de ? 'Auch bei uns:' : 'Also with us:'}
+        text={other.line}
+        href={localePath(`/category/${other.slug}/`, lang)}
+        link={other.title}
+      />
+    </div>
   </section>
 </Base>
 
@@ -189,15 +195,12 @@ const other = isKsw
   .more { padding-block: 0 var(--space-section); }
   /* The accordion draws its own top rule: the heading above it needs none. */
   .sec-h.plain { border-bottom: 0; padding-bottom: 14px; max-width: 52rem; }
-  /* The other discipline: one quiet line at the end of the page, its name in its own type width. */
+  /* The other discipline: the same quiet line as under a post (NextLine). */
   .also { padding-block: 0 var(--space-section); }
-  .also p { border-top: 1px solid var(--linie); padding-top: 22px; color: var(--stein); }
-  .also a { color: var(--fg); font-size: var(--fs-item); text-underline-offset: 5px; }
-  .also a.cond { font-weight: 900; }
-  .also a.wide { font-weight: 300; }
+  .also :global(.next) { margin-top: 0; }
   .gallery { padding-block: 0 var(--space-section); }
-  /* Four albums in a row (two on phones): the first four fill exactly one row, or two rows of two. */
-  .gallery ul { list-style: none; padding: 0; margin: 24px 0 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+  /* Five albums in a row (two on phones): ten show on desktop (two rows), four on phones (two rows of two). */
+  .gallery ul { list-style: none; padding: 0; margin: 24px 0 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 20px 16px; }
   .gallery a { text-decoration: none; display: grid; gap: 6px; font-weight: 600; transition: transform 300ms ease-in; }
   /* Same subtle zoom as the old site's .gal-item:hover */
   .gallery a:hover, .gallery a:focus-visible { transform: scale(1.05); }
@@ -209,6 +212,14 @@ const other = isKsw
   /* Albums after the first few stay hidden until the line below the grid is opened. Browsers without :has show all. */
   .gallery li.extra { display: none; }
   .gallery:has(details[open]) li.extra { display: list-item; }
+  .gallery details.small-only { display: none; }
   @supports not selector(:has(*)) { .gallery li.extra { display: list-item; } .gallery details { display: none; } }
-  @media (max-width: 860px) { .cols { grid-template-columns: 1fr; } .gallery ul { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; } }
+  @media (max-width: 860px) {
+    .cols { grid-template-columns: 1fr; }
+    .gallery ul { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .gallery li.extra-small { display: none; }
+    .gallery:has(details[open]) li.extra-small { display: list-item; }
+    .gallery details.small-only { display: block; }
+    @supports not selector(:has(*)) { .gallery li.extra-small { display: list-item; } .gallery details.small-only { display: none; } }
+  }
 </style>
