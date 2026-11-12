@@ -59,6 +59,32 @@ export function websiteLd() {
   };
 }
 
+/** Home video (own file only): lets Google index the video and show its preview image. Needs site.json video.uploaded. */
+export function videoLd() {
+  const v = site.video;
+  if (!v?.src || !v.poster || !v.uploaded) return undefined;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'VideoObject',
+    name: v.title,
+    description: `${site.name}: ${site.description}`,
+    thumbnailUrl: [SITE_URL + v.poster],
+    uploadDate: `${v.uploaded}T00:00:00+01:00`,
+    contentUrl: SITE_URL + v.src,
+    inLanguage: 'de',
+    publisher: { '@id': `${SITE_URL}/#academy` },
+  };
+}
+
+/** Path of a page for search results ("Aktuelles › Gürtelprüfung 2026" instead of the address). Last item = this page. */
+export function breadcrumbLd(items: { name: string; path: string }[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, i) => ({ '@type': 'ListItem', position: i + 1, name: item.name, item: SITE_URL + encodeURI(decodeURI(item.path)) })),
+  };
+}
+
 export function organizationLd(slots: Slot[]) {
   return {
     '@context': 'https://schema.org',

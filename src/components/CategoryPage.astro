@@ -8,7 +8,7 @@ import VideoEmbeds from './VideoEmbeds.astro';
 import { getSchedule, dayList, ageLabel } from '../lib/schedule';
 import { resolveImage, capWidth } from '../lib/images';
 import { site } from '../lib/site';
-import { disciplineLd } from '../lib/seo';
+import { disciplineLd, breadcrumbLd } from '../lib/seo';
 import { useTranslations, localePath } from '../i18n/ui';
 import type { Discipline } from '../lib/disciplines';
 
@@ -28,7 +28,12 @@ const bodyLang = bodyEntry === entry && lang !== 'de' ? 'de' : undefined;
 const titleImage = entry.data.image ? resolveImage(entry.filePath, entry.data.image) : undefined;
 // schema.org only on the page in its own language (an untranslated English URL shows German text and is noindex).
 const ownPath = page.alternate[lang];
-const jsonLd = ownPath ? disciplineLd({ slug: page.slug, lang, title: page.title, description: page.description, path: ownPath }) : undefined;
+const jsonLd = ownPath
+  ? [
+      disciplineLd({ slug: page.slug, lang, title: page.title, description: page.description, path: ownPath }),
+      breadcrumbLd([{ name: t('nav.home'), path: localePath('/', lang) }, { name: page.title, path: ownPath }]),
+    ]
+  : undefined;
 ---
 
 <Base title={page.title} searchTitle={page.searchTitle} description={page.description} alternate={page.alternate} image={page.preview ? `/og/discipline-${page.slug}.jpg` : undefined} imageAlt={page.preview?.alt} jsonLd={jsonLd}>
