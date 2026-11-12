@@ -36,13 +36,13 @@ const appleRoute = `https://maps.apple.com/?daddr=${encodeURIComponent(destinati
       </p>
     </div>
     <div class="side">
-      <address><b>{de ? 'Trainingshalle' : 'Training hall'}</b>{site.hall.street}<br />{site.hall.note && <>{site.hall.note}<br /></>}{site.hall.city}</address>
+      <address><b>{de ? 'Trainingshalle' : 'Training hall'}</b>{site.hall.street}<br />{site.hall.note && <><span lang={de ? undefined : 'de'}>{site.hall.note}</span><br /></>}{site.hall.city}</address>
       <p class="route">
         <a class="route-main" href={googleRoute} data-apple={appleRoute} rel="noopener">{de ? 'Route planen' : 'Get directions'}</a>
         <a class="route-alt" href={site.hall.osm} rel="noopener">{de ? 'oder auf OpenStreetMap' : 'or on OpenStreetMap'}</a>
       </p>
       {site.social.length > 0 && (
-        <p class="social">{site.social.map((s) => <a href={s.url} rel="me noopener">{s.label ?? s.name}</a>)}</p>
+        <p class="social">{site.social.map((s) => <a href={s.url} rel="me noopener">{de ? (s.label ?? s.name) : s.name}</a>)}</p>
       )}
       <slot />
     </div>
