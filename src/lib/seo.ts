@@ -43,6 +43,22 @@ export function disciplineLd(page: { slug: keyof typeof ART; lang: string; title
   };
 }
 
+/**
+ * Site name for Google: shown above the title in search results instead of the bare domain. Home page only
+ * (Google reads it there). The short name first, the full name as the alternative.
+ */
+export function websiteLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${SITE_URL}/#website`,
+    name: `${site.shortName} Griepentrog`,
+    alternateName: [site.name, site.shortName],
+    url: SITE_URL + '/',
+    publisher: { '@id': `${SITE_URL}/#academy` },
+  };
+}
+
 export function organizationLd(slots: Slot[]) {
   return {
     '@context': 'https://schema.org',

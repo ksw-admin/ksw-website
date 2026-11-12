@@ -12,7 +12,7 @@ import { Image } from 'astro:assets';
 import { getPosts, medalTotal } from '../lib/posts';
 import { useTranslations, localePath, type Lang } from '../i18n/ui';
 import { getSchedule } from '../lib/schedule';
-import { organizationLd } from '../lib/seo';
+import { organizationLd, websiteLd } from '../lib/seo';
 import { getHome, homeImage } from '../lib/home';
 
 interface Props { lang: Lang }
@@ -28,7 +28,7 @@ const latest = posts.slice(0, 4);
 const year = new Date().getFullYear();
 const thisYear = posts.filter((p) => p.date.getFullYear() === year);
 const placings = medalTotal(thisYear);
-const jsonLd = organizationLd(await getSchedule());
+const jsonLd = [websiteLd(), organizationLd(await getSchedule())];
 ---
 
 <Base alternate={{ de: '/', en: '/en/' }} jsonLd={jsonLd} description={home.description}>
