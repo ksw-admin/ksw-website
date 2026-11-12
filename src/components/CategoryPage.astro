@@ -179,4 +179,6 @@ const albums = entry.data.galleryImages.map((g) => ({ ...g, img: resolveImage(en
     .gallery details.small-only { display: block; }
     @supports not selector(:has(*)) { .gallery li.extra-small { display: list-item; } .gallery details.small-only { display: none; } }
   }
+  /* Very narrow screens (small phones, large text zoom): one album per row. */
+  @media (max-width: 340px) { .gallery ul { grid-template-columns: minmax(0, 1fr); } }
 </style>
