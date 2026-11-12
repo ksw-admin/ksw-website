@@ -88,7 +88,7 @@ const albums = entry.data.galleryImages.map((g) => ({ ...g, img: resolveImage(en
   {albums.length > 0 && (
     <section class="band gallery">
       <div class="wrap">
-        <div class="sec-h"><h2>{t('gallery.title')}</h2>{isKsw && <a href={localePath('/articles/', lang)}>{de ? 'Berichte zu Turnieren und Prüfungen' : 'Reports on tournaments and gradings'}</a>}</div>
+        <div class="sec-h"><h2>{t('gallery.title')}</h2></div>
         <ul>
           {albums.map((g, i) => (
             <li class:list={{ extra: i >= ALBUMS_SHOWN, 'extra-small': i >= ALBUMS_SHOWN_SMALL && i < ALBUMS_SHOWN }}>
