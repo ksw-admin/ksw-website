@@ -5,10 +5,7 @@ import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import HangulSign from './HangulSign.astro';
 import VideoEmbeds from './VideoEmbeds.astro';
-import NewsLedger from './NewsLedger.astro';
 import FaqList from './FaqList.astro';
-import NextLine from './NextLine.astro';
-import { getPosts } from '../lib/posts';
 import { getFaq } from '../lib/faq';
 import { getSchedule, dayList, ageLabel } from '../lib/schedule';
 import { resolveImage, capWidth } from '../lib/images';
@@ -39,30 +36,13 @@ const jsonLd = ownPath
       breadcrumbLd([{ name: t('nav.home'), path: localePath('/', lang) }, { name: page.title, path: ownPath }]),
     ]
   : undefined;
-// Newest reports: all posts so far are about Kuk Sool Won (tournaments, gradings), so only that page lists them.
-const latest = isKsw ? (await getPosts(lang)).slice(0, 3) : [];
 // Questions marked for this page in the CMS (FAQ › "Auch zeigen auf"), in the FAQ's order.
 const faq = (await getFaq(lang)).filter((f) => f.showOn.includes(page.slug));
-// The other discipline, in its own tone and type width: jade and wide for Tai Chi, band tone and condensed for Kuk Sool Won.
-const youngest = Math.min(...(await getSchedule('kuksoolwon')).map((s) => s.ageMin ?? Infinity));
 const de = lang === 'de';
-// Photo albums (Flickr): the newest ones show, the rest opens on request, so the reports and questions below stay near.
+// Photo albums (Flickr): the newest ones show, the rest opens on request, so the questions below stay near.
 const ALBUMS_SHOWN = 10; // two rows of five on desktop
 const ALBUMS_SHOWN_SMALL = 4; // two rows of two on phones
 const albums = entry.data.galleryImages.map((g) => ({ ...g, img: resolveImage(entry.filePath, g.image)!.meta }));
-const other = isKsw
-  ? {
-      slug: 'taichi' as const,
-      title: de ? 'Tai Chi, Qi Gong und Atemschulung' : 'Tai Chi, Qi Gong and breathing training',
-      line: de ? 'ruhige Bewegungen und Atemtechnik, in jedem Alter erlernbar.' : 'calm movements and breathing technique, at any age.',
-    }
-  : {
-      slug: 'kuksoolwon' as const,
-      title: 'Kuk Sool Won',
-      line: Number.isFinite(youngest)
-        ? de ? `koreanische Kampfkunst für Kinder ab ${youngest} Jahren, Jugendliche und Erwachsene.` : `Korean martial art for children from age ${youngest}, teenagers and adults.`
-        : de ? 'koreanische Kampfkunst für Kinder, Jugendliche und Erwachsene.' : 'Korean martial art for children, teenagers and adults.',
-    };
 ---
 
 <Base title={page.title} searchTitle={page.searchTitle} description={page.description} alternate={page.alternate} image={page.preview ? `/og/discipline-${page.slug}.jpg` : undefined} imageAlt={page.preview?.alt} jsonLd={jsonLd}>
@@ -108,7 +88,7 @@ const other = isKsw
   {albums.length > 0 && (
     <section class="band gallery">
       <div class="wrap">
-        <div class="sec-h"><h2>{t('gallery.title')}</h2></div>
+        <div class="sec-h"><h2>{t('gallery.title')}</h2>{isKsw && <a href={localePath('/articles/', lang)}>{de ? 'Berichte zu Turnieren und Prüfungen' : 'Reports on tournaments and gradings'}</a>}</div>
         <ul>
           {albums.map((g, i) => (
             <li class:list={{ extra: i >= ALBUMS_SHOWN, 'extra-small': i >= ALBUMS_SHOWN_SMALL && i < ALBUMS_SHOWN }}>
@@ -132,15 +112,6 @@ const other = isKsw
     </section>
   )}
 
-  {latest.length > 0 && (
-    <section class="band more">
-      <div class="wrap">
-        <div class="sec-h"><h2>{t('news.title')}</h2><a href={localePath('/articles/', lang)}>{t('news.all')}</a></div>
-        <NewsLedger posts={latest} lang={lang} level={3} />
-      </div>
-    </section>
-  )}
-
   {faq.length > 0 && (
     <section class="band more">
       <div class="wrap">
@@ -150,17 +121,6 @@ const other = isKsw
     </section>
   )}
 
-  <section class="band also">
-    <div class="wrap">
-      <NextLine
-        label={de ? 'Die andere Kampfkunst der Academy' : "The academy's other art"}
-        lead={de ? 'Auch bei uns:' : 'Also with us:'}
-        text={other.line}
-        href={localePath(`/category/${other.slug}/`, lang)}
-        link={other.title}
-      />
-    </div>
-  </section>
 </Base>
 
 <style>
@@ -195,9 +155,6 @@ const other = isKsw
   .more { padding-block: 0 var(--space-section); }
   /* The accordion draws its own top rule: the heading above it needs none. */
   .sec-h.plain { border-bottom: 0; padding-bottom: 14px; max-width: 52rem; }
-  /* The other discipline: the same quiet line as under a post (NextLine). */
-  .also { padding-block: 0 var(--space-section); }
-  .also :global(.next) { margin-top: 0; }
   .gallery { padding-block: 0 var(--space-section); }
   /* Five albums in a row (two on phones): ten show on desktop (two rows), four on phones (two rows of two). */
   .gallery ul { list-style: none; padding: 0; margin: 24px 0 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 20px 16px; }
