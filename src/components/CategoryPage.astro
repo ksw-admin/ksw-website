@@ -31,7 +31,7 @@ const ownPath = page.alternate[lang];
 const jsonLd = ownPath ? disciplineLd({ slug: page.slug, lang, title: page.title, description: page.description, path: ownPath }) : undefined;
 ---
 
-<Base title={page.title} description={page.description} alternate={page.alternate} image={page.preview ? `/og/discipline-${page.slug}.jpg` : undefined} imageAlt={page.preview?.alt} jsonLd={jsonLd}>
+<Base title={page.title} searchTitle={page.searchTitle} description={page.description} alternate={page.alternate} image={page.preview ? `/og/discipline-${page.slug}.jpg` : undefined} imageAlt={page.preview?.alt} jsonLd={jsonLd}>
   <section class:list={['band', 'head', isKsw ? 'k' : 't', { 'has-title-image': titleImage }]}>
     <div class="wrap">
       <div class="head-text">

@@ -18,6 +18,8 @@ import { getLangFromUrl } from '../i18n/ui';
 
 interface Props {
   title?: string;
+  /** Whole title for search results and the browser tab, used as written (no academy name added). Wins over title. */
+  searchTitle?: string;
   description?: string;
   /** Path of the same page in each language, if it exists (hreflang + language switch). */
   alternate?: { de?: string; en?: string };
@@ -32,7 +34,7 @@ interface Props {
   articleDate?: string;
 }
 
-const { title, description = site.description, alternate, image = '/og/default.jpg', imageAlt: imageAltProp, jsonLd, noindex = false, ogType = 'website', articleDate } = Astro.props;
+const { title, searchTitle, description = site.description, alternate, image = '/og/default.jpg', imageAlt: imageAltProp, jsonLd, noindex = false, ogType = 'website', articleDate } = Astro.props;
 // The requested address. On an untranslated English page the i18n fallback rewrites to the German route, and
 // Astro.url then holds the German address; originPathname keeps the /en/... one the visitor asked for.
 const reqPath = Astro.originPathname || Astro.url.pathname;
@@ -44,7 +46,7 @@ const metaDescription = (() => {
   const s = description.replace(/\s+/g, ' ').trim();
   return s.length > 160 ? s.slice(0, 157).replace(/\s+\S*$/, '') + ' …' : s;
 })();
-const fullTitle = title ? `${title} | ${site.shortName} Griepentrog` : `${site.name} | Kuk Sool Won & Tai Chi in Duisburg`;
+const fullTitle = searchTitle ? searchTitle : title ? `${title} | ${site.shortName} Griepentrog` : `Kuk Sool Won & Tai Chi in Duisburg-Rheinhausen | ${site.shortName}`;
 // An English URL whose page has no English version renders the German content (i18n fallback rewrite).
 const dePath = reqPath.replace(/^\/en(?=\/|$)/, '') || '/';
 const isFallback = lang !== 'de' && alternate?.[lang] !== reqPath;

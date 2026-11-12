@@ -16,6 +16,8 @@ export type Discipline = {
   textLang: Lang;
   translated: boolean;
   title: string;
+  /** Title for search results and previews (search_title of the shown language's entry); else `title`. */
+  searchTitle?: string;
   description?: string;
   /** Link preview photo (German entry's image, alt text in the shown language if translated). */
   preview?: { fsPath: string; alt?: string };
@@ -42,6 +44,7 @@ export async function getDisciplines(lang: Lang): Promise<Discipline[]> {
         textLang: text === de ? 'de' : lang,
         translated,
         title: text.data.title!.trim(),
+        searchTitle: text.data.search_title?.trim() || undefined,
         description: text.data.description ?? de.data.description,
         preview: de.data.image
           ? { fsPath: resolveImage(de.filePath, de.data.image)!.fsPath, alt: text.data.image_text ?? de.data.image_text }

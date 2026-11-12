@@ -130,6 +130,7 @@ collections:
     public_folder: images
     fields:
       - { label: Titel, name: title, widget: string, i18n: true }
+      - { label: Titel für Google, name: search_title, widget: string, required: false, i18n: true, hint: 'Die blaue Überschrift in Google und der Text im Browser-Tab; darf Ort und Zielgruppe nennen, höchstens etwa 60 Zeichen. Wird genau so verwendet (der Name der Academy wird nicht angehängt). Leer: Titel oben + „Kampfkunst Academy Griepentrog“. Die Überschrift auf der Seite bleibt der Titel.' }
       - { label: Kurzbeschreibung (für Google), name: description, widget: string, required: false, i18n: true, hint: 'Ein bis zwei Sätze, höchstens etwa 155 Zeichen: steht in Google unter dem Link und in der WhatsApp-Vorschau.' }
       - { label: Titelbild, name: image, widget: image, required: false, hint: 'Steht oben auf der Seite neben dem Titel und erscheint beim Teilen der Seite (WhatsApp, Facebook). Am besten ein Foto mit Bewegung, im Querformat; es wird nicht beschnitten.' }
       - { label: Bildbeschreibung Titelbild, name: image_text, widget: string, required: false, i18n: true, hint: 'Was auf dem Foto zu sehen ist, für Menschen, die es nicht sehen.' }

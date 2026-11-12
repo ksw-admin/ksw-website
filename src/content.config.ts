@@ -55,6 +55,9 @@ const disciplines = defineCollection({
     title: opt(z.string()),
     description: opt(z.string()),
     tags,
+    // Title for search results and link previews (browser tab, Google): may name place and audience. The page
+    // heading stays `title`. Empty: `title` is used.
+    search_title: opt(z.string()),
     // Title image (CMS "Titelbild"): top of the page next to the title, and the link preview /og/discipline-<slug>.jpg.
     image: opt(z.string()),
     image_text: opt(z.string()),
