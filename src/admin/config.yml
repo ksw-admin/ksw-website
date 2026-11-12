@@ -165,6 +165,15 @@ collections:
     fields:
       - { label: Frage, name: question, widget: string, i18n: true }
       - { label: Reihenfolge, name: order, widget: number, value_type: int, default: 100, required: false, hint: 'Kleine Zahlen stehen oben (10, 20, 30 …; Lücken lassen Platz zum Einsortieren).' }
+      - label: Auch zeigen auf
+        name: show_on
+        widget: select
+        multiple: true
+        required: false
+        options:
+          - { label: Seite Kuk Sool Won, value: kuksoolwon }
+          - { label: Seite Tai Chi, value: taichi }
+        hint: 'Die Frage steht dann zusätzlich unter dem Text dieser Seite. Zwei bis vier Fragen pro Seite reichen.'
       - { label: Antwort, name: body, widget: markdown, i18n: true, buttons: [bold, italic, link, bulleted-list], editor_components: [], hint: 'Kurz und konkret. Links auf andere Seiten der Website sind gut (z.B. /#schedule für den Wochenplan).' }
 
   - name: pages

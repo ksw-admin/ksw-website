@@ -14,6 +14,8 @@ export type Faq = {
   /** Entry whose answer (Markdown body) is shown. */
   answerEntry: Entry;
   answerLang: Lang;
+  /** Discipline pages that also show this question (German entry's show_on). */
+  showOn: ('kuksoolwon' | 'taichi')[];
 };
 
 export async function getFaq(lang: Lang): Promise<Faq[]> {
@@ -36,6 +38,7 @@ export async function getFaq(lang: Lang): Promise<Faq[]> {
         questionLang: q ? lang : 'de',
         answerEntry: answer,
         answerLang: answer === de ? 'de' : lang,
+        showOn: de.data.show_on,
       } as Faq & { order: number };
     })
     .sort((a, b) => a.order - b.order || a.question.localeCompare(b.question, 'de'));

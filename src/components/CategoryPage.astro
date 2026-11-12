@@ -5,6 +5,8 @@ import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import HangulSign from './HangulSign.astro';
 import VideoEmbeds from './VideoEmbeds.astro';
+import FaqList from './FaqList.astro';
+import { getFaq } from '../lib/faq';
 import { getSchedule, dayList, ageLabel } from '../lib/schedule';
 import { resolveImage, capWidth } from '../lib/images';
 import { site } from '../lib/site';
@@ -34,6 +36,13 @@ const jsonLd = ownPath
       breadcrumbLd([{ name: t('nav.home'), path: localePath('/', lang) }, { name: page.title, path: ownPath }]),
     ]
   : undefined;
+// Questions marked for this page in the CMS (FAQ › "Auch zeigen auf"), in the FAQ's order.
+const faq = (await getFaq(lang)).filter((f) => f.showOn.includes(page.slug));
+const de = lang === 'de';
+// Photo albums (Flickr): the newest ones show, the rest opens on request, so the questions below stay near.
+const ALBUMS_SHOWN = 10; // two rows of five on desktop
+const ALBUMS_SHOWN_SMALL = 4; // two rows of two on phones
+const albums = entry.data.galleryImages.map((g) => ({ ...g, img: resolveImage(entry.filePath, g.image)!.meta }));
 ---
 
 <Base title={page.title} searchTitle={page.searchTitle} description={page.description} alternate={page.alternate} image={page.preview ? `/og/discipline-${page.slug}.jpg` : undefined} imageAlt={page.preview?.alt} jsonLd={jsonLd}>
@@ -76,26 +85,42 @@ const jsonLd = ownPath
     </div>
   </section>
 
-  {entry.data.galleryImages.length > 0 && (
+  {albums.length > 0 && (
     <section class="band gallery">
       <div class="wrap">
         <div class="sec-h"><h2>{t('gallery.title')}</h2></div>
         <ul>
-          {entry.data.galleryImages.map((g) => {
-            const img = resolveImage(entry.filePath, g.image)!.meta;
-            return (
-              <li>
-                <a href={g.link} rel="noopener">
-                  <Image src={img} alt="" width={capWidth(img, 600)} quality={75} widths={[300, 600]} sizes="(max-width: 600px) 100vw, 300px" loading="lazy" />
-                  <span lang={lang !== 'de' ? 'de' : undefined}>{g.link_text}</span>
-                </a>
-              </li>
-            );
-          })}
+          {albums.map((g, i) => (
+            <li class:list={{ extra: i >= ALBUMS_SHOWN, 'extra-small': i >= ALBUMS_SHOWN_SMALL && i < ALBUMS_SHOWN }}>
+              <a href={g.link} rel="noopener">
+                <Image src={g.img} alt="" width={capWidth(g.img, 600)} quality={75} widths={[300, 600]} sizes="(max-width: 860px) 50vw, 240px" loading="lazy" />
+                <span lang={lang !== 'de' ? 'de' : undefined}>{g.link_text}</span>
+              </a>
+            </li>
+          ))}
         </ul>
+        {/* Opens the rest of the albums (CSS :has below); an empty <details> so it works without JavaScript. */}
+        {albums.length > ALBUMS_SHOWN_SMALL && (
+          <details class:list={{ 'small-only': albums.length <= ALBUMS_SHOWN }}>
+            <summary>
+              <span class="closed">{de ? `Alle ${albums.length} Alben zeigen` : `Show all ${albums.length} albums`}</span>
+              <span class="open">{de ? 'Weniger Alben zeigen' : 'Show fewer albums'}</span>
+            </summary>
+          </details>
+        )}
       </div>
     </section>
   )}
+
+  {faq.length > 0 && (
+    <section class="band more">
+      <div class="wrap">
+        <div class="sec-h plain"><h2>{t('faq.title')}</h2><a href={localePath('/faq/', lang)}>{t('faq.all')}</a></div>
+        <FaqList faq={faq} lang={lang} />
+      </div>
+    </section>
+  )}
+
 </Base>
 
 <style>
@@ -127,11 +152,33 @@ const jsonLd = ownPath
   aside .btn { margin-top: 16px; }
   .cal-link { margin-top: 12px; font-weight: 700; }
   .cal-link a { text-decoration: underline; text-underline-offset: 4px; }
+  .more { padding-block: 0 var(--space-section); }
+  /* The accordion draws its own top rule: the heading above it needs none. */
+  .sec-h.plain { border-bottom: 0; padding-bottom: 14px; max-width: 52rem; }
   .gallery { padding-block: 0 var(--space-section); }
-  .gallery ul { list-style: none; padding: 0; margin: 24px 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+  /* Five albums in a row (two on phones): ten show on desktop (two rows), four on phones (two rows of two). */
+  .gallery ul { list-style: none; padding: 0; margin: 24px 0 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 20px 16px; }
   .gallery a { text-decoration: none; display: grid; gap: 6px; font-weight: 600; transition: transform 300ms ease-in; }
   /* Same subtle zoom as the old site's .gal-item:hover */
   .gallery a:hover, .gallery a:focus-visible { transform: scale(1.05); }
   .gallery :global(img) { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4px; display: block; }
-  @media (max-width: 860px) { .cols { grid-template-columns: 1fr; } }
+  .gallery details { margin-top: 20px; }
+  .gallery summary { cursor: pointer; list-style: none; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; width: fit-content; }
+  .gallery summary::-webkit-details-marker { display: none; }
+  .gallery details:not([open]) .open, .gallery details[open] .closed { display: none; }
+  /* Albums after the first few stay hidden until the line below the grid is opened. Browsers without :has show all. */
+  .gallery li.extra { display: none; }
+  .gallery:has(details[open]) li.extra { display: list-item; }
+  .gallery details.small-only { display: none; }
+  @supports not selector(:has(*)) { .gallery li.extra { display: list-item; } .gallery details { display: none; } }
+  @media (max-width: 860px) {
+    .cols { grid-template-columns: 1fr; }
+    .gallery ul { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .gallery li.extra-small { display: none; }
+    .gallery:has(details[open]) li.extra-small { display: list-item; }
+    .gallery details.small-only { display: block; }
+    @supports not selector(:has(*)) { .gallery li.extra-small { display: list-item; } .gallery details.small-only { display: none; } }
+  }
+  /* Very narrow screens (small phones, large text zoom): one album per row. */
+  @media (max-width: 340px) { .gallery ul { grid-template-columns: minmax(0, 1fr); } }
 </style>
