@@ -44,7 +44,7 @@ const metaDescription = (() => {
   const s = description.replace(/\s+/g, ' ').trim();
   return s.length > 160 ? s.slice(0, 157).replace(/\s+\S*$/, '') + ' …' : s;
 })();
-const fullTitle = title ? `${title} | ${site.shortName} Griepentrog` : `${site.name} | Kuk Sool Won & Tai Chi in Duisburg`;
+const fullTitle = title ? `${title} | ${site.shortName} Griepentrog` : `Kuk Sool Won & Tai Chi in Duisburg-Rheinhausen | ${site.shortName} Griepentrog`;
 // An English URL whose page has no English version renders the German content (i18n fallback rewrite).
 const dePath = reqPath.replace(/^\/en(?=\/|$)/, '') || '/';
 const isFallback = lang !== 'de' && alternate?.[lang] !== reqPath;

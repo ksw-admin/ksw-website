@@ -1,6 +1,7 @@
 ---
 title: Kuk Sool Won
-description: "Kuk Sool Won in Duisburg-Rheinhausen: koreanische Kampfkunst für Kinder ab 4 Jahren, Jugendliche und Erwachsene. Gruppen, Trainingszeiten, Probetraining."
+search_title: "Kuk Sool Won für Kinder und Erwachsene in Duisburg-Rheinhausen"
+description: "Kampfsport für Kinder ab 4 Jahren, Jugendliche und Erwachsene in Duisburg-Rheinhausen: Kuk Sool Won, koreanische Kampfkunst. Zeiten und Probetraining."
 image: images/Gem2018.jpg
 image_text: "Peter Griepentrog zeigt bei einer Vorführung auf der Wiese eine Selbstverteidigungstechnik, sein Partner liegt am Boden; dahinter Zuschauer."
 tags: ksw
