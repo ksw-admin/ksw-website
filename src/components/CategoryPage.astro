@@ -5,6 +5,10 @@ import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import HangulSign from './HangulSign.astro';
 import VideoEmbeds from './VideoEmbeds.astro';
+import NewsLedger from './NewsLedger.astro';
+import FaqList from './FaqList.astro';
+import { getPosts } from '../lib/posts';
+import { getFaq } from '../lib/faq';
 import { getSchedule, dayList, ageLabel } from '../lib/schedule';
 import { resolveImage, capWidth } from '../lib/images';
 import { site } from '../lib/site';
@@ -34,6 +38,26 @@ const jsonLd = ownPath
       breadcrumbLd([{ name: t('nav.home'), path: localePath('/', lang) }, { name: page.title, path: ownPath }]),
     ]
   : undefined;
+// Newest reports: all posts so far are about Kuk Sool Won (tournaments, gradings), so only that page lists them.
+const latest = isKsw ? (await getPosts(lang)).slice(0, 3) : [];
+// Questions marked for this page in the CMS (FAQ › "Auch zeigen auf"), in the FAQ's order.
+const faq = (await getFaq(lang)).filter((f) => f.showOn.includes(page.slug));
+// The other discipline, in its own tone and type width: jade and wide for Tai Chi, band tone and condensed for Kuk Sool Won.
+const youngest = Math.min(...(await getSchedule('kuksoolwon')).map((s) => s.ageMin ?? Infinity));
+const de = lang === 'de';
+const other = isKsw
+  ? {
+      slug: 'taichi' as const,
+      title: de ? 'Tai Chi, Qi Gong und Atemschulung' : 'Tai Chi, Qi Gong and breathing training',
+      line: de ? 'Ruhige Bewegungen und Atemtechnik, in jedem Alter erlernbar.' : 'Calm movements and breathing technique, at any age.',
+    }
+  : {
+      slug: 'kuksoolwon' as const,
+      title: 'Kuk Sool Won',
+      line: Number.isFinite(youngest)
+        ? de ? `Koreanische Kampfkunst für Kinder ab ${youngest} Jahren, Jugendliche und Erwachsene.` : `Korean martial art for children from age ${youngest}, teenagers and adults.`
+        : de ? 'Koreanische Kampfkunst für Kinder, Jugendliche und Erwachsene.' : 'Korean martial art for children, teenagers and adults.',
+    };
 ---
 
 <Base title={page.title} searchTitle={page.searchTitle} description={page.description} alternate={page.alternate} image={page.preview ? `/og/discipline-${page.slug}.jpg` : undefined} imageAlt={page.preview?.alt} jsonLd={jsonLd}>
@@ -74,6 +98,34 @@ const jsonLd = ownPath
         <a class="btn" href={localePath('/#contact', lang)}>{t('cta.trial')}</a>
       </aside>
     </div>
+  </section>
+
+  {latest.length > 0 && (
+    <section class="band more">
+      <div class="wrap">
+        <div class="sec-h"><h2>{t('news.title')}</h2><a href={localePath('/articles/', lang)}>{t('news.all')}</a></div>
+        <NewsLedger posts={latest} lang={lang} level={3} />
+      </div>
+    </section>
+  )}
+
+  {faq.length > 0 && (
+    <section class="band more">
+      <div class="wrap">
+        <div class="sec-h plain"><h2>{t('faq.title')}</h2><a href={localePath('/faq/', lang)}>{t('faq.all')}</a></div>
+        <FaqList faq={faq} lang={lang} />
+      </div>
+    </section>
+  )}
+
+  <section class:list={['band', 'other', other.slug === 'taichi' ? 't' : 'k']}>
+    <a class="wrap" href={localePath(`/category/${other.slug}/`, lang)}>
+      <HangulSign discipline={other.slug} />
+      <span class="other-text">
+        <span class:list={['other-title', other.slug === 'taichi' ? 'wide' : 'cond']}>{other.title}</span>
+        <span class="other-line">{other.line}</span>
+      </span>
+    </a>
   </section>
 
   {entry.data.galleryImages.length > 0 && (
@@ -127,6 +179,20 @@ const jsonLd = ownPath
   aside .btn { margin-top: 16px; }
   .cal-link { margin-top: 12px; font-weight: 700; }
   .cal-link a { text-decoration: underline; text-underline-offset: 4px; }
+  .more { padding-block: 0 var(--space-section); }
+  /* The accordion draws its own top rule: the heading above it needs none. */
+  .sec-h.plain { border-bottom: 0; padding-bottom: 14px; max-width: 52rem; }
+  /* The other discipline: one slim band in its tone, the whole band is the link. */
+  .other { margin-bottom: var(--space-section); }
+  .other.t { background: var(--tc-bg); color: var(--tc-fg); }
+  .other.k { background: var(--panel); color: var(--panel-fg); }
+  .other a { display: flex; align-items: center; gap: 20px 32px; flex-wrap: wrap; padding-block: 26px; text-decoration: none; color: inherit; }
+  .other :global(.hangul) { font-size: clamp(2rem, 4vw, 2.75rem); flex: none; }
+  .other-text { display: grid; gap: 4px; min-width: 0; }
+  .other-title { font-size: var(--fs-sub); line-height: 1.1; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
+  .other-title.cond { font-weight: 900; font-size: 2rem; }
+  .other-title.wide { font-weight: 300; }
+  .other a:hover .other-title { text-decoration-thickness: 3px; }
   .gallery { padding-block: 0 var(--space-section); }
   .gallery ul { list-style: none; padding: 0; margin: 24px 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
   .gallery a { text-decoration: none; display: grid; gap: 6px; font-weight: 600; transition: transform 300ms ease-in; }

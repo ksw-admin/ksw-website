@@ -1,6 +1,9 @@
 ---
 question: Wer unterrichtet?
 order: 60
+show_on:
+  - kuksoolwon
+  - taichi
 ---
 
 <!-- Quelle: Qualifikationen (site.json), Meister-Einleitung, Tai-Chi-Seite. -->

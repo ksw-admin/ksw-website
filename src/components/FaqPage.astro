@@ -4,8 +4,8 @@
  * (Netlify Forms, form name "frage"): submissions land in the Netlify dashboard and by email with whoever reviews
  * them. Nothing a visitor sends appears on the site by itself; an answered question is added in the CMS.
  */
-import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
+import FaqList from './FaqList.astro';
 import { getFaq, plainAnswer } from '../lib/faq';
 import { site, primaryPhone, phoneLabel, telHref } from '../lib/site';
 import { useTranslations, localePath, type Lang } from '../i18n/ui';
@@ -14,7 +14,6 @@ interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 const faq = await getFaq(lang);
-const items = await Promise.all(faq.map(async (f) => ({ ...f, Content: (await render(f.answerEntry)).Content })));
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -36,14 +35,7 @@ const jsonLd = {
   <section class="band faq">
     <div class="wrap">
       <h1 class="page-title">{t('faq.title')}</h1>
-      <div class="list">
-        {items.map((f) => (
-          <details id={f.slug}>
-            <summary lang={f.questionLang !== lang ? f.questionLang : undefined}>{f.question}</summary>
-            <div class="prose" lang={f.answerLang !== lang ? f.answerLang : undefined}><f.Content /></div>
-          </details>
-        ))}
-      </div>
+      <div class="questions"><FaqList faq={faq} lang={lang} anchors /></div>
     </div>
   </section>
 
@@ -92,17 +84,7 @@ const jsonLd = {
 
 <style>
   .faq { padding-block: var(--space-page-top) var(--space-section); }
-  .list { margin-top: 28px; max-width: 52rem; border-top: 2px solid var(--fg); }
-  details { border-bottom: 1px solid var(--linie); }
-  summary {
-    cursor: pointer; list-style: none; padding: 18px 40px 18px 0; position: relative;
-    font-size: var(--fs-item); font-weight: 700; line-height: 1.25;
-  }
-  summary::-webkit-details-marker { display: none; }
-  summary::after { content: '+'; position: absolute; right: 6px; top: 14px; font-size: 1.6rem; font-weight: 500; }
-  details[open] summary::after { content: '–'; }
-  summary:hover { text-decoration: underline; text-underline-offset: 4px; }
-  .prose { padding: 0 0 22px; max-width: 62ch; }
+  .questions { margin-top: 28px; }
 
   .ask { padding-block: var(--space-section); background: var(--card); border-top: 1px solid var(--linie); }
   .ask h2 { font-size: var(--fs-sub); }

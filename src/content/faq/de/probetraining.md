@@ -1,6 +1,9 @@
 ---
 question: Kann ich einfach zum Probetraining kommen?
 order: 10
+show_on:
+  - kuksoolwon
+  - taichi
 ---
 
 <!-- Quelle: Startseite, Kontakt-Einleitung. Offen für Peter: content-questions.md (Probetraining kostenlos?). -->

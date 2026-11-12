@@ -1,6 +1,8 @@
 ---
 question: Gibt es Gürtelprüfungen?
 order: 70
+show_on:
+  - kuksoolwon
 ---
 
 <!-- Quelle: Beiträge (Gürtelprüfung 2022 und 2026, Dan-Prüfungen, IHHHF-Prüfung). -->

@@ -112,6 +112,8 @@ const faq = defineCollection({
     question: opt(z.string()),
     // Position on the page (small numbers first). Taken from the German entry.
     order: opt(z.number()),
+    // Also shown on these pages (Kuk Sool Won / Tai Chi), below the text. Taken from the German entry.
+    show_on: z.array(z.enum(['kuksoolwon', 'taichi'])).default([]),
     // Only shown while this website feature is switched on (site.json).
     requires: opt(z.enum(['calendar'])),
   }),

@@ -1,6 +1,8 @@
 ---
 question: Ab welchem Alter kann man anfangen?
 order: 20
+show_on:
+  - kuksoolwon
 ---
 
 <!-- Quelle: Trainingszeiten (schedule.json), Tai-Chi-Seite. -->
