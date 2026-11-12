@@ -33,6 +33,8 @@ const Site = z.object({
       src: z.string().regex(/^\/.+\.mp4$/, 'path like /video/name.mp4').optional().or(z.literal('')),
       poster: z.string().optional().or(z.literal('')),
       captions: z.string().regex(/^\/.+\.vtt$/, 'path like /video/name.de.vtt').optional().or(z.literal('')), // German captions (WebVTT)
+      // Day the own video went online (YYYY-MM-DD). With it, search engines get the video data (schema.org VideoObject).
+      uploaded: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'date like 2026-11-09').optional().or(z.literal('')),
       youtubeId: z.string().regex(/^[\w-]{11}$/).optional().or(z.literal('')),
       title: z.string(),
     })

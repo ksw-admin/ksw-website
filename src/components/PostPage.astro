@@ -6,7 +6,8 @@ import BackLink from './BackLink.astro';
 import Base from '../layouts/Base.astro';
 import Medals from './Medals.astro';
 import type { Post } from '../lib/posts';
-import { articleLd } from '../lib/seo';
+import { articleLd, breadcrumbLd } from '../lib/seo';
+import { useTranslations, localePath } from '../i18n/ui';
 import { capWidth } from '../lib/images';
 
 interface Props { post: Post }
@@ -19,6 +20,17 @@ const { Content } = await render(bodyEntry);
 const fmt = new Intl.DateTimeFormat(post.lang === 'de' ? 'de-DE' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 // News keep the whole report in "description" (old CMS form had no body field).
 const paragraphs = post.paragraphs;
+const t = useTranslations(post.lang);
+const jsonLd = [
+  articleLd(post),
+  ...(post.href
+    ? [breadcrumbLd([
+        { name: t('nav.home'), path: localePath('/', post.lang) },
+        { name: t('nav.news'), path: localePath('/articles/', post.lang) },
+        { name: post.title, path: post.href },
+      ])]
+    : []),
+];
 ---
 
 <Base
@@ -29,7 +41,7 @@ const paragraphs = post.paragraphs;
   imageAlt={post.imageText && post.imageText !== 'placeholder' ? post.imageText : post.title}
   ogType="article"
   articleDate={post.date.toISOString().slice(0, 10)}
-  jsonLd={articleLd(post)}
+  jsonLd={jsonLd}
 >
   <article class="band">
     <div class="wrap">
