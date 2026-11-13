@@ -4,6 +4,7 @@ From the content pass on 2026-11-03 (old site vs. redesign). Answer here or tell
 
 ## Facts to confirm
 
+- [ ] **Code of conduct and Korean numbers (2026-11-13):** new on the Kuk Sool Won page: "Unser Verhaltenskodex", the ten rules of the Schulordnung from the member folder, each with a short title of ours (text: `src/content/conduct.json`). New FAQ question "Wie zählt man auf Koreanisch?". OK to publish, and are the short titles fine? The numbers use the folder's spelling (Yosot, Yodul, Swin …); say if the site should use another one. The Hangul signs (하나, 둘, 셋 …) are not in the folder; they match the native Korean numerals 1 to 10 in Wikipedia "Korean numerals" (checked 2026-11-13). Not taken over: the belt drawing (source of the image unknown) and the long list of Korean terms (possible later as a FAQ question or an own page).
 - [ ] **Trial lesson:** can people just come to the hall at training time, without signing up? The site now says so
       ("Für ein Probetraining einfach zur Trainingszeit in die Halle kommen"). Is it free?
 - [ ] **Photo captions:** home page group photo "Lehrgang in der Halle, mit Gästen der IHHHF" and master photo
