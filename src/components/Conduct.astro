@@ -1,23 +1,23 @@
 ---
 /**
  * "Unser Verhaltenskodex": the school's ten rules (Schulordnung from the member folder), counted in Korean.
- * Shown on the Kuk Sool Won page. Text: src/content/conduct.json (German and English).
+ * Shown on the Kuk Sool Won page. Text: src/content/conduct.json (CMS: Einstellungen › Verhaltenskodex).
  * The Hangul numerals are a graphic like the 국술원 sign (generated content, hidden from screen readers); the
  * number and its Korean name ("1 Hana") are real text, spelled as in the folder.
  */
-import conduct from '../content/conduct.json';
+import { getConduct } from '../lib/conduct';
 import type { Lang } from '../i18n/ui';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
-const head = conduct[lang];
+const conduct = getConduct(lang);
 // Rows per column on wide screens: half the rules, so the list still fits when a rule is added or removed.
 const rows = Math.ceil(conduct.rules.length / 2);
 ---
 
 <section class="band conduct" id="kodex">
   <div class="wrap">
-    <div class="sec-h"><h2>{head.title}</h2></div>
+    <div class="sec-h"><h2>{conduct.title}</h2></div>
     <ol role="list" style={`--rows:${rows}`}>
       {conduct.rules.map((r, i) => (
         <li>
@@ -26,8 +26,8 @@ const rows = Math.ceil(conduct.rules.length / 2);
             <span class="word num">{i + 1} <span lang="ko-Latn">{r.word}</span></span>
           </div>
           <div class="rule">
-            <h3>{r[lang].title}</h3>
-            <p>{r[lang].text}</p>
+            <h3>{r.title}</h3>
+            <p>{r.text}</p>
           </div>
         </li>
       ))}
