@@ -1,0 +1,72 @@
+{
+  "de": {
+    "title": "Unser Verhaltenskodex",
+    "intro": "Zehn Regeln aus unserer Schulordnung, gezählt auf Koreanisch."
+  },
+  "en": {
+    "title": "Our code of conduct",
+    "intro": "Ten rules from our school rules, counted in Korean."
+  },
+  "rules": [
+    {
+      "sign": "하나",
+      "word": "Hana",
+      "de": { "title": "Pünktlich sein", "text": "Mindestens 15 Minuten vor Trainingsbeginn in der Schule." },
+      "en": { "title": "Be on time", "text": "At the school at least 15 minutes before training starts." }
+    },
+    {
+      "sign": "둘",
+      "word": "Dul",
+      "de": { "title": "Schmuck ablegen", "text": "Schmuck und Uhren vor dem Training ablegen." },
+      "en": { "title": "Take off jewellery", "text": "Jewellery and watches come off before training." }
+    },
+    {
+      "sign": "셋",
+      "word": "Set",
+      "de": { "title": "Nicht essen", "text": "Essen und Kaugummi sind im Dojang, dem Trainingsraum, nicht erlaubt." },
+      "en": { "title": "No food", "text": "No food or chewing gum in the dojang, the training hall." }
+    },
+    {
+      "sign": "넷",
+      "word": "Net",
+      "de": { "title": "Barfuß auf die Matte", "text": "Das Dojang nur barfuß oder mit Mattenschuhen betreten." },
+      "en": { "title": "Barefoot on the mat", "text": "Enter the dojang barefoot or in mat shoes only." }
+    },
+    {
+      "sign": "다섯",
+      "word": "Dasot",
+      "de": { "title": "Saubere Kleidung", "text": "Die Trainingskleidung ist sauber und in einwandfreiem Zustand." },
+      "en": { "title": "Clean clothes", "text": "Training clothes are clean and in good condition." }
+    },
+    {
+      "sign": "여섯",
+      "word": "Yosot",
+      "de": { "title": "Gepflegt trainieren", "text": "Auf Körperhygiene achten, die Nägel sind kurz geschnitten." },
+      "en": { "title": "Train well groomed", "text": "Mind your personal hygiene and keep your nails short." }
+    },
+    {
+      "sign": "일곱",
+      "word": "Ilgob",
+      "de": { "title": "Ruhe und Konzentration", "text": "Sobald das Training begonnen hat, wird nicht mehr gesprochen." },
+      "en": { "title": "Quiet and focus", "text": "Once training has started, there is no talking." }
+    },
+    {
+      "sign": "여덟",
+      "word": "Yodul",
+      "de": { "title": "Fair kämpfen", "text": "Beim Kampftraining die komplette Ausrüstung tragen. Sparring ist angeleitet, locker und fair, nach festen Regeln." },
+      "en": { "title": "Fight fair", "text": "Wear the complete gear for sparring. Sparring is guided, light and fair, with fixed rules." }
+    },
+    {
+      "sign": "아홉",
+      "word": "Ahob",
+      "de": { "title": "Offen ansprechen", "text": "Unstimmigkeiten oder Beschwerden gleich dem Meister mitteilen." },
+      "en": { "title": "Speak up", "text": "Raise any disagreement or complaint with the master straight away." }
+    },
+    {
+      "sign": "열",
+      "word": "Yol",
+      "de": { "title": "Trinken in den Pausen", "text": "Jede und jeder bringt eine eigene Flasche mit." },
+      "en": { "title": "Drink during the breaks", "text": "Everyone brings their own bottle." }
+    }
+  ]
+}

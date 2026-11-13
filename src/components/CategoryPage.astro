@@ -6,6 +6,7 @@ import Base from '../layouts/Base.astro';
 import HangulSign from './HangulSign.astro';
 import VideoEmbeds from './VideoEmbeds.astro';
 import FaqList from './FaqList.astro';
+import Conduct from './Conduct.astro';
 import { getFaq } from '../lib/faq';
 import { getSchedule, dayList, ageLabel } from '../lib/schedule';
 import { resolveImage, capWidth } from '../lib/images';
@@ -112,6 +113,8 @@ const albums = entry.data.galleryImages.map((g) => ({ ...g, img: resolveImage(en
     </section>
   )}
 
+  {isKsw && <Conduct lang={lang} />}
+
   {faq.length > 0 && (
     <section class="band more">
       <div class="wrap">
@@ -153,6 +156,8 @@ const albums = entry.data.galleryImages.map((g) => ({ ...g, img: resolveImage(en
   .cal-link { margin-top: 12px; font-weight: 700; }
   .cal-link a { text-decoration: underline; text-underline-offset: 4px; }
   .more { padding-block: 0 var(--space-section); }
+  /* After the grey code-of-conduct band the questions need their own space above. */
+  :global(.conduct) + .more { padding-top: var(--space-section); }
   /* The accordion draws its own top rule: the heading above it needs none. */
   .sec-h.plain { border-bottom: 0; padding-bottom: 14px; max-width: 52rem; }
   .gallery { padding-block: 0 var(--space-section); }
