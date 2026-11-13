@@ -360,6 +360,49 @@ collections:
                 default: alle
                 options: [{ label: Alle Gruppen, value: alle }, { label: Nur Kuk Sool Won, value: kuksoolwon }, { label: Nur Tai Chi, value: taichi }]
 
+      - label: Verhaltenskodex
+        name: conduct
+        file: src/content/conduct.json
+        format: json
+        description: >-
+          Die Regeln im Abschnitt „Unser Verhaltenskodex“ auf der Kuk Sool Won-Seite, in dieser Reihenfolge. Jede Regel
+          hat ihr koreanisches Zahlwort (Zeichen und Schreibweise), einen kurzen Titel und einen Satz. Englisch leer
+          lassen: dann steht dort der deutsche Text.
+        fields:
+          - label: Überschrift
+            name: de
+            widget: object
+            fields:
+              - { label: Überschrift, name: title, widget: string }
+          - label: Überschrift Englisch
+            name: en
+            widget: object
+            required: false
+            fields:
+              - { label: Überschrift Englisch, name: title, widget: string, required: false }
+          - label: Regeln
+            label_singular: Regel
+            name: rules
+            widget: list
+            min: 1
+            summary: '{{fields.word}}'
+            fields:
+              - { label: Koreanisches Zeichen, name: sign, widget: string, pattern: ['^[가-힣]+$', 'Nur koreanische Schriftzeichen, z.B. 하나'], hint: 'Das Zahlwort in koreanischer Schrift, z.B. 하나 für 1. Es steht groß vor der Regel.' }
+              - { label: Zahlwort, name: word, widget: string, hint: 'So wie in der Mitgliedermappe, z.B. Hana. Die Zahl davor (1, 2, 3 …) ergibt sich aus der Reihenfolge.' }
+              - label: Deutsch
+                name: de
+                widget: object
+                fields:
+                  - { label: Titel, name: title, widget: string, hint: 'Kurz, z.B. „Pünktlich sein“.' }
+                  - { label: Text, name: text, widget: string }
+              - label: Englisch
+                name: en
+                widget: object
+                required: false
+                fields:
+                  - { label: Titel, name: title, widget: string, required: false }
+                  - { label: Text, name: text, widget: string, required: false }
+
       - label: Kontakt und Allgemeines
         name: site
         file: src/content/site.json
