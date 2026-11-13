@@ -1,0 +1,130 @@
+---
+/**
+ * BetaBanner: Quiet black notification band above the header on astro-redesign.
+ * Follows design-system/README.md: panel black, sentence case, left-aligned, no emoji.
+ */
+import { useTranslations, localePath, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<aside id="beta-banner" class="band beta-banner" aria-label={t('beta.banner.title')} data-nosnippet>
+  <div class="wrap beta-wrap">
+    <p class="beta-text">
+      <strong>{t('beta.banner.title')}:</strong>
+      <span>{t('beta.banner.desc')}</span>
+    </p>
+    <div class="beta-actions">
+      <a href={localePath('/beta/', lang)} class="beta-link">{t('beta.banner.info')}</a>
+      <button type="button" id="beta-optout-btn" class="beta-btn">{t('beta.banner.optout')}</button>
+      <button type="button" id="beta-dismiss-btn" class="beta-close" aria-label={t('beta.banner.close')}>✕</button>
+    </div>
+  </div>
+</aside>
+<script is:inline>
+  // Runs before the first paint: closed banners stay closed for the session, without a layout shift.
+  try { if (sessionStorage.getItem('ksw-beta-dismissed') === '1') document.getElementById('beta-banner').hidden = true; } catch (e) {}
+</script>
+
+<script>
+  // Rendered only in a beta build (Base.astro). Cookie handling from src/lib/split-test.ts (tested).
+  import { buildResetCookie } from '../lib/split-test';
+
+  const banner = document.getElementById('beta-banner');
+  let dismissed = false;
+  try {
+    dismissed = sessionStorage.getItem('ksw-beta-dismissed') === '1';
+  } catch {}
+  if (banner && !dismissed) {
+    document.getElementById('beta-dismiss-btn')?.addEventListener('click', () => {
+      banner.hidden = true;
+      try {
+        sessionStorage.setItem('ksw-beta-dismissed', '1');
+      } catch {}
+    });
+    document.getElementById('beta-optout-btn')?.addEventListener('click', () => {
+      document.cookie = buildResetCookie(undefined, location.protocol === 'https:');
+      try {
+        sessionStorage.removeItem('ksw-beta-dismissed');
+      } catch {}
+      // The old site has fewer pages (no /faq/ etc.): go to its home page.
+      location.replace('/');
+    });
+  }
+</script>
+
+<style>
+  .beta-banner {
+    background: var(--panel);
+    color: var(--panel-fg);
+    border-bottom: 1px solid var(--linie);
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+  .beta-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px 16px;
+    flex-wrap: wrap;
+    padding-block: 8px;
+  }
+  .beta-text {
+    margin: 0;
+    color: var(--panel-fg);
+  }
+  .beta-text strong {
+    font-weight: 700;
+  }
+  .beta-text span {
+    color: var(--stein);
+    margin-left: 4px;
+  }
+  .beta-actions {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+  }
+  .beta-link {
+    color: var(--stein);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .beta-link:hover,
+  .beta-link:focus-visible {
+    color: var(--panel-fg);
+  }
+  .beta-btn {
+    background: none;
+    border: 1px solid var(--panel-fg);
+    color: var(--panel-fg);
+    font: inherit;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .beta-btn:hover,
+  .beta-btn:focus-visible {
+    background: rgba(255, 255, 255, 0.15);
+  }
+  .beta-close {
+    background: none;
+    border: none;
+    color: var(--stein);
+    font-size: 0.95rem;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+  }
+  .beta-close:hover,
+  .beta-close:focus-visible {
+    color: var(--panel-fg);
+  }
+</style>

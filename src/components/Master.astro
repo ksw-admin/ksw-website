@@ -1,0 +1,64 @@
+---
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import { site } from '../lib/site';
+
+interface Props { heading: string; photo: ImageMetadata; photoAlt: string; caption?: string }
+const { heading, photo, photoAlt, caption } = Astro.props;
+const { master } = site;
+---
+
+<!-- Own section heading on the yellow rule, like news and video: after the news list it must not read like one more post. -->
+<section class="master band" id="master" aria-labelledby="master-title">
+  <div class="wrap">
+    <div class="sec-h"><h2 id="master-title">{heading}</h2></div>
+    <div class="cols">
+    <figure>
+      <Image src={photo} alt={photoAlt} width={Math.min(photo.width, 1000)} quality={75} widths={[400, 560, 700, 1000]} sizes="(max-width: 760px) calc(100vw - 32px), 40vw" loading="lazy" />
+      {caption && <figcaption>{caption}</figcaption>}
+    </figure>
+    <div>
+      <h3 class="cond">{site.contactName}</h3>
+      <div class="intro"><slot /></div>
+      <dl>
+        {master.credentials.map((c, i) => {
+          // Same area twice in a row (two rehab licences): one label, two values.
+          const repeat = i > 0 && master.credentials[i - 1].label === c.label;
+          return (
+            <>
+              {!repeat && <dt>{c.label}</dt>}
+              <dd class:list={{ cont: repeat }}>{c.value}</dd>
+            </>
+          );
+        })}
+      </dl>
+    </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .master { padding-block: 0 var(--space-section); }
+  .cols { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 56px; align-items: start; margin-top: 32px; }
+  figure { margin: 0; }
+  figure :global(img) { width: 100%; height: auto; aspect-ratio: 5 / 4; object-fit: cover; object-position: 30% 30%; border-radius: 4px; display: block; }
+  figcaption { font-size: var(--fs-meta); color: var(--stein); margin-top: 8px; }
+  h3 { font-size: clamp(2.4rem, 5vw, 3.8rem); line-height: 0.95; font-weight: 900; }
+  .intro { margin-top: 16px; font-size: var(--fs-lead); max-width: 44ch; }
+  dl { margin: 28px 0 0; display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 10px 24px; }
+  dt { color: var(--stein); font-weight: 500; }
+  dd.cont { grid-column: 2; }
+  dd { margin: 0; font-weight: 600; }
+  @media (max-width: 760px) {
+    .cols { grid-template-columns: 1fr; gap: 28px; margin-top: 24px; }
+    dl { grid-template-columns: 1fr; gap: 2px; }
+    dd.cont { grid-column: auto; }
+    dd { margin-bottom: 10px; }
+  }
+  /* Landscape crop 5:4 everywhere (portrait 4:5 left the photo twice as tall as the text on desktop and took a whole
+     screen on phones). Desktop: slightly larger text, so photo and text end at about the same height. */
+  @media (min-width: 761px) {
+    .intro { max-width: 40ch; }
+    dl { gap: 16px 28px; margin-top: 36px; font-size: 1.1rem; }
+  }
+</style>

@@ -1,0 +1,62 @@
+---
+// /other/imprint/ (Impressum), /other/privacy/ (Datenschutz): German only, legally binding. Old German paths: 301.
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { splitId } from '../../lib/posts';
+import { site } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const pages = await getCollection('pages', (e) => e.id.startsWith('de/'));
+  return pages.map((entry) => ({ params: { page: splitId(entry.id).slug }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+// Datenschutz: the forms paragraph describes only the forms that are switched on (CMS: Einstellungen),
+// so the text never mentions a form the site does not have. Both off: no paragraph.
+const contact = site.contactForm;
+const question = site.questionForm;
+const both = contact && question;
+const formsText =
+  splitId(entry.id).slug === 'privacy' && (contact || question)
+    ? {
+        label: `Formulare (${[contact && 'Kontakt', question && 'Fragen'].filter(Boolean).join(', ')}):`,
+        text: [
+          both
+            ? 'Über das Kontaktformular und das Fragen-Formular auf der Seite „FAQ“ können Sie uns schreiben.'
+            : contact
+              ? 'Über das Kontaktformular können Sie uns schreiben.'
+              : 'Über das Fragen-Formular auf der Seite „FAQ“ können Sie uns schreiben.',
+          `Netlify speichert Ihre Angaben (${[
+            contact && `${both ? 'Kontaktformular: ' : ''}Name, Nachricht und die E-Mail-Adresse oder Telefonnummer, die Sie angeben`,
+            question && `${both ? 'Fragen-Formular: ' : ''}die Frage, die Sprache der Seite und, falls angegeben, Ihre E-Mail-Adresse`,
+          ]
+            .filter(Boolean)
+            .join('; ')}) und leitet sie an uns weiter; zum Schutz vor Spam prüft Netlify Einsendungen automatisch mit dem Dienst Akismet (Automattic Inc., USA).`,
+          `Wir nutzen die Angaben nur, um Ihre ${both ? 'Nachricht oder Frage' : contact ? 'Nachricht' : 'Frage'} zu beantworten${
+            question ? '; Fragen nehmen wir gegebenenfalls ohne Namen und E-Mail-Adresse mit Antwort in die FAQ auf' : ''
+          }. Danach löschen wir die Angaben (Art. 6 Abs. 1 lit. b und f DSGVO).`,
+        ].join(' '),
+      }
+    : null;
+---
+
+{/* Impressum and Datenschutz must be on the site (footer link), but not in Google: they contain Peter's private
+    address (provider / data controller), which Gemini's AI Overview showed as the training location (2026-11-09).
+    noindex keeps the pages out of the index; data-nosnippet keeps the text out of snippets and AI Overviews meanwhile. */}
+<Base title={entry.data.title} noindex>
+  <section class="band">
+    <div class="wrap">
+      <div class="sec-h"><h1 class="page-title">{entry.data.title}</h1></div>
+      <div class="prose" data-nosnippet>
+        <Content />
+        {formsText && <p><strong>{formsText.label}</strong> {formsText.text}</p>}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  section { padding-block: var(--space-page-top) var(--space-section); }
+  .prose { margin-top: 28px; }
+</style>

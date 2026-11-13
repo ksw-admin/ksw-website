@@ -1,0 +1,9 @@
+---
+// Calendar page, only built when switched on in the CMS (site.json › calendarPage).
+import CalendarPage from '../../../components/CalendarPage.astro';
+import { site } from '../../../lib/site';
+
+export const getStaticPaths = () => (site.calendarPage ? [{ params: { index: undefined } }] : []);
+---
+
+<CalendarPage lang="en" />

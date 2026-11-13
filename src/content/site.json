@@ -1,0 +1,76 @@
+{
+  "master": {
+    "dan": 5,
+    "since": 1986,
+    "credentials": [
+      {
+        "label": "Kuk Sool Won",
+        "value": "5. Dan, Kampfkunst seit 1986"
+      },
+      {
+        "label": "Tai Chi Chuan / Qi Gong",
+        "value": "Lehrbefähigung"
+      },
+      {
+        "label": "Rehabilitationssport",
+        "value": "Fachübungsleiterlizenz für Innere Medizin und Orthopädie"
+      },
+      {
+        "label": "Verbände",
+        "value": "IHHHF & WTKA"
+      }
+    ]
+  },
+  "contactForm": false,
+  "phones": [
+    {
+      "label": "Mobil",
+      "value": "0170 - 90 42 408",
+      "primary": true
+    },
+    {
+      "label": "Tel.",
+      "value": "020 65 - 67 96 31"
+    }
+  ],
+  "analytics": {
+    "cloudflareToken": "5f7f1ea0441c4966ad1e864554f85b6a"
+  },
+  "shortName": "Kampfkunst Academy",
+  "questionForm": false,
+  "name": "Kampfkunst Academy Peter Griepentrog",
+  "contactName": "Peter Griepentrog",
+  "calendarPage": true,
+  "postCta": true,
+  "social": [
+    {
+      "name": "Flickr",
+      "url": "https://www.flickr.com/photos/143500996@N08/",
+      "label": "Fotoalben auf Flickr"
+    }
+  ],
+  "hall": {
+    "street": "Beethovenstr. 18a",
+    "note": "im Regenbogenhaus",
+    "city": "47226 Duisburg-Rheinhausen",
+    "osm": "https://www.openstreetmap.org/search?query=Beethovenstra%C3%9Fe%2018a%2047226%20Duisburg",
+    "geo": {
+      "lat": 51.40478,
+      "lng": 6.71458
+    }
+  },
+  "credit": {
+    "text": "Website: Jonah L.",
+    "url": "https://links.skazu.net/"
+  },
+  "video": {
+    "src": "/video/griepentrog.mp4",
+    "poster": "/video/griepentrog-poster.webp",
+    "captions": "/video/griepentrog.de.vtt",
+    "uploaded": "2026-11-09",
+    "title": "Wir sind sehr stolz auf unsere erfolgreiche Kampfkunst-Abteilung in Duisburg"
+  },
+  "email": "info@atemschulung-griepentrog.de",
+  "description": "Kuk Sool Won, Tai Chi und Qi Gong in Duisburg-Rheinhausen",
+  "calendar": true
+}

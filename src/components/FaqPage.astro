@@ -1,0 +1,102 @@
+---
+/**
+ * FAQ (German and English routes). Questions: src/content/faq/ (CMS: FAQ). Below the list a question form
+ * (Netlify Forms, form name "frage"): submissions land in the Netlify dashboard and by email with whoever reviews
+ * them. Nothing a visitor sends appears on the site by itself; an answered question is added in the CMS.
+ */
+import Base from '../layouts/Base.astro';
+import FaqList from './FaqList.astro';
+import { getFaq, plainAnswer } from '../lib/faq';
+import { site, primaryPhone, phoneLabel, telHref } from '../lib/site';
+import { useTranslations, localePath, type Lang } from '../i18n/ui';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const faq = await getFaq(lang);
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  inLanguage: lang,
+  mainEntity: faq.map((f) => ({
+    '@type': 'Question',
+    name: f.question,
+    acceptedAnswer: { '@type': 'Answer', text: plainAnswer(f.answerEntry.body ?? '') },
+  })),
+};
+---
+
+<Base
+  title={t('faq.title')}
+  description={lang === 'de' ? 'Antworten zu Probetraining, Alter, Kuk Sool Won, Tai Chi, Prüfungen und Trainingszeiten.' : 'Answers about trial lessons, age, Kuk Sool Won, Tai Chi, gradings and training times.'}
+  alternate={{ de: '/faq/', en: '/en/faq/' }}
+  jsonLd={jsonLd}
+>
+  <section class="band faq">
+    <div class="wrap">
+      <h1 class="page-title">{t('faq.title')}</h1>
+      <div class="questions"><FaqList faq={faq} lang={lang} anchors /></div>
+    </div>
+  </section>
+
+  <section class="band ask" id="frage">
+    <div class="wrap">
+      <h2>{t('faq.ask.title')}</h2>
+      {site.questionForm ? (
+      <>
+      <p class="intro">{t('faq.ask.intro')}</p>
+      <form name="frage" method="POST" action={localePath('/faq/thanks/', lang)} data-netlify="true" netlify-honeypot="bot-field">
+        <input type="hidden" name="form-name" value="frage" />
+        <input type="hidden" name="sprache" value={lang} />
+        <p class="hp" aria-hidden="true"><label>Nicht ausfüllen <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
+        <label for="frage-text">{t('faq.ask.question')}</label>
+        <textarea id="frage-text" name="frage" required rows="5" maxlength="1500"></textarea>
+        <label for="frage-mail">{t('faq.ask.email')}</label>
+        <input id="frage-mail" name="email" type="email" autocomplete="email" maxlength="200" />
+        <button class="btn" type="submit">{t('faq.ask.send')}</button>
+        <p class="note">{t('faq.ask.privacy')} <a href="/other/privacy/" hreflang="de">{t('footer.privacy')}</a>.</p>
+      </form>
+      </>
+      ) : (
+      // Form switched off in the CMS (Einstellungen › Kontakt und Allgemeines): point to phone and email.
+      <>
+      <p class="intro">{t('faq.contact.intro').replace('{name}', site.contactName)}</p>
+      <p class="direct">
+        <a href={telHref(primaryPhone.value)}>{phoneLabel(primaryPhone.value)}</a>
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+        <a href={localePath('/other/contact/', lang)}>{t('footer.directions')}</a>
+      </p>
+      </>
+      )}
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Open the answer a link points to (/faq/#kalender) and keep the hash in sync, so answers can be shared.
+  const open = () => {
+    const d = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (d instanceof HTMLDetailsElement) d.open = true;
+  };
+  open();
+  addEventListener('hashchange', open);
+</script>
+
+<style>
+  .faq { padding-block: var(--space-page-top) var(--space-section); }
+  .questions { margin-top: 28px; }
+
+  .ask { padding-block: var(--space-section); background: var(--card); border-top: 1px solid var(--linie); }
+  .ask h2 { font-size: var(--fs-sub); }
+  .intro { margin-top: 8px; max-width: 60ch; color: var(--stein); }
+  form { margin-top: 20px; display: grid; gap: 6px; max-width: 40rem; }
+  label { font-weight: 700; margin-top: 10px; }
+  textarea, input { font: inherit; color: var(--fg); background: var(--bg); border: 2px solid var(--fg); border-radius: 4px; padding: 10px 12px; width: 100%; }
+  textarea { resize: vertical; min-height: 7rem; }
+  textarea:focus-visible, input:focus-visible { outline: 3px solid var(--gelb); outline-offset: 1px; }
+  .btn { justify-self: start; margin-top: 16px; }
+  .note { font-size: var(--fs-meta); color: var(--stein); margin-top: 6px; }
+  .direct { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px 28px; font-weight: 700; font-size: var(--fs-lead); }
+  .direct a { text-underline-offset: 4px; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+</style>

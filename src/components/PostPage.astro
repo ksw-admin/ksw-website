@@ -1,0 +1,93 @@
+---
+import { render } from 'astro:content';
+import { Image } from 'astro:assets';
+import VideoEmbeds from './VideoEmbeds.astro';
+import BackLink from './BackLink.astro';
+import PostCta from './PostCta.astro';
+import { site } from '../lib/site';
+import Base from '../layouts/Base.astro';
+import Medals from './Medals.astro';
+import type { Post } from '../lib/posts';
+import { articleLd, breadcrumbLd } from '../lib/seo';
+import { useTranslations, localePath } from '../i18n/ui';
+import { capWidth } from '../lib/images';
+
+interface Props { post: Post }
+const { post } = Astro.props;
+const { data } = post.entry;
+// Report: the shown language's, else the German one (an English translation may leave the report out).
+const bodyEntry = post.textEntry.body?.trim() ? post.textEntry : post.entry;
+const bodyLang = bodyEntry === post.entry && post.lang !== 'de' ? 'de' : undefined;
+const { Content } = await render(bodyEntry);
+const fmt = new Intl.DateTimeFormat(post.lang === 'de' ? 'de-DE' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+// News keep the whole report in "description" (old CMS form had no body field).
+const paragraphs = post.paragraphs;
+const t = useTranslations(post.lang);
+const jsonLd = [
+  articleLd(post),
+  ...(post.href
+    ? [breadcrumbLd([
+        { name: t('nav.home'), path: localePath('/', post.lang) },
+        { name: t('nav.news'), path: localePath('/articles/', post.lang) },
+        { name: post.title, path: post.href },
+      ])]
+    : []),
+];
+---
+
+<Base
+  title={post.title}
+  alternate={post.alternate}
+  description={paragraphs[0]}
+  image={post.image ? `/og/${post.slug}.jpg` : undefined}
+  imageAlt={post.imageText && post.imageText !== 'placeholder' ? post.imageText : post.title}
+  ogType="article"
+  articleDate={post.date.toISOString().slice(0, 10)}
+  jsonLd={jsonLd}
+>
+  <article class="band">
+    <div class="wrap">
+      <!-- Most visitors arrive here from a shared link: the way to the other posts comes first, not only at the end. -->
+      <BackLink lang={post.lang} place="up" />
+      <header>
+        <p class="meta">
+          <time datetime={post.date.toISOString().slice(0, 10)}>{fmt.format(post.date)}</time>
+          {data.kind && <span>{data.kind}</span>}
+          {data.place && <span>{data.place}</span>}
+        </p>
+        <h1 class="page-title">{post.title}</h1>
+        <Medals medals={data.medals} />
+      </header>
+      <div class="cols">
+        <div class="prose">
+          {paragraphs.map((p) => <p class="desc" lang={post.descriptionLang !== post.lang ? post.descriptionLang : undefined}>{p}</p>)}
+          <div lang={bodyLang}><Content /></div>
+          <VideoEmbeds />
+        </div>
+        {post.image && (
+          <figure>
+            <Image src={post.image.meta} alt={post.imageText || ''} width={capWidth(post.image.meta, 1600)} quality={75} widths={[400, 600, 800, 1200, 1600]} sizes="(max-width: 800px) calc(100vw - 32px), 40vw" loading="eager" />
+            {post.imageText && post.imageText !== 'placeholder' && <figcaption>{post.imageText}</figcaption>}
+          </figure>
+        )}
+      </div>
+      {site.postCta && <PostCta lang={post.lang} />}
+      <BackLink lang={post.lang} place="back" />
+    </div>
+  </article>
+</Base>
+
+<style>
+  article { padding-block: var(--space-page-top) var(--space-section); }
+  header { border-bottom: 2px solid var(--fg); padding-bottom: 16px; display: grid; gap: 10px; }
+  .meta { color: var(--stein); display: flex; gap: 16px; flex-wrap: wrap; font-weight: 600; }
+  .cols { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px; margin-top: 32px; align-items: start; }
+  /* Short text keeps its line breaks (old CMS texts); the Markdown report below is formatted by Astro. */
+  .desc { white-space: pre-line; }
+  figure { margin: 0; }
+  figure :global(img) { width: 100%; height: auto; border-radius: 4px; display: block; }
+  figcaption { font-size: var(--fs-meta); color: var(--stein); margin-top: 8px; }
+  /* Phones: the photo right under the title, before the text (like the CMS preview); at the end of a long
+     report nobody would see it. Photos placed inside the report stay where they are in the text. */
+  @media (max-width: 800px) { .cols { grid-template-columns: 1fr; gap: 24px; } .cols figure { order: -1; } }
+</style>

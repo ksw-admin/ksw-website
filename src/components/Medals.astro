@@ -1,0 +1,34 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props { medals: CollectionEntry<'news'>['data']['medals'] }
+const { medals } = Astro.props;
+const parts = medals
+  ? ([
+      ['g', 'Gold', medals.gold],
+      ['s', 'Silber', medals.silver],
+      ['b', 'Bronze', medals.bronze],
+    ] as const).filter(([, , n]) => n > 0)
+  : [];
+const label = medals ? [...parts.map(([, name, n]) => `${n} ${name}`), medals.other ? `${medals.other} weitere Plätze` : ''].filter(Boolean).join(', ') : '';
+---
+
+{
+  medals && (
+    <div class="medals num" role="img" aria-label={label} title={label}>
+      {parts.map(([cls, , n]) => (
+        <span><i class={cls} />{n}</span>
+      ))}
+      {medals.other > 0 && <span>+{medals.other}</span>}
+    </div>
+  )
+}
+
+<style>
+  .medals { display: flex; gap: 10px; font-weight: 700; white-space: nowrap; }
+  span { display: inline-flex; align-items: center; gap: 5px; }
+  i { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
+  .g { background: var(--gold); }
+  .s { background: var(--silber); }
+  .b { background: var(--bronze); }
+</style>

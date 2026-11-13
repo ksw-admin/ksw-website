@@ -1,0 +1,161 @@
+---
+import '@fontsource-variable/archivo/wdth.css';
+// Hangul signs (국술원, 태극, 도장): whole font, split by unicode-range (see global.css).
+import '@fontsource/nanum-myeongjo/800.css';
+// Same file the CSS above references (Vite hashes it once): preloaded so the headline font loads in parallel with the CSS.
+import archivoLatin from '@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2?url';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MobileBar from '../components/MobileBar.astro';
+import ClosureBanner from '../components/ClosureBanner.astro';
+import BetaBanner from '../components/BetaBanner.astro';
+import BetaSwitch from '../components/BetaSwitch.astro';
+import { site } from '../lib/site';
+import { getHome } from '../lib/home';
+import { isBetaBuild } from '../lib/split-test';
+import { getLangFromUrl } from '../i18n/ui';
+
+interface Props {
+  title?: string;
+  /** Whole title for search results and the browser tab, used as written (no academy name added). Wins over title. */
+  searchTitle?: string;
+  description?: string;
+  /** Path of the same page in each language, if it exists (hreflang + language switch). */
+  alternate?: { de?: string; en?: string };
+  /** Link preview image: a /og/<name>.jpg path (1200x630, built by src/pages/og/[slug].jpg.ts). */
+  image?: string;
+  imageAlt?: string;
+  /** schema.org data for this page (one object or a list). */
+  jsonLd?: object | object[];
+  noindex?: boolean;
+  ogType?: 'website' | 'article';
+  /** ISO date for article previews. */
+  articleDate?: string;
+}
+
+const { title, searchTitle, description = site.description, alternate, image = '/og/default.jpg', imageAlt: imageAltProp, jsonLd, noindex = false, ogType = 'website', articleDate } = Astro.props;
+// The requested address. On an untranslated English page the i18n fallback rewrites to the German route, and
+// Astro.url then holds the German address; originPathname keeps the /en/... one the visitor asked for.
+const reqPath = Astro.originPathname || Astro.url.pathname;
+const lang = getLangFromUrl(new URL(reqPath, Astro.site));
+// Default preview image = the home page photo, so its alt text comes from home.json in the page's language (CMS).
+const imageAlt = imageAltProp ?? getHome(lang).photoAlt;
+// One line for meta tags (post texts contain line breaks), max ~160 characters for search results and previews.
+const metaDescription = (() => {
+  const s = description.replace(/\s+/g, ' ').trim();
+  return s.length > 160 ? s.slice(0, 157).replace(/\s+\S*$/, '') + ' …' : s;
+})();
+const fullTitle = searchTitle ? searchTitle : title ? `${title} | ${site.shortName} Griepentrog` : `Kuk Sool Won & Tai Chi in Duisburg-Rheinhausen | ${site.shortName}`;
+// An English URL whose page has no English version renders the German content (i18n fallback rewrite).
+const dePath = reqPath.replace(/^\/en(?=\/|$)/, '') || '/';
+const isFallback = lang !== 'de' && alternate?.[lang] !== reqPath;
+const canonical = new URL(isFallback ? dePath : reqPath, Astro.site);
+const ogImage = new URL(encodeURI(image), Astro.site);
+// Private beta parts only in a build of the beta branch (src/lib/split-test.ts); gone after the merge into main.
+const beta = isBetaBuild();
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <!-- Theme chosen in the footer (Hell/Dunkel); none = follow the system. Runs before first paint: no flash. -->
+    <script is:inline>
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="preload" href={archivoLatin} as="font" type="font/woff2" crossorigin />
+    <title>{fullTitle}</title>
+    <meta name="description" content={metaDescription} />
+    {(noindex || isFallback) && <meta name="robots" content="noindex" />}
+    <link rel="canonical" href={canonical} />
+    {!isFallback && alternate?.de && <link rel="alternate" hreflang="de" href={new URL(alternate.de, Astro.site)} />}
+    {!isFallback && alternate?.en && <link rel="alternate" hreflang="en" href={new URL(alternate.en, Astro.site)} />}
+    {!isFallback && alternate?.de && <link rel="alternate" hreflang="x-default" href={new URL(alternate.de, Astro.site)} />}
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content={lang === 'de' ? 'de_DE' : 'en_GB'} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={metaDescription} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:secure_url" content={ogImage} />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={imageAlt} />
+    {ogType === 'article' && articleDate && <meta property="article:published_time" content={articleDate} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={metaDescription} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={imageAlt} />
+
+    <meta name="theme-color" content="#ffdd00" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" href="/images/icons/apple-icon-180.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="google-site-verification" content="Mqsxt2K_Gilpo3g4d8fLzYVDDlcBzGOVZjrGxTFG14w" />
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+  </head>
+  <body>
+    {beta && <BetaSwitch />}
+    {beta && <BetaBanner lang={lang} />}
+    <Header lang={lang} alternate={alternate} />
+    <ClosureBanner lang={lang} />
+    {isFallback && (
+      <aside class="fallback-note band" lang="en" aria-label="Language note">
+        <p class="wrap">This page is only available in German. <a href={dePath} hreflang="de" lang="de">Deutsche Version</a></p>
+      </aside>
+    )}
+    <main id="content" lang={isFallback ? 'de' : undefined}>
+      <slot />
+    </main>
+    <Footer lang={lang} />
+    <MobileBar lang={lang} />
+    <!-- After a language switch: restore the reading position before the first paint (stored by Header.astro). -->
+    <script is:inline>
+      try {
+        var s = JSON.parse(sessionStorage.getItem('lang-switch-scroll') || 'null');
+        sessionStorage.removeItem('lang-switch-scroll');
+        if (s && s.to === location.pathname && !location.hash && s.share > 0) {
+          // instant: html has scroll-behavior: smooth for in-page links; here the page must not visibly scroll.
+          window.scrollTo({ top: s.share * (document.documentElement.scrollHeight - window.innerHeight), behavior: 'instant' });
+        }
+      } catch (e) {}
+    </script>
+    {
+      // Cloudflare Web Analytics: production build only, and only once a token is set in site.json (CMS: Einstellungen).
+      import.meta.env.PROD && site.analytics.cloudflareToken && (
+        // Same as the snippet from the Cloudflare dashboard (type="module", only the token in data-cf-beacon).
+        <script
+          is:inline
+          type="module"
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={JSON.stringify({ token: site.analytics.cloudflareToken })}
+        />
+      )
+    }
+    {
+      import.meta.env.PROD && (
+        <script is:inline>
+          if ('serviceWorker' in navigator) {
+            addEventListener('load', function () {
+              navigator.serviceWorker.register('/service-worker.js');
+              // The old Eleventy worker cached images forever in "workbox-runtime-*" caches: remove them.
+              if (window.caches) caches.keys().then(function (keys) {
+                keys.filter(function (k) { return k.indexOf('workbox-runtime') === 0; }).forEach(function (k) { caches.delete(k); });
+              });
+            });
+          }
+        </script>
+      )
+    }
+  </body>
+</html>

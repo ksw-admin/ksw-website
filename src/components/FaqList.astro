@@ -1,0 +1,36 @@
+---
+/**
+ * Questions as an accordion (one <details> per question). Used on the FAQ page (all questions, each with its
+ * anchor /faq/#<name>) and on the Kuk Sool Won / Tai Chi pages (the questions marked for that page, no anchors).
+ */
+import { render } from 'astro:content';
+import type { Faq } from '../lib/faq';
+import type { Lang } from '../i18n/ui';
+
+interface Props { faq: Faq[]; lang: Lang; /** id per question, so /faq/#kalender opens it (FAQ page only) */ anchors?: boolean }
+const { faq, lang, anchors = false } = Astro.props;
+const items = await Promise.all(faq.map(async (f) => ({ ...f, Content: (await render(f.answerEntry)).Content })));
+---
+
+<div class="list">
+  {items.map((f) => (
+    <details id={anchors ? f.slug : undefined}>
+      <summary lang={f.questionLang !== lang ? f.questionLang : undefined}>{f.question}</summary>
+      <div class="prose" lang={f.answerLang !== lang ? f.answerLang : undefined}><f.Content /></div>
+    </details>
+  ))}
+</div>
+
+<style>
+  .list { max-width: 52rem; border-top: 2px solid var(--fg); }
+  details { border-bottom: 1px solid var(--linie); }
+  summary {
+    cursor: pointer; list-style: none; padding: 18px 40px 18px 0; position: relative;
+    font-size: var(--fs-item); font-weight: 700; line-height: 1.25;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: '+'; position: absolute; right: 6px; top: 14px; font-size: 1.6rem; font-weight: 500; }
+  details[open] summary::after { content: '–'; }
+  summary:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .prose { padding: 0 0 22px; max-width: 62ch; }
+</style>

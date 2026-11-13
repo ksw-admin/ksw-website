@@ -1,0 +1,12 @@
+---
+// Old URLs stay: /category/kuksoolwon/, /category/taichi/
+import CategoryPage from '../../components/CategoryPage.astro';
+import { getDisciplines } from '../../lib/disciplines';
+
+export async function getStaticPaths() {
+  return (await getDisciplines('de')).map((page) => ({ params: { slug: page.slug }, props: { page } }));
+}
+const { page } = Astro.props;
+---
+
+<CategoryPage page={page} />

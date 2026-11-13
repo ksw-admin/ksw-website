@@ -1,0 +1,18 @@
+---
+/**
+ * The Korean sign above a discipline: 국술원 (Kuk Sool Won) in yellow, 태극 (taegeuk, the "Tai Chi") in a muted
+ * jade drawn from the Tai Chi colours (--tc-fg / --tc-bg of the surrounding block). A graphic, not text: drawn from
+ * data-sign as generated content (global.css .hangul::before), hidden from screen readers.
+ * Used on the home page (DisciplinePaths) and the discipline pages (CategoryPage).
+ */
+interface Props { discipline: 'kuksoolwon' | 'taichi' }
+const { discipline } = Astro.props;
+const taichi = discipline === 'taichi';
+---
+
+<div class:list={['hangul', { tg: taichi }]} lang="ko" aria-hidden="true" data-sign={taichi ? '태극' : '국술원'}></div>
+
+<style>
+  .hangul { font-family: var(--hangul); font-weight: 800; color: var(--gelb-ink); font-size: clamp(3rem, 7vw, 5.5rem); line-height: 1; letter-spacing: 0.06em; }
+  .hangul.tg { color: color-mix(in srgb, var(--tc-fg) 42%, var(--tc-bg)); }
+</style>
