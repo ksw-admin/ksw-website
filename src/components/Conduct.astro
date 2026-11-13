@@ -41,7 +41,8 @@ const head = conduct[lang];
   ol { list-style: none; padding: 0; margin: 28px 0 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(5, auto); grid-auto-flow: column; column-gap: 64px; }
   li { display: grid; grid-template-columns: 5.75rem minmax(0, 1fr); column-gap: 20px; align-items: start; padding-block: 18px; border-top: 1px solid color-mix(in srgb, var(--panel-fg) 22%, transparent); }
   .count { display: grid; gap: 4px; }
-  .hangul { font-family: var(--hangul); font-weight: 800; font-size: 2.5rem; line-height: 1; white-space: nowrap; }
+  /* Yellow ink like the 국술원 sign above the page title. */
+  .hangul { font-family: var(--hangul); font-weight: 800; font-size: 2.5rem; line-height: 1; white-space: nowrap; color: var(--gelb-ink); }
   .word { font-size: var(--fs-meta); font-weight: 600; color: var(--stein); }
   h3 { font-size: var(--fs-item); font-weight: 800; line-height: 1.2; }
   .rule p { margin-top: 4px; max-width: 46ch; }
