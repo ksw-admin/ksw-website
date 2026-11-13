@@ -5,10 +5,9 @@ import { readFileSync } from 'node:fs';
 
 const conduct = JSON.parse(readFileSync(new URL('../src/content/conduct.json', import.meta.url), 'utf8'));
 
-test('conduct.json has a title and intro in German and English', () => {
+test('conduct.json has a title in German and English', () => {
   for (const lang of ['de', 'en']) {
     assert.ok(conduct[lang]?.title?.trim(), `${lang}.title`);
-    assert.ok(conduct[lang]?.intro?.trim(), `${lang}.intro`);
   }
 });
 

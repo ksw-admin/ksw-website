@@ -11,13 +11,14 @@ import type { Lang } from '../i18n/ui';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const head = conduct[lang];
+// Rows per column on wide screens: half the rules, so the list still fits when a rule is added or removed.
+const rows = Math.ceil(conduct.rules.length / 2);
 ---
 
 <section class="band conduct" id="kodex">
   <div class="wrap">
     <div class="sec-h"><h2>{head.title}</h2></div>
-    <p class="intro">{head.intro}</p>
-    <ol>
+    <ol role="list" style={`--rows:${rows}`}>
       {conduct.rules.map((r, i) => (
         <li>
           <div class="count">
@@ -36,9 +37,9 @@ const head = conduct[lang];
 
 <style>
   .conduct { background: var(--panel); color: var(--panel-fg); padding-block: var(--space-section); }
-  .intro { margin-top: 14px; font-size: var(--fs-lead); max-width: 60ch; }
-  /* Two columns read downwards (1 to 5, then 6 to 10), like the folder's list; one column on phones. */
-  ol { list-style: none; padding: 0; margin: 28px 0 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(5, auto); grid-auto-flow: column; column-gap: 64px; }
+  /* Two columns read downwards (1 to 5, then 6 to 10), like the folder's list; one column on phones.
+     role="list" in the markup: Safari drops the list semantics of a list without markers. */
+  ol { list-style: none; padding: 0; margin: 28px 0 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(var(--rows), auto); grid-auto-flow: column; column-gap: 64px; }
   li { display: grid; grid-template-columns: 5.75rem minmax(0, 1fr); column-gap: 20px; align-items: start; padding-block: 18px; border-top: 1px solid color-mix(in srgb, var(--panel-fg) 22%, transparent); }
   .count { display: grid; gap: 4px; }
   /* Yellow ink like the 국술원 sign above the page title. */

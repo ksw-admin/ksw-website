@@ -11,7 +11,7 @@ import { getFaq } from '../lib/faq';
 import { getSchedule, dayList, ageLabel } from '../lib/schedule';
 import { resolveImage, capWidth } from '../lib/images';
 import { site } from '../lib/site';
-import { disciplineLd, breadcrumbLd } from '../lib/seo';
+import { disciplineLd, breadcrumbLd, conductLd } from '../lib/seo';
 import { useTranslations, localePath } from '../i18n/ui';
 import type { Discipline } from '../lib/disciplines';
 
@@ -35,6 +35,7 @@ const jsonLd = ownPath
   ? [
       disciplineLd({ slug: page.slug, lang, title: page.title, description: page.description, path: ownPath }),
       breadcrumbLd([{ name: t('nav.home'), path: localePath('/', lang) }, { name: page.title, path: ownPath }]),
+      ...(isKsw ? [conductLd(lang, ownPath)] : []),
     ]
   : undefined;
 // Questions marked for this page in the CMS (FAQ › "Auch zeigen auf"), in the FAQ's order.

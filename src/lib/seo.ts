@@ -2,6 +2,7 @@
 import { site, primaryPhone } from './site';
 import type { Slot } from './schedule';
 import type { Post } from './posts';
+import conduct from '../content/conduct.json';
 
 const SITE_URL = 'https://www.kuk-sool-won-griepentrog.de';
 const DAY_URI = { mo: 'Monday', di: 'Tuesday', mi: 'Wednesday', do: 'Thursday', fr: 'Friday', sa: 'Saturday', so: 'Sunday' } as const;
@@ -72,6 +73,25 @@ export function videoLd() {
     uploadDate: `${v.uploaded}T00:00:00+01:00`,
     contentUrl: SITE_URL + v.src,
     inLanguage: 'de',
+    publisher: { '@id': `${SITE_URL}/#academy` },
+  };
+}
+
+/**
+ * Code of conduct on the Kuk Sool Won page (Conduct.astro) as an ordered list: each rule with its position, short
+ * title and text. Same @id as the section's anchor (#kodex), linked to the academy.
+ */
+export function conductLd(lang: 'de' | 'en', path: string) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    '@id': `${SITE_URL}${path}#kodex`,
+    name: conduct[lang].title,
+    url: `${SITE_URL}${path}#kodex`,
+    inLanguage: lang,
+    itemListOrder: 'https://schema.org/ItemListOrderAscending',
+    numberOfItems: conduct.rules.length,
+    itemListElement: conduct.rules.map((r, i) => ({ '@type': 'ListItem', position: i + 1, name: r[lang].title, description: r[lang].text })),
     publisher: { '@id': `${SITE_URL}/#academy` },
   };
 }
