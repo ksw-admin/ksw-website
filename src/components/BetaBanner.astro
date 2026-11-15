@@ -13,8 +13,8 @@ const { lang } = Astro.props;
 const t = useTranslations(lang);
 ---
 
-<aside id="beta-banner" class="band beta-banner" aria-label={t('beta.banner.title')} data-nosnippet>
-  <div class="wrap beta-wrap">
+<aside id="beta-banner" class="band beta-banner" aria-label={t('beta.banner.title')}>
+  <div class="wrap beta-wrap" data-nosnippet>
     <p class="beta-text">
       <strong>{t('beta.banner.title')}:</strong>
       <span>{t('beta.banner.desc')}</span>
