@@ -73,10 +73,14 @@ const title = (s: Slot) => groupName(s, lang, { spelled: true });
     <div class="week-col">
     <div class="week">
       <div class="week-head">{t('week.title')} <span>{site.hall.street}, {site.hall.note}</span></div>
+      {/* The week as plain text, visually hidden (the grid shows it): the one place screen readers hear days and
+          times, and what reader modes show (they drop buttons). Own class instead of .visually-hidden: Readability
+          scores class names containing "hidden" as clutter and drops the list. */}
+      <ul class="week-text">{slots.map((s) => <li>{title(s)}: {when(s)}</li>)}</ul>
       <div class="grid" style={`--rows:${rows};--cols:${days.length}`}>
-        {/* Days, hours, lines and "no training" are visual scaffolding: aria-hidden, because every slot button
-            already says its day and time. Reader modes (Firefox Readability) skip aria-hidden and drop buttons,
-            so they show the session list below instead of a column of bare labels. */}
+        {/* Days, hours, lines and "no training" are visual scaffolding: aria-hidden, because the list above
+            states days and times. Reader modes (Firefox Readability) skip aria-hidden and drop buttons,
+            so they show that list instead of a column of bare labels. */}
         {days.map((d, i) => <div class="day" aria-hidden="true" style={`grid-column:${i + 2}`}>{dayShort(d, lang)}</div>)}
         {hours.map((h) => (
           <>
@@ -86,7 +90,7 @@ const title = (s: Slot) => groupName(s, lang, { spelled: true });
         ))}
         {days.map((d, i) => (!usedDays.has(d) ? <div class="empty" aria-hidden="true" style={`grid-column:${i + 2}`}>{t('week.none')}</div> : null))}
         {slots.flatMap((s) =>
-          s.days.map((d) => (
+          s.days.map((d, n) => (
             <button
               type="button"
               class:list={['slot', s.discipline === 'kuksoolwon' ? 'k' : 't']}
@@ -94,20 +98,20 @@ const title = (s: Slot) => groupName(s, lang, { spelled: true });
               data-id={s.id}
               aria-pressed="false"
               aria-controls="slot-detail"
+              aria-hidden={n > 0 ? 'true' : undefined}
+              tabindex={n > 0 ? -1 : undefined}
             >
-              {/* The name starts with the visible text ("4–6 16:00"), then the full wording for screen readers:
-                  voice control users can say what they see (WCAG 2.5.3 Label in Name). */}
+              {/* The name starts with the visible text ("4–6 16:00"), then the group for screen readers: voice
+                  control users can say what they see (WCAG 2.5.3 Label in Name). Days and times are in the list
+                  above; a group on several days is one button for screen readers and the keyboard (the copies on
+                  the other days are aria-hidden and out of the tab order, a click on them still works). */}
               <span>{short(s)}</span>
               <small class="num">{s.from}</small>
-              <span class="visually-hidden">: {title(s)}, {when(s)}</span>
+              <span class="visually-hidden">: {title(s)}</span>
             </button>
           )),
         )}
       </div>
-      {/* The week as plain text for reader modes and text-only clients (visually hidden, the grid shows it).
-          Own class instead of .visually-hidden: Readability scores class names containing "hidden" as clutter
-          and drops the list. */}
-      <ul class="week-text">{slots.map((s) => <li>{title(s)}: {when(s)}</li>)}</ul>
       <div class="legend">
         <span><i style="background:var(--slot-k)"></i>Kuk Sool Won</span>
         <span><i style="background:var(--jade)"></i>{disciplineName('taichi', lang)}</span>
