@@ -26,13 +26,18 @@ const items = (await getClosures()).map((c) => ({
 {
   items.length > 0 && (
     <aside class="closures band" aria-label={lang === 'de' ? 'Trainingsausfall' : 'Training cancelled'} hidden={!items.some((i) => i.visible)}>
-      <ul class="wrap">
-        {items.map((i) => (
-          <li data-show={i.show} data-end={i.end} hidden={!i.visible}>
-            <strong>{i.headline}:</strong> <span lang={i.textLang}>{i.text}</span>
-          </li>
-        ))}
-      </ul>
+      {/* data-nosnippet: keep this short-lived notice out of Google's snippets and sitelink labels. Google honours
+          it only on div, span and section, so it sits on a div inside the aside. In Nov 2026 Google showed the
+          sitelink of /category/kuksoolwon/ as "Fällt aus" (text of this banner). */}
+      <div data-nosnippet>
+        <ul class="wrap">
+          {items.map((i) => (
+            <li data-show={i.show} data-end={i.end} hidden={!i.visible}>
+              <strong>{i.headline}:</strong> <span lang={i.textLang}>{i.text}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
     </aside>
   )
 }
