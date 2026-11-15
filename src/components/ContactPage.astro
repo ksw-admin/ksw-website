@@ -1,0 +1,33 @@
+---
+/** Contact page (German and English routes): the contact band as the whole page, plus the form when it is switched on. */
+import Base from '../layouts/Base.astro';
+import Visit from './Visit.astro';
+import ContactForm from './ContactForm.astro';
+import { site } from '../lib/site';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const de = lang === 'de';
+---
+
+<Base
+  title={t('nav.contact')}
+  description={de ? 'Telefon, E-Mail und Adresse der Trainingshalle in Duisburg-Rheinhausen' : 'Phone, email and address of the training hall in Duisburg-Rheinhausen'}
+  alternate={{ de: '/other/contact/', en: '/en/other/contact/' }}
+>
+  <Visit
+    lang={lang}
+    level={1}
+    heading={de ? 'Kontakt und Probetraining' : 'Contact and trial lesson'}
+    intro={de ? 'Wir freuen uns auf Fragen und Mitteilungen! Sendet einfach eine E-Mail oder ruft an.' : 'Questions and messages are welcome. Just send an email or call.'}
+  />
+  {site.contactForm && <ContactForm lang={lang} />}
+</Base>
+
+<style is:global>
+  /* The black contact band fills the window down to the footer (no grey gap on tall screens). */
+  body > main:has(> .visit:only-child) { display: flex; flex-direction: column; }
+  body > main > .visit:only-child { flex: 1 0 auto; }
+</style>

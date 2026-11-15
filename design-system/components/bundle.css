@@ -1,0 +1,77 @@
+/* Component styles for the static previews, copied from ksw-website (src/styles/global.css and the
+   components named in tokens.json › meta.components). Uses the same custom property names as the site. */
+
+/* Archivo with its width axis (tokens.css declares the face without a stretch range). */
+@font-face {
+  font-family: 'Archivo Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  font-stretch: 62% 125%;
+  src: url('../fonts/archivo-latin-wdth-normal.woff2') format('woff2-variations');
+}
+
+.ksw { font: 400 17px/1.55 var(--font-sans); color: var(--fg); background: var(--bg); padding: 20px; -webkit-font-smoothing: antialiased; }
+.ksw *, .ksw *::before, .ksw *::after { box-sizing: border-box; }
+.ksw h1, .ksw h2, .ksw h3, .ksw p { margin: 0; }
+.ksw a { color: inherit; }
+.ksw :focus-visible { outline: 3px solid var(--jade); outline-offset: 3px; }
+.ksw .cond { font-stretch: 62%; }
+.ksw .wide { font-stretch: 125%; }
+.ksw .num { font-variant-numeric: tabular-nums; }
+
+/* Button */
+.ksw .btn { display: inline-flex; align-items: center; gap: 8px; background: var(--gelb); color: #000; border: 1px solid #000; border-radius: 4px; padding: 13px 19px; font: 700 1rem var(--font-sans); text-decoration: none; cursor: pointer; }
+.ksw .btn:hover { background: var(--gelb-hover); }
+
+/* SectionHeading */
+.ksw .sec-h { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-bottom: 2px solid var(--fg); padding-bottom: 10px; }
+.ksw .sec-h h2 { font-size: 51px; line-height: 1; font-weight: 900; font-stretch: 62%; }
+.ksw .sec-h a { font-weight: 700; }
+
+/* TimetableSlot */
+.ksw .week { background: var(--card); border: 2px solid var(--fg); border-radius: 4px; padding: 14px; box-shadow: 12px 12px 0 var(--gelb); margin-right: 12px; }
+.ksw .slots { display: grid; grid-template-columns: repeat(3, 96px); gap: 6px; }
+.ksw .slot { border: 0; border-radius: 3px; padding: 6px 8px; height: 52px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; text-align: left; font: 700 13px/1.1 var(--font-sans); cursor: pointer; }
+.ksw .slot small { font-weight: 500; font-size: 12px; }
+.ksw .slot.k { background: var(--slot-k); color: var(--slot-k-fg); }
+.ksw .slot.t { background: var(--jade); color: #fff; }
+.ksw .slot:hover { box-shadow: inset 0 0 0 2px var(--gelb); }
+.ksw .slot.k.dim { background: color-mix(in srgb, var(--slot-k) 14%, var(--card)); color: var(--fg); }
+.ksw .slot.t.dim { background: color-mix(in srgb, var(--jade) 20%, var(--card)); color: var(--fg); }
+.ksw .slot.hit { background: var(--gelb); color: #000; box-shadow: inset 0 0 0 2px #000; }
+.ksw .legend { display: flex; gap: 14px; margin-top: 10px; font-size: 13px; flex-wrap: wrap; }
+.ksw .legend i { display: inline-block; width: 11px; height: 11px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+
+/* NewsRow */
+.ksw .row { display: grid; grid-template-columns: 6.5rem 9rem minmax(0, 1fr) auto; gap: 20px; align-items: start; padding-block: 18px; border-bottom: 1px solid var(--linie); }
+.ksw .row time { color: var(--stein); font-weight: 500; }
+.ksw .thumb { width: 100%; aspect-ratio: 4 / 3; border-radius: 4px; background: var(--linie); }
+.ksw .kind { font-size: 13.6px; font-weight: 600; color: var(--stein); display: block; margin-bottom: 2px; }
+.ksw .row h3 { font-size: 21px; font-weight: 700; line-height: 1.2; }
+.ksw .row p { color: var(--stein); margin-top: 6px; max-width: 62ch; }
+.ksw .more { font-weight: 700; color: var(--fg); }
+
+/* Medals */
+.ksw .medals { display: flex; gap: 10px; font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.ksw .medals span { display: inline-flex; align-items: center; gap: 5px; }
+.ksw .medals i { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
+.ksw .g { background: var(--gold); }
+.ksw .s { background: var(--silber); }
+.ksw .b { background: var(--bronze); }
+
+/* PhoneLink */
+.ksw.dark-band { background: var(--panel); color: var(--panel-fg); }
+.ksw .phone { display: inline-flex; align-items: center; gap: 0.25em; font-size: 64px; font-weight: 900; font-stretch: 62%; line-height: 1; text-decoration: none; letter-spacing: -0.01em; color: var(--gelb); font-variant-numeric: tabular-nums; }
+.ksw .phone:hover { text-decoration: underline; text-decoration-thickness: 0.06em; text-underline-offset: 0.12em; }
+.ksw .phone .icon { flex: none; display: grid; place-items: center; width: 0.82em; height: 0.82em; border-radius: 50%; background: var(--gelb); color: #000; transition: transform 0.2s ease; }
+.ksw .phone .icon svg { width: 52%; height: 52%; }
+.ksw .phone:hover .icon { transform: rotate(-12deg); }
+
+/* CredentialList */
+.ksw dl { margin: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 10px 24px; }
+.ksw dt { color: var(--stein); font-weight: 500; }
+.ksw dd { margin: 0; font-weight: 600; }
+.ksw dd.cont { grid-column: 2; }
+
+@media (prefers-reduced-motion: reduce) { .ksw * { transition: none !important; } }

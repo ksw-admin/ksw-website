@@ -1,0 +1,75 @@
+{
+  "items": [
+    {
+      "cancelled": false,
+      "approx": {
+        "month": "2026-12",
+        "part": "Anfang"
+      },
+      "title": "Weihnachtsfeier",
+      "title_en": "Christmas Party",
+      "kind": "Verein"
+    },
+    {
+      "cancelled": false,
+      "approx": {
+        "month": "2026-11",
+        "part": "Mitte"
+      },
+      "title": "Gürtelprüfung",
+      "kind": "Prüfung"
+    },
+    {
+      "from": "2026-02-14",
+      "title": "Kids Tournament International Championship",
+      "kind": "Turnier",
+      "report": "2026-02-16-kids-tournament-international-championship"
+    },
+    {
+      "from": "2026-03-29",
+      "title": "Gürtelprüfung",
+      "kind": "Prüfung",
+      "report": "2026-03-29-prüfung-mit-78-jahren"
+    },
+    {
+      "from": "2026-04-09",
+      "title": "International Open German Championships",
+      "kind": "Turnier",
+      "place": "Arnsberg",
+      "report": "2026-04-09-international-open-german-championships-in-arnsberg-2026"
+    },
+    {
+      "from": "2026-05-09",
+      "title": "New Generation Turnier",
+      "kind": "Turnier",
+      "place": "Arnsberg",
+      "report": "2026-05-31-new-generation-turnier-arnsberg-2026"
+    },
+    {
+      "from": "2026-05-29",
+      "title": "Gürtelprüfung",
+      "kind": "Prüfung",
+      "report": "2026-05-31-gürtelprüfung-2026"
+    },
+    {
+      "from": "2026-07-04",
+      "title": "World Martial Arts Championship",
+      "kind": "Turnier",
+      "place": "Arnsberg",
+      "report": "2026-07-12-arnsberg-am-world-material-arts-championship-04-07-2026"
+    },
+    {
+      "from": "2026-10-10",
+      "title": "Best Martial Art Fighter",
+      "kind": "Turnier",
+      "place": "Arnsberg",
+      "report": "2026-10-24-arnsberg-best-material-art-fighter-2026"
+    },
+    {
+      "from": "2026-12-05",
+      "title": "World Cup – Intercontinental Open Championships",
+      "kind": "Turnier",
+      "place": "Sporthalle Große Wiese, Am Solepark 7, 59759 Arnsberg"
+    }
+  ]
+}

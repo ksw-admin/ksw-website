@@ -1,0 +1,12 @@
+---
+// /en/category/<slug>/: English text when translated, else the German text with an English note (Base.astro).
+import CategoryPage from '../../../components/CategoryPage.astro';
+import { getDisciplines } from '../../../lib/disciplines';
+
+export async function getStaticPaths() {
+  return (await getDisciplines('en')).map((page) => ({ params: { slug: page.slug }, props: { page } }));
+}
+const { page } = Astro.props;
+---
+
+<CategoryPage page={page} />

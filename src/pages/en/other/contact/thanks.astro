@@ -1,0 +1,12 @@
+---
+// Shown after the English contact form was sent (Netlify redirects the POST here). Not for search engines.
+import ThanksPage from '../../../../components/ThanksPage.astro';
+---
+
+<ThanksPage
+  title="Message sent"
+  heading="Thank you for your message."
+  text="It has arrived. Peter Griepentrog will reply by email or phone."
+  back={{ href: '/en/', label: 'Back to the home page' }}
+  alternate={{ de: '/other/contact/thanks/', en: '/en/other/contact/thanks/' }}
+/>

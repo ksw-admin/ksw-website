@@ -1,0 +1,33 @@
+---
+/**
+ * Page shown after a form was sent (Netlify redirects the POST here): heading, one sentence, a way back.
+ * Not for search engines. Used by the FAQ question form (FaqThanks.astro) and the contact form.
+ */
+import Base from '../layouts/Base.astro';
+
+interface Props {
+  /** Browser tab title. */
+  title: string;
+  heading: string;
+  text: string;
+  back: { href: string; label: string };
+  alternate?: { de?: string; en?: string };
+}
+const { title, heading, text, back, alternate } = Astro.props;
+---
+
+<Base title={title} noindex alternate={alternate}>
+  <section class="band">
+    <div class="wrap">
+      <h1 class="page-title">{heading}</h1>
+      <p>{text}</p>
+      <a class="btn" href={back.href}>{back.label}</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  section { padding-block: var(--space-page-top) var(--space-section); }
+  p { margin-top: 16px; max-width: 52ch; font-size: var(--fs-lead); }
+  .btn { margin-top: 24px; }
+</style>

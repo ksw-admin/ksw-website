@@ -1,0 +1,94 @@
+---
+import Base from '../layouts/Base.astro';
+import WeekPlanner from './WeekPlanner.astro';
+import DisciplinePaths from './DisciplinePaths.astro';
+import NewsLedger from './NewsLedger.astro';
+import UpcomingEvents from './UpcomingEvents.astro';
+import Master from './Master.astro';
+import Visit from './Visit.astro';
+import VideoFacade from './VideoFacade.astro';
+import { site } from '../lib/site';
+import { Image } from 'astro:assets';
+import { getPosts, medalTotal } from '../lib/posts';
+import { useTranslations, localePath, type Lang } from '../i18n/ui';
+import { getSchedule } from '../lib/schedule';
+import { organizationLd, websiteLd, videoLd } from '../lib/seo';
+import { getHome, homeImage } from '../lib/home';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+// Texts and photos: src/content/home.json (CMS: Startseite). English falls back to German per field.
+const home = getHome(lang);
+const groupPhoto = homeImage(home.photo).meta;
+const masterPhoto = homeImage(home.masterPhoto).meta;
+// Posts in this language; untranslated ones show in German.
+const posts = await getPosts(lang);
+const latest = posts.slice(0, 4);
+const year = new Date().getFullYear();
+const thisYear = posts.filter((p) => p.date.getFullYear() === year);
+const placings = medalTotal(thisYear);
+const video = videoLd();
+const jsonLd = [websiteLd(), organizationLd(await getSchedule()), ...(video ? [video] : [])];
+---
+
+<Base alternate={{ de: '/', en: '/en/' }} jsonLd={jsonLd} description={home.description}>
+  <WeekPlanner lang={lang}>
+    <Fragment slot="headline">
+      <h1 class="cond">{home.headline}</h1>
+      <p class="lead">{home.lead}</p>
+    </Fragment>
+  </WeekPlanner>
+
+  <figure class="photo">
+    <Image src={groupPhoto} alt={home.photoAlt} width={Math.min(groupPhoto.width, 2400)} quality={72} widths={[640, 1024, 1600, 2400]} sizes="100vw" loading="lazy" />
+    <figcaption class="band"><div class="wrap">{home.photoCaption}</div></figcaption>
+  </figure>
+
+  <DisciplinePaths lang={lang} kswText={home.kswText} taichiText={home.taichiText} />
+
+  {site.video && <VideoFacade lang={lang} {...site.video} heading={home.videoHeading} />}
+
+  <section class="news band" id="news">
+    <div class="wrap">
+      <div class="sec-h"><h2>{t('news.title')}</h2></div>
+      <UpcomingEvents lang={lang} />
+      <!-- Pairs with "Demnächst" above: says where the upcoming dates end and the reports begin. -->
+      <!-- "Alle Beiträge" leads to the archive of reports, so it sits with "Zuletzt", not with the upcoming dates. -->
+      <div class="recent"><h3>{t('news.recent')}</h3><a href={localePath('/articles/', lang)}>{t('news.all')}</a></div>
+      {placings > 0 && (
+        <p class="tally">
+          <span>{lang === 'de' ? `${year} bisher ${placings} Platzierungen` : `${placings} placings in ${year} so far`}</span>
+          <span class="key"><i class="g"></i>Gold <i class="s"></i>{lang === 'de' ? 'Silber' : 'Silver'} <i class="b"></i>Bronze</span>
+        </p>
+      )}
+      <NewsLedger posts={latest} lang={lang} level={4} />
+    </div>
+  </section>
+
+  <Master heading={home.masterHeading} photo={masterPhoto} photoAlt={home.masterPhotoAlt} caption={home.masterPhotoCaption}>
+    <p>{home.masterIntro}</p>
+  </Master>
+
+  <Visit lang={lang} heading={home.contactHeading} intro={home.contactIntro} />
+</Base>
+
+<style>
+  .lead { font-size: clamp(1.25rem, 1.1vw + 0.6rem, 1.5rem); max-width: 34ch; margin-top: 22px; font-weight: 500; }
+  h1 { font-size: clamp(3.2rem, 7.5vw, 8.6rem); line-height: 0.86; letter-spacing: -0.01em; font-weight: 900; margin-top: 18px; }
+  .photo { margin: 0; background: #000; }
+  .photo :global(img) { display: block; width: 100%; height: clamp(240px, 42vw, 560px); object-fit: cover; object-position: center 40%; }
+  /* Phones: the same pause between week plan and paths as on desktop (was hidden, so the first picture came three
+     screens down); 4:3 so the people stay large enough. */
+  @media (max-width: 760px) { .photo :global(img) { height: auto; aspect-ratio: 4 / 3; } }
+  .photo figcaption { background: var(--bg); color: var(--stein); font-size: var(--fs-meta); padding-block: 10px; }
+  .news { padding-block: var(--space-section); }
+  /* Season total and the key to the medal dots in the list below. */
+  .recent { margin-top: 26px; display: flex; align-items: baseline; justify-content: space-between; gap: 8px 16px; flex-wrap: wrap; }
+  .recent h3 { font-size: var(--fs-sub); font-weight: 800; }
+  .recent a { font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
+  .tally { margin-top: 14px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 20px; color: var(--stein); font-size: var(--fs-meta); }
+  .key i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin: 0 5px 0 10px; vertical-align: 0; }
+  .key i:first-child { margin-left: 0; }
+  .key .g { background: var(--gold); } .key .s { background: var(--silber); } .key .b { background: var(--bronze); }
+</style>

@@ -1,0 +1,37 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { Image } from 'astro:assets';
+import { resolveImage } from '../../lib/images';
+
+const sponsors = (await getCollection('sponsors')).sort((a, b) => a.data.name.localeCompare(b.data.name, 'de'));
+---
+
+<Base title="Sponsoren">
+  <section class="band">
+    <div class="wrap">
+      <div class="sec-h"><h1 class="page-title">Sponsoren</h1></div>
+      <ul>
+        {sponsors.map(({ data, filePath }) => (
+          <li>
+            {data.image && <Image src={resolveImage(filePath, data.image)!.meta} alt={data.image_text || data.name} height={90} densities={[1, 2]} loading="lazy" />}
+            <div>
+              <h2>{data.link ? <a href={data.link} rel="noopener">{data.name}</a> : data.name}</h2>
+              {(data.adresse_1 || data.adresse_2) && <p>{[data.adresse_1, data.adresse_2].filter(Boolean).join(', ')}</p>}
+              {data.telefon && <p class="num">{data.telefon}</p>}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  section { padding-block: var(--space-page-top) var(--space-section); }
+  ul { list-style: none; padding: 0; margin: 28px 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 32px; }
+  li { display: grid; gap: 12px; align-content: start; }
+  li :global(img) { max-height: 90px; width: auto; object-fit: contain; }
+  h2 { font-size: var(--fs-item); }
+  p { color: var(--stein); }
+</style>

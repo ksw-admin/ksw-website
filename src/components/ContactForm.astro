@@ -1,0 +1,67 @@
+---
+/**
+ * Contact form on the contact page, only when switched on in the CMS (Einstellungen › Kontakt und Allgemeines ›
+ * Kontaktformular). Netlify Forms, form name "kontakt": messages land in the Netlify dashboard and, once set up there,
+ * by email. Nothing is shown on the site. Same look as the FAQ question form. German and English share the form
+ * name, so both land in the same Netlify form.
+ */
+import { localePath, type Lang } from '../i18n/ui';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const de = lang === 'de';
+const needContact = de
+  ? 'Bitte E-Mail-Adresse oder Telefonnummer angeben, damit wir antworten können.'
+  : 'Please give an email address or a phone number, so we can reply.';
+---
+
+<section class="band contact-form" id="nachricht">
+  <div class="wrap">
+    <h2>{de ? 'Nachricht schreiben' : 'Write a message'}</h2>
+    <p class="intro">{de ? 'Lieber schreiben als anrufen? Die Nachricht geht direkt an Peter Griepentrog. Für eine Antwort bitte E-Mail-Adresse oder Telefonnummer angeben.' : 'Prefer writing to calling? The message goes straight to Peter Griepentrog. For a reply, please give an email address or a phone number.'}</p>
+    <form name="kontakt" method="POST" action={localePath('/other/contact/thanks/', lang)} data-netlify="true" netlify-honeypot="bot-field" data-need-contact={needContact}>
+      <input type="hidden" name="form-name" value="kontakt" />
+      <p class="hp" aria-hidden="true"><label>Nicht ausfüllen <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
+      <label for="k-name">Name</label>
+      <input id="k-name" name="name" required autocomplete="name" maxlength="120" />
+      <label for="k-mail">{de ? 'E-Mail-Adresse' : 'Email address'}</label>
+      <input id="k-mail" name="email" type="email" autocomplete="email" maxlength="200" />
+      <label for="k-tel">{de ? 'Telefon (E-Mail oder Telefon reicht)' : 'Phone (email or phone is enough)'}</label>
+      <input id="k-tel" name="telefon" type="tel" autocomplete="tel" maxlength="40" />
+      <label for="k-text">{de ? 'Nachricht' : 'Message'}</label>
+      <textarea id="k-text" name="nachricht" required rows="6" maxlength="3000"></textarea>
+      <button class="btn" type="submit">{de ? 'Nachricht senden' : 'Send message'}</button>
+      <p class="note">{de ? <>Was mit den Angaben passiert, steht in der <a href="/other/privacy/">Datenschutzerklärung</a>.</> : <>What happens with your details is described in the <a href="/other/privacy/" hreflang="de">privacy notice (German)</a>.</>}</p>
+    </form>
+  </div>
+</section>
+
+<script>
+  // Without an email address or phone number nobody can answer: ask for one of the two before sending.
+  const form = document.querySelector<HTMLFormElement>('form[name="kontakt"]');
+  const mail = form?.querySelector<HTMLInputElement>('#k-mail');
+  const tel = form?.querySelector<HTMLInputElement>('#k-tel');
+  form?.addEventListener('submit', (e) => {
+    if (mail && tel && !mail.value.trim() && !tel.value.trim()) {
+      e.preventDefault();
+      mail.setCustomValidity(form.dataset.needContact ?? '');
+      mail.reportValidity();
+    }
+  });
+  mail?.addEventListener('input', () => mail.setCustomValidity(''));
+  tel?.addEventListener('input', () => mail?.setCustomValidity(''));
+</script>
+
+<style>
+  .contact-form { padding-block: var(--space-section); background: var(--card); border-top: 1px solid var(--linie); }
+  h2 { font-size: var(--fs-sub); }
+  .intro { margin-top: 8px; max-width: 60ch; color: var(--stein); }
+  form { margin-top: 20px; display: grid; gap: 6px; max-width: 40rem; }
+  label { font-weight: 700; margin-top: 10px; }
+  textarea, input { font: inherit; color: var(--fg); background: var(--bg); border: 2px solid var(--fg); border-radius: 4px; padding: 10px 12px; width: 100%; }
+  textarea { resize: vertical; min-height: 8rem; }
+  textarea:focus-visible, input:focus-visible { outline: 3px solid var(--gelb); outline-offset: 1px; }
+  .btn { justify-self: start; margin-top: 16px; }
+  .note { font-size: var(--fs-meta); color: var(--stein); margin-top: 6px; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+</style>

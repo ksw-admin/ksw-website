@@ -1,0 +1,57 @@
+---
+/**
+ * "Unser Verhaltenskodex": the school's ten rules (Schulordnung from the member folder), counted in Korean.
+ * Shown on the Kuk Sool Won page. Text: src/content/conduct.json (CMS: Einstellungen › Verhaltenskodex).
+ * The Hangul numerals are a graphic like the 국술원 sign (generated content, hidden from screen readers); the
+ * number and its Korean name ("1 Hana") are real text, spelled as in the folder.
+ */
+import { getConduct } from '../lib/conduct';
+import type { Lang } from '../i18n/ui';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const conduct = getConduct(lang);
+// Rows per column on wide screens: half the rules, so the list still fits when a rule is added or removed.
+const rows = Math.ceil(conduct.rules.length / 2);
+---
+
+<section class="band conduct" id="kodex">
+  <div class="wrap">
+    <div class="sec-h"><h2>{conduct.title}</h2></div>
+    <ol role="list" style={`--rows:${rows}`}>
+      {conduct.rules.map((r, i) => (
+        <li>
+          <div class="count">
+            <span class="hangul" lang="ko" aria-hidden="true" data-sign={r.sign}></span>
+            <span class="word num">{i + 1} <span lang="ko-Latn">{r.word}</span></span>
+          </div>
+          <div class="rule">
+            <h3>{r.title}</h3>
+            <p>{r.text}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .conduct { background: var(--panel); color: var(--panel-fg); padding-block: var(--space-section); }
+  /* Two columns read downwards (1 to 5, then 6 to 10), like the folder's list; one column on phones.
+     role="list" in the markup: Safari drops the list semantics of a list without markers. */
+  ol { list-style: none; padding: 0; margin: 28px 0 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(var(--rows), auto); grid-auto-flow: column; column-gap: 64px; }
+  li { display: grid; grid-template-columns: 5.75rem minmax(0, 1fr); column-gap: 20px; align-items: start; padding-block: 18px; border-top: 1px solid color-mix(in srgb, var(--panel-fg) 22%, transparent); }
+  .count { display: grid; gap: 4px; }
+  /* Yellow ink like the 국술원 sign above the page title. */
+  .hangul { font-family: var(--hangul); font-weight: 800; font-size: 2.5rem; line-height: 1; white-space: nowrap; color: var(--gelb-ink); }
+  .word { font-size: var(--fs-meta); font-weight: 600; color: var(--stein); }
+  h3 { font-size: var(--fs-item); font-weight: 800; line-height: 1.2; }
+  .rule p { margin-top: 4px; max-width: 46ch; }
+  @media (max-width: 860px) {
+    ol { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; grid-auto-flow: row; }
+  }
+  @media (max-width: 400px) {
+    li { grid-template-columns: 4.5rem minmax(0, 1fr); column-gap: 14px; }
+    .hangul { font-size: 2rem; }
+  }
+</style>

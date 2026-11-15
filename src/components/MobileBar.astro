@@ -1,0 +1,27 @@
+---
+/** Phones only: a bar at the bottom with the two things visitors come for, contact and training times. */
+import { useTranslations, localePath, type Lang } from '../i18n/ui';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<nav class="mbar" aria-label={t('nav.quick')}>
+  <a href={localePath('/other/contact/', lang)}>{t('nav.contact')}</a>
+  <a href={localePath('/#schedule', lang)}>{t('cta.times')}</a>
+</nav>
+
+<style>
+  .mbar { display: none; }
+  @media (max-width: 700px) {
+    .mbar {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--linie);
+      padding: 8px max(10px, env(safe-area-inset-right, 0px)) calc(8px + env(safe-area-inset-bottom, 0px)) max(10px, env(safe-area-inset-left, 0px));
+    }
+    a { text-align: center; padding: 12px; border-radius: 4px; font-weight: 700; text-decoration: none; }
+    a:first-child { background: var(--gelb); color: #000; }
+    a:last-child { color: var(--panel-fg); border: 2px solid var(--panel-fg); }
+  }
+</style>

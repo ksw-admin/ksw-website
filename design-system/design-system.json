@@ -1,0 +1,28 @@
+{
+  "v": 3,
+  "layout": "files",
+  "createdOnFiles": { "v": 1, "at": "2026-11-03T19:13:46Z" },
+  "title": "Kampfkunst Academy",
+  "namespace": "KSW",
+  "libraries": [],
+  "sections": {},
+  "groups": ["Logos"],
+  "assetGroups": {
+    "Logos": {
+      "name": "Logos",
+      "tile": "l",
+      "order": ["Logo.svg"],
+      "files": {
+        "Logo.svg": { "name": "Logo.svg", "blob": "df558f91d2a1024903d5f0d16e5a5189", "size": 15144, "type": "image/svg+xml" }
+      }
+    }
+  },
+  "blobs": {},
+  "docs": { "sections": [] },
+  "lastChange": {
+    "by": "Claude",
+    "at": "2026-11-03T19:20:00Z",
+    "via": "GitHub · ksw-admin/ksw-website@3c04326",
+    "note": "First version from the astro-redesign code: tokens, fonts, logo, brand book, 7 component previews, cover."
+  }
+}

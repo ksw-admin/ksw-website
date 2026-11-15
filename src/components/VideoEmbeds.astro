@@ -1,0 +1,12 @@
+---
+/**
+ * Script for videos inside Markdown texts (src/lib/youtube.ts turns a lone YouTube link into .yt-embed).
+ * Same player as the home video (src/scripts/youtube-player.ts).
+ * Styles: global.css (.yt-embed), because the Markdown output is not part of a component.
+ */
+---
+
+<script>
+  import { initYoutubePlayers } from '../scripts/youtube-player';
+  initYoutubePlayers('.yt-embed[data-yt]', '.yt-play', 'button');
+</script>

@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Seite nicht gefunden" noindex>
+  <section class="band">
+    <div class="wrap">
+      <div class="sec-h"><h1 class="page-title">Diese Seite gibt es nicht.</h1></div>
+      <p>Vielleicht wurde sie verschoben. <a href="/">Zur Startseite</a> oder zu den <a href="/#schedule">Trainingszeiten</a>.</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  section { padding-block: var(--space-page-top) var(--space-section); }
+  p { margin-top: 20px; font-size: var(--fs-lead); }
+</style>
