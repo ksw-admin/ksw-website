@@ -74,14 +74,17 @@ const title = (s: Slot) => groupName(s, lang, { spelled: true });
     <div class="week">
       <div class="week-head">{t('week.title')} <span>{site.hall.street}, {site.hall.note}</span></div>
       <div class="grid" style={`--rows:${rows};--cols:${days.length}`}>
-        {days.map((d, i) => <div class="day" style={`grid-column:${i + 2}`}>{dayShort(d, lang)}</div>)}
+        {/* Days, hours, lines and "no training" are visual scaffolding: aria-hidden, because every slot button
+            already says its day and time. Reader modes (Firefox Readability) skip aria-hidden and drop buttons,
+            so they show the session list below instead of a column of bare labels. */}
+        {days.map((d, i) => <div class="day" aria-hidden="true" style={`grid-column:${i + 2}`}>{dayShort(d, lang)}</div>)}
         {hours.map((h) => (
           <>
-            <div class="tick num" style={`grid-row:${row(`${String(h).padStart(2, '0')}:00`)}`}>{h}:00</div>
-            <div class="rule" style={`grid-row:${row(`${String(h).padStart(2, '0')}:00`)}`} />
+            <div class="tick num" aria-hidden="true" style={`grid-row:${row(`${String(h).padStart(2, '0')}:00`)}`}>{h}:00</div>
+            <div class="rule" aria-hidden="true" style={`grid-row:${row(`${String(h).padStart(2, '0')}:00`)}`} />
           </>
         ))}
-        {days.map((d, i) => (!usedDays.has(d) ? <div class="empty" style={`grid-column:${i + 2}`}>{t('week.none')}</div> : null))}
+        {days.map((d, i) => (!usedDays.has(d) ? <div class="empty" aria-hidden="true" style={`grid-column:${i + 2}`}>{t('week.none')}</div> : null))}
         {slots.flatMap((s) =>
           s.days.map((d) => (
             <button
@@ -101,6 +104,10 @@ const title = (s: Slot) => groupName(s, lang, { spelled: true });
           )),
         )}
       </div>
+      {/* The week as plain text for reader modes and text-only clients (visually hidden, the grid shows it).
+          Own class instead of .visually-hidden: Readability scores class names containing "hidden" as clutter
+          and drops the list. */}
+      <ul class="week-text">{slots.map((s) => <li>{title(s)}: {when(s)}</li>)}</ul>
       <div class="legend">
         <span><i style="background:var(--slot-k)"></i>Kuk Sool Won</span>
         <span><i style="background:var(--jade)"></i>{disciplineName('taichi', lang)}</span>
@@ -261,6 +268,7 @@ const title = (s: Slot) => groupName(s, lang, { spelled: true });
   .cal .page { font-weight: 700; text-underline-offset: 4px; }
   .cal a[data-cal] { font-weight: 600; text-underline-offset: 4px; }
   .cal .howto { font-size: var(--fs-meta); color: var(--stein); }
+  .week-text { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
   .legend { display: flex; gap: 18px; margin-top: 12px; font-size: var(--fs-meta); flex-wrap: wrap; }
   .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
 </style>
