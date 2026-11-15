@@ -46,7 +46,10 @@ const metaDescription = (() => {
   const s = description.replace(/\s+/g, ' ').trim();
   return s.length > 160 ? s.slice(0, 157).replace(/\s+\S*$/, '') + ' …' : s;
 })();
-const fullTitle = searchTitle ? searchTitle : title ? `${title} | ${site.shortName} Griepentrog` : `Kuk Sool Won & Tai Chi in Duisburg-Rheinhausen | ${site.shortName}`;
+// No title = home page. English gets its own title: one language per page (Google), and a copy of the German
+// title made Google label /en/ with its h1 in the German results (2026-11-15).
+const homeTitle = lang === 'en' ? 'Martial Arts in Duisburg-Rheinhausen: Kuk Sool Won & Tai Chi' : `Kuk Sool Won & Tai Chi in Duisburg-Rheinhausen | ${site.shortName}`;
+const fullTitle = searchTitle ? searchTitle : title ? `${title} | ${site.shortName} Griepentrog` : homeTitle;
 // An English URL whose page has no English version renders the German content (i18n fallback rewrite).
 const dePath = reqPath.replace(/^\/en(?=\/|$)/, '') || '/';
 const isFallback = lang !== 'de' && alternate?.[lang] !== reqPath;
